@@ -40,9 +40,10 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
             Athlon Agent • AI-powered sports operations platform
           </p>
 
-          <h1 className="mt-7 text-4xl font-bold leading-[1.04] tracking-tight md:text-6xl lg:text-7xl">
-            <span className="block md:whitespace-nowrap">Outmanage the competition</span>
-            <span className="mt-2 block bg-gradient-to-r from-primary via-accent to-info bg-clip-text text-transparent md:whitespace-nowrap">
+          <h1 className="mx-auto mt-7 w-full max-w-[34rem] text-[clamp(0.75rem,3.5vw,4.25rem)] font-bold leading-[1.12] tracking-tight">
+            Outmanage the competition
+            <br />
+            <span className="bg-gradient-to-r from-primary via-accent to-info bg-clip-text text-transparent">
               with the CRM platform built for sports agents.
             </span>
           </h1>
