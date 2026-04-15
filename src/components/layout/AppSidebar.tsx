@@ -15,6 +15,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { Logo } from '@/components/brand/Logo';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Overview', path: '/dashboard' },
@@ -33,9 +34,18 @@ export function AppSidebar() {
   const location = useLocation();
 
   return (
-    <aside className={cn('h-screen bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300', collapsed ? 'w-16' : 'w-60')}>
+    <aside className={cn('h-screen bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300', collapsed ? 'w-20' : 'w-60')}>
       <div className={cn('h-16 flex items-center border-b border-sidebar-border px-4', collapsed ? 'justify-center' : 'justify-between')}>
-        {!collapsed ? <span className="font-display text-xl font-semibold tracking-tight">Athlon</span> : <span className="font-display text-xl font-bold">A</span>}
+        <NavLink
+          to="/"
+          aria-label="Athlon home"
+          className={cn(
+            'inline-flex items-center rounded-md transition duration-300 hover:opacity-85',
+            collapsed ? 'max-w-[3.1rem] overflow-hidden' : 'max-w-[9.5rem]',
+          )}
+        >
+          <Logo size={collapsed ? 'sm' : 'md'} />
+        </NavLink>
       </div>
 
       <nav className="flex-1 py-4 px-2 space-y-1">

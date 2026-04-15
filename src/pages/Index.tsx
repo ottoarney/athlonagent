@@ -10,6 +10,7 @@ import { ProductShowcase } from '@/components/landing/ProductShowcase';
 import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { ChatFeaturePreview } from '@/components/landing/ChatFeaturePreview';
 import { setStoredRole } from '@/lib/auth-flow';
+import { Logo } from '@/components/brand/Logo';
 
 const faqs = [
   ['Is Athlon built only for agents?', 'No — Athlon includes a dedicated athlete portal with role-based visibility and communication.'],
@@ -32,9 +33,12 @@ export default function Index() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
         <div className="container px-4 md:px-6 h-20 flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2 font-semibold text-lg">
-            <span className="h-8 w-8 rounded-xl bg-primary text-primary-foreground inline-flex items-center justify-center font-bold">A</span>
-            <span className="font-display text-2xl">Athlon</span>
+          <Link
+            to="/"
+            aria-label="Athlon home"
+            className="inline-flex items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Logo size="md" priority />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 text-sm text-muted-foreground">
@@ -88,7 +92,12 @@ export default function Index() {
 
       <footer className="border-t border-border bg-surface">
         <div className="container px-4 md:px-6 py-8 flex flex-wrap items-center justify-between gap-4 text-sm">
-          <p className="text-muted-foreground">Athlon • premium sports-agent and athlete operations platform.</p>
+          <div className="flex items-center gap-3">
+            <Link to="/" aria-label="Athlon home" className="inline-flex items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85">
+              <Logo size="sm" />
+            </Link>
+            <p className="text-muted-foreground">Premium sports-agent and athlete operations platform.</p>
+          </div>
           <div className="flex flex-wrap gap-3">
             <Link to="/signup/agent" className="underline">Agent signup</Link>
             <Link to="/signup/athlete" className="underline">Athlete signup</Link>
