@@ -1,7 +1,7 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AuthMode, getAuthRoute, getStoredRole, setStoredRole, UserRole } from '@/lib/auth-flow';
+import { AuthMode, getStoredRole, setStoredRole, UserRole } from '@/lib/auth-flow';
 
 function isAuthMode(value: string | null): value is AuthMode {
   return value === 'signup' || value === 'login';
@@ -10,13 +10,12 @@ function isAuthMode(value: string | null): value is AuthMode {
 export default function RoleSelect() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const mode: AuthMode = isAuthMode(searchParams.get('mode')) ? searchParams.get('mode') : 'signup';
   const storedRole = getStoredRole();
 
   const handleRoleSelect = (role: UserRole) => {
     setStoredRole(role);
-    navigate(getAuthRoute(mode, role));
+    navigate(`/${mode}/${role}`);
   };
 
   return (
@@ -28,7 +27,7 @@ export default function RoleSelect() {
 
         <p className="text-sm uppercase tracking-[0.12em] text-muted-foreground">Athlon {mode === 'signup' ? 'Onboarding' : 'Sign in'}</p>
         <h1 className="text-3xl md:text-4xl mt-2">Choose your portal</h1>
-        <p className="text-muted-foreground mt-3">Select the right portal so we can route you into the correct Athlon experience.</p>
+        <p className="text-muted-foreground mt-3">Select your path so Athlon can route and personalize your experience.</p>
 
         <div className="mt-8 grid md:grid-cols-2 gap-4">
           <button className="rounded-2xl border border-border bg-surface p-5 text-left hover:border-accent/60 transition-all" onClick={() => handleRoleSelect('agent')}>
@@ -44,7 +43,7 @@ export default function RoleSelect() {
         {storedRole && (
           <div className="mt-6 rounded-xl border border-border bg-background p-4 flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">Last selected portal: <span className="font-medium text-foreground capitalize">{storedRole}</span></p>
-            <Button variant="outline" onClick={() => navigate(getAuthRoute(mode, storedRole))}>Continue</Button>
+            <Button variant="outline" onClick={() => navigate(`/${mode}/${storedRole}`)}>Continue</Button>
           </div>
         )}
       </div>

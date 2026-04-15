@@ -11,6 +11,7 @@ import {
 import { athletes, Athlete } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface AppHeaderProps {
   selectedAthlete: Athlete | null;
@@ -20,6 +21,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = false }: AppHeaderProps) {
   const [notificationCount] = useState(3);
+  const navigate = useNavigate();
 
   return (
     <header className="h-16 bg-background border-b border-border flex items-center justify-between px-6">
@@ -114,10 +116,10 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
         {/* Profile / Auth Links */}
         {showAuthLinks ? (
           <div className="flex items-center gap-2 ml-2">
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
+            <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => navigate('/login/agent')}>
               Sign in
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => navigate('/demo')}>
               Request access
             </Button>
           </div>

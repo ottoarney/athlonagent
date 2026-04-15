@@ -71,3 +71,41 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Athlon auth + cloud setup
+
+The app now includes role-aware auth (agent/athlete), Google OAuth, and Supabase-ready profile onboarding.
+
+### Required environment variables
+
+Create a `.env.local` file:
+
+```bash
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+VITE_AUTH_REDIRECT_TO=http://localhost:5173/auth/callback
+```
+
+If env vars are missing, auth screens still render but disable live auth actions with a clear warning.
+
+### Database schema
+
+Apply the core schema migration:
+
+```bash
+supabase migration up
+```
+
+Migration file:
+- `supabase/migrations/20260415090000_athlon_core_schema.sql`
+
+This creates a scalable foundation for:
+- `profiles`
+- `agencies`
+- `athletes`
+- `conversations`
+- `messages`
+- `tasks`
+- `deals`
+
+and enables realtime for conversations/messages.

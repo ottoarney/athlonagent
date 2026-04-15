@@ -185,3 +185,32 @@
     @apply transition-all duration-200 ease-out;
   }
 }
+
+@layer components {
+  .marquee-track {
+    @apply flex w-max gap-3;
+    animation: athlon-marquee 28s linear infinite;
+  }
+
+  .marquee-reverse {
+    animation-direction: reverse;
+    animation-duration: 34s;
+  }
+
+  .marquee-item {
+    @apply rounded-full border border-border bg-background px-5 py-2 text-sm font-medium whitespace-nowrap transition-colors;
+  }
+
+  .group:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes athlon-marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
