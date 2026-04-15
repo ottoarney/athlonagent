@@ -40,10 +40,10 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
             Athlon Agent • AI-powered sports operations platform
           </p>
 
-          <h1 className="mt-7 text-5xl leading-[1.02] md:text-7xl lg:text-8xl">
-            Outperform the market with the
+          <h1 className="mt-7 text-4xl leading-[1.04] md:text-6xl lg:text-7xl">
+            Outmanage the competition with the
             <span className="mt-2 block bg-gradient-to-r from-primary via-accent to-info bg-clip-text text-transparent">
-              best athlete ops platform
+              AI platform built for agents.
             </span>
           </h1>
 
