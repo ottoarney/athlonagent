@@ -49,8 +49,8 @@ export default function Index() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button variant="ghost" onClick={() => navigate('/login/agent')}>Sign In</Button>
-            <Button className="rounded-full" onClick={() => navigate('/signup/agent')}>Get Started</Button>
+            <Button variant="outline" className="rounded-full" onClick={() => navigate('/demo')}>Contact sales</Button>
+            <Button className="rounded-full" onClick={() => navigate('/signup/agent')}>Go to my account</Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>

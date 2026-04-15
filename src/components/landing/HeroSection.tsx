@@ -1,79 +1,127 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, BellRing, CalendarClock, Handshake, MessageSquare, Milestone } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 
 interface HeroSectionProps {
   onPrimaryCta: () => void;
   onSecondaryCta: () => void;
 }
 
-const floatingCards = [
-  { icon: Handshake, title: 'Jordan Brand Renewal', meta: '$280k • In review', x: '-12%', y: '10%' },
-  { icon: CalendarClock, title: 'Media Day Deadline', meta: 'Due in 18h', x: '58%', y: '-6%' },
-  { icon: MessageSquare, title: 'Canvas Thread', meta: '4 new updates', x: '64%', y: '60%' },
-  { icon: BellRing, title: 'Obligations Alert', meta: '2 approvals blocked', x: '-4%', y: '70%' },
+const exploreTiles = [
+  'Deal Pipeline',
+  'Brand Campaigns',
+  'Athlete CRM',
+  'Contract Hub',
+  'Travel Ops',
+  'AI Assistant',
+  'AI Agents',
+  'Workflow Builder',
+  'Automations',
+];
+
+const boardRows = [
+  ['Nike Renewal', 'In Review', 'Apr 18', 'High'],
+  ['Off-season Media', 'Ready', 'Apr 21', 'Medium'],
+  ['Draft Weekend', 'Blocked', 'Apr 23', 'High'],
+  ['Charity Event', 'Ready', 'Apr 29', 'Low'],
+  ['Adidas Shoot', 'In Review', 'May 02', 'Medium'],
 ];
 
 export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.35)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.35)_1px,transparent_1px)] bg-[size:72px_72px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--accent)/0.18),transparent_38%),radial-gradient(circle_at_88%_20%,hsl(var(--accent)/0.12),transparent_35%)]" />
+    <section className="relative overflow-hidden border-b border-border bg-surface/30">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.4)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.4)_1px,transparent_1px)] bg-[size:96px_96px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,hsl(var(--accent)/0.22),transparent_40%)]" />
 
-      <div className="container relative px-4 md:px-6 py-16 md:py-24 lg:py-28">
-        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
-          <div>
-            <Badge className="rounded-full border-accent/35 bg-accent/15 text-foreground"><Milestone className="h-3.5 w-3.5 mr-1" /> Athlete Operations System</Badge>
-            <h1 className="mt-6 text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-3xl">
-              The premium control layer for modern sports representation.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              Run deals, communication, deliverables, and athlete visibility in one shared operating system built for high-performance teams.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button className="rounded-full px-6 h-12" onClick={onPrimaryCta}>Choose your path <ArrowRight className="h-4 w-4 ml-1" /></Button>
-              <Button variant="outline" className="rounded-full px-6 h-12" onClick={onSecondaryCta}>Request demo</Button>
-              <Button variant="ghost" className="rounded-full px-6 h-12" onClick={() => window.location.assign('/waitlist')}>Join waitlist</Button>
-            </div>
+      <div className="container relative px-4 md:px-6 py-14 md:py-20 lg:py-24">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="inline-flex items-center rounded-full border border-border bg-background/80 px-4 py-1.5 text-sm text-muted-foreground shadow-sm">
+            <Sparkles className="mr-2 h-3.5 w-3.5 text-accent" />
+            Athlon Agent • AI-powered sports operations platform
+          </p>
+
+          <h1 className="mt-7 text-5xl leading-[1.02] md:text-7xl lg:text-8xl">
+            Outperform the market with the
+            <span className="mt-2 block bg-gradient-to-r from-primary via-accent to-info bg-clip-text text-transparent">
+              best athlete ops platform
+            </span>
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+            Scale deal execution, athlete communication, and campaign delivery from one unified command center built for modern agencies.
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button className="h-12 rounded-full px-7" onClick={onPrimaryCta}>
+              Get started
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+            <Button variant="outline" className="h-12 rounded-full px-7" onClick={onSecondaryCta}>
+              Book a demo
+            </Button>
           </div>
 
-          <div className="relative min-h-[420px]">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="relative z-20 rounded-3xl border border-border bg-card p-5 shadow-xl"
-            >
-              <div className="rounded-2xl border border-border bg-surface p-4">
-                <div className="flex items-center justify-between">
-                  <p className="font-semibold">Athlon Command Canvas</p>
-                  <Badge className="bg-accent/25 text-foreground rounded-full">Live</Badge>
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  {['Deal Pipeline', 'Roster Health', 'Campaign Calendar', 'Collaboration Notes'].map((item) => (
-                    <div key={item} className="rounded-xl border border-border bg-background p-3">
-                      <p className="font-medium">{item}</p>
-                      <p className="text-xs text-muted-foreground mt-1">Syncing in real time</p>
-                    </div>
-                  ))}
+          <p className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <CheckCircle2 className="h-4 w-4 text-accent" />
+            No credit card needed • Built for agents, athletes, and team ops
+          </p>
+        </div>
+
+        <div className="relative mx-auto mt-14 max-w-6xl lg:mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65 }}
+            className="mx-2 rounded-3xl border border-border bg-background/95 p-5 shadow-xl backdrop-blur"
+          >
+            <div className="rounded-2xl border border-border bg-card">
+              <div className="flex items-center justify-between border-b border-border px-5 py-3 text-sm">
+                <p className="font-semibold">Athlon Agent Workspace</p>
+                <span className="rounded-full bg-accent/20 px-2 py-1 text-xs">Live sync</span>
+              </div>
+
+              <div className="overflow-x-auto px-5 pb-5 pt-4">
+                <div className="min-w-[620px]">
+                  <div className="grid grid-cols-[2fr_1fr_1fr_1fr] rounded-lg bg-surface px-4 py-2 text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                    <span>Campaign</span>
+                    <span>Status</span>
+                    <span>Deadline</span>
+                    <span>Priority</span>
+                  </div>
+                  <div className="mt-2 space-y-2">
+                    {boardRows.map((row) => (
+                      <div key={row[0]} className="grid grid-cols-[2fr_1fr_1fr_1fr] rounded-lg border border-border px-4 py-2.5 text-sm">
+                        <span className="font-medium">{row[0]}</span>
+                        <span className="text-muted-foreground">{row[1]}</span>
+                        <span>{row[2]}</span>
+                        <span>{row[3]}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
+          </motion.div>
 
-            {floatingCards.map((item, index) => (
-              <motion.div
-                key={item.title}
-                className="absolute z-10 w-56 rounded-xl border border-border bg-background/95 p-3 shadow-lg"
-                style={{ left: item.x, top: item.y }}
-                animate={{ y: [0, index % 2 === 0 ? -8 : 10, 0] }}
-                transition={{ duration: 6 + index, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <div className="flex items-center gap-2 text-sm font-medium"><item.icon className="h-4 w-4 text-accent" /> {item.title}</div>
-                <p className="text-xs text-muted-foreground mt-1">{item.meta}</p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.aside
+            initial={{ opacity: 0, x: 25 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative mx-auto mt-5 w-full max-w-sm rounded-3xl border border-border bg-card/95 p-4 shadow-lg lg:absolute lg:-right-2 lg:top-12 lg:mt-0"
+          >
+            <p className="text-center text-base font-medium">What would you like to launch?</p>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {exploreTiles.map((tile) => (
+                <div key={tile} className="rounded-xl border border-border bg-background p-2 text-center text-xs font-medium">
+                  {tile}
+                </div>
+              ))}
+            </div>
+            <Button className="mt-4 w-full rounded-full" onClick={onPrimaryCta}>
+              Start with Athlon
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </motion.aside>
         </div>
       </div>
     </section>
