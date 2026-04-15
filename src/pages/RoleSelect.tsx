@@ -2,6 +2,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AuthMode, getStoredRole, setStoredRole, UserRole } from '@/lib/auth-flow';
+import { Logo } from '@/components/brand/Logo';
 
 function isAuthMode(value: string | null): value is AuthMode {
   return value === 'signup' || value === 'login';
@@ -21,11 +22,14 @@ export default function RoleSelect() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-2xl rounded-3xl border border-border bg-card p-6 md:p-8 shadow-lg">
+        <Link to="/" aria-label="Athlon home" className="mb-5 inline-flex items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85">
+          <Logo size="md" priority />
+        </Link>
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-5">
           <ArrowLeft className="h-4 w-4" /> Back to landing page
         </Link>
 
-        <p className="text-sm uppercase tracking-[0.12em] text-muted-foreground">Athlon {mode === 'signup' ? 'Onboarding' : 'Sign in'}</p>
+        <p className="text-sm uppercase tracking-[0.12em] text-muted-foreground">{mode === 'signup' ? 'Onboarding' : 'Sign in'}</p>
         <h1 className="text-3xl md:text-4xl mt-2">Choose your portal</h1>
         <p className="text-muted-foreground mt-3">Select your path so Athlon can route and personalize your experience.</p>
 

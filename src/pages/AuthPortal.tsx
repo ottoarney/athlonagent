@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { getStoredRole, isUserRole, setStoredRole, UserRole } from '@/lib/auth-flow';
 import { isAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
 import { toast } from 'sonner';
+import { Logo } from '@/components/brand/Logo';
 
 export default function AuthPortal() {
   const navigate = useNavigate();
@@ -64,6 +65,13 @@ export default function AuthPortal() {
           <div className="relative overflow-hidden border-b lg:border-b-0 lg:border-r border-border p-8 md:p-10">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--accent)/0.18),transparent_40%)]" />
             <div className="relative space-y-6">
+              <Link
+                to="/"
+                aria-label="Athlon home"
+                className="inline-flex w-fit items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85"
+              >
+                <Logo size="md" priority />
+              </Link>
               <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-4 w-4" /> Back to Athlon
               </Link>
@@ -87,6 +95,13 @@ export default function AuthPortal() {
                 Supabase env vars are missing. Configure <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> to enable live auth.
               </div>
             )}
+            <Link
+              to="/"
+              aria-label="Athlon home"
+              className="mb-6 inline-flex w-fit items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85 lg:hidden"
+            >
+              <Logo size="md" />
+            </Link>
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-semibold">{safeMode === 'signup' ? 'Create account' : 'Sign in'}</h2>
               <Button variant="ghost" className="capitalize" onClick={() => navigate(`/${safeMode}/${selectedRole === 'agent' ? 'athlete' : 'agent'}`)}>
