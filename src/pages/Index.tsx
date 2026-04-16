@@ -42,7 +42,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-[#f3f4f6] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.04)] backdrop-blur-xl">
         <div className="container px-4 md:px-6 h-20 flex items-center justify-between">
           <Link
             to="/"
@@ -52,16 +52,16 @@ export default function Index() {
             <Logo size="md" priority />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6 text-sm text-muted-foreground">
+          <nav className="hidden lg:flex items-center gap-6 text-sm text-[#6b7280]">
             {['#pathways', '#features'].map((item) => (
-              <a key={item} href={item} className="hover:text-foreground transition-colors">{item === '#pathways' ? 'Pathways' : 'Product'}</a>
+              <a key={item} href={item} className="transition-colors hover:text-[#111827]">{item === '#pathways' ? 'Pathways' : 'Product'}</a>
             ))}
-            <button className="hover:text-foreground transition-colors" onClick={() => beginAuth('signup')}>See Platform</button>
+            <button className="transition-colors hover:text-[#111827]" onClick={() => beginAuth('signup')}>See Platform</button>
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button variant="outline" className="rounded-full" onClick={() => beginAuth('login')}>Sign In</Button>
-            <Button className="rounded-full" onClick={() => beginAuth('signup')}>Get Started</Button>
+            <Button variant="outline" className="rounded-full border-[#d1d5db] text-[#374151]" onClick={() => beginAuth('login')}>Sign In</Button>
+            <Button className="rounded-full bg-[#16a34a] text-white hover:bg-[#16a34a]/95" onClick={() => beginAuth('signup')}>Get Started</Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>
@@ -81,6 +81,15 @@ export default function Index() {
 
       <main>
         <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
+        <div className="border-t border-[#f3f4f6] bg-[#f9fafb]">
+          <div className="container flex items-center justify-center gap-3 px-4 py-3 text-center md:px-6">
+            <span aria-hidden="true" className="text-sm">🏈</span>
+            <p className="text-[0.75rem] uppercase tracking-[0.1em] text-[#9ca3af]">
+              Trusted by agents representing NFL · NBA · NIL athletes
+            </p>
+            <span aria-hidden="true" className="text-sm">🏀</span>
+          </div>
+        </div>
         <RolePathSection
           onSelectSignup={routeWithRole}
           onSelectLogin={routeWithRole}
