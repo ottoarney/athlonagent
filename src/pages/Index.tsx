@@ -11,7 +11,7 @@ import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
 import { ChatFeaturePreview } from '@/components/landing/ChatFeaturePreview';
-import { setStoredRole } from '@/lib/auth-flow';
+import { AuthMode, getAuthRoute, getRoleSelectRoute, setStoredRole, UserRole } from '@/lib/auth-flow';
 import { Logo } from '@/components/brand/Logo';
 
 const faqs = [
@@ -21,15 +21,24 @@ const faqs = [
   ['How does collaboration work?', 'Conversations, pinned updates, reminders, files, and task context live in one workspace thread instead of scattered apps.'],
 ];
 
-function routeWithRole(path: string, navigate: ReturnType<typeof useNavigate>) {
-  const role = path.includes('athlete') ? 'athlete' : 'agent';
-  setStoredRole(role);
-  navigate(path);
-}
-
 export default function Index() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const beginAuth = (mode: AuthMode, role?: UserRole) => {
+    if (role) {
+      setStoredRole(role);
+      navigate(getAuthRoute(mode, role));
+      return;
+    }
+
+    navigate(getRoleSelectRoute(mode));
+  };
+
+  const routeWithRole = (path: string) => {
+    const role = path.includes('athlete') ? 'athlete' : 'agent';
+    const mode = path.includes('/login') ? 'login' : 'signup';
+    beginAuth(mode, role);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -47,12 +56,12 @@ export default function Index() {
             {['#pathways', '#features'].map((item) => (
               <a key={item} href={item} className="hover:text-foreground transition-colors">{item === '#pathways' ? 'Pathways' : 'Product'}</a>
             ))}
-            <a href="/demo" className="hover:text-foreground">Demo</a>
+            <button className="hover:text-foreground transition-colors" onClick={() => beginAuth('signup')}>See Platform</button>
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button variant="outline" className="rounded-full" onClick={() => navigate('/demo')}>Contact sales</Button>
-            <Button className="rounded-full" onClick={() => navigate('/signup/agent')}>Go to my account</Button>
+            <Button variant="outline" className="rounded-full" onClick={() => beginAuth('login')}>Sign In</Button>
+            <Button className="rounded-full" onClick={() => beginAuth('signup')}>Get Started</Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>
@@ -62,24 +71,28 @@ export default function Index() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
-            <Button variant="outline" onClick={() => routeWithRole('/signup/agent', navigate)}>Agent signup</Button>
-            <Button variant="outline" onClick={() => routeWithRole('/signup/athlete', navigate)}>Athlete signup</Button>
-            <Button variant="outline" onClick={() => routeWithRole('/login/agent', navigate)}>Sign in</Button>
-            <Button variant="outline" onClick={() => navigate('/demo')}>Request demo</Button>
-            <Button variant="outline" onClick={() => navigate('/waitlist')}>Join waitlist</Button>
+            <Button variant="outline" onClick={() => beginAuth('signup', 'agent')}>Agent / Agency</Button>
+            <Button variant="outline" onClick={() => beginAuth('signup', 'athlete')}>Athlete</Button>
+            <Button variant="outline" onClick={() => beginAuth('login')}>Sign In</Button>
+            <Button variant="outline" onClick={() => beginAuth('signup')}>Get Started</Button>
           </div>
         )}
       </header>
 
       <main>
-        <HeroSection onPrimaryCta={() => document.getElementById('pathways')?.scrollIntoView({ behavior: 'smooth' })} onSecondaryCta={() => navigate('/demo')} />
-        <RolePathSection onSelectSignup={(path) => routeWithRole(path, navigate)} onSelectLogin={(path) => routeWithRole(path, navigate)} />
+        <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
+        <RolePathSection
+          onSelectSignup={routeWithRole}
+          onSelectLogin={routeWithRole}
+          onSeePlatform={() => beginAuth('signup')}
+          onJoinNow={() => beginAuth('signup')}
+        />
         <TrustMarquee />
         <ProductShowcase />
         <ChatFeaturePreview />
         <AgentAthleteToggle />
         <SocialProofTestimonials />
-        <PricingTierSection />
+        <PricingTierSection onTierCta={beginAuth} />
 
         <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
           <h2 className="text-3xl md:text-5xl">Frequently asked questions</h2>
@@ -103,11 +116,10 @@ export default function Index() {
             <p className="text-muted-foreground">Premium sports-agent and athlete operations platform.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/signup/agent" className="underline">Agent signup</Link>
-            <Link to="/signup/athlete" className="underline">Athlete signup</Link>
-            <Link to="/login/agent" className="underline">Sign in</Link>
-            <Link to="/demo" className="underline">Request demo</Link>
-            <Link to="/waitlist" className="underline">Join waitlist</Link>
+            <button className="underline" onClick={() => beginAuth('signup', 'agent')}>Agent signup</button>
+            <button className="underline" onClick={() => beginAuth('signup', 'athlete')}>Athlete signup</button>
+            <button className="underline" onClick={() => beginAuth('login')}>Sign in</button>
+            <button className="underline" onClick={() => beginAuth('signup')}>Start free</button>
           </div>
         </div>
       </footer>

@@ -26,3 +26,11 @@ export function setStoredRole(role: UserRole) {
 export function getAuthRoute(mode: AuthMode, role: UserRole) {
   return `/${mode}/${role}`;
 }
+
+export function getRoleSelectRoute(mode: AuthMode = 'signup') {
+  return `/auth?mode=${mode}`;
+}
+
+export function getDashboardRoute(role: UserRole) {
+  return role === 'agent' ? '/dashboard' : '/athlete-dashboard';
+}

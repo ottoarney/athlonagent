@@ -1,5 +1,6 @@
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AuthMode, UserRole } from '@/lib/auth-flow';
 
 const pricingTiers = [
   {
@@ -9,6 +10,8 @@ const pricingTiers = [
     description: 'For boutique agencies getting organized with AI-assisted workflows.',
     features: ['Deal tracking + tasks', 'Athlete communication hub', 'Email support'],
     cta: 'Start free trial',
+    mode: 'signup' as AuthMode,
+    role: 'agent' as UserRole,
     highlighted: false,
   },
   {
@@ -18,6 +21,8 @@ const pricingTiers = [
     description: 'For growth-stage teams managing high-volume campaigns and deals.',
     features: ['Everything in Starter', 'Automation builder', 'Advanced analytics + reports'],
     cta: 'Choose Pro',
+    mode: 'signup' as AuthMode,
+    role: 'agent' as UserRole,
     highlighted: true,
   },
   {
@@ -27,11 +32,17 @@ const pricingTiers = [
     description: 'For large agencies and teams that need custom governance and onboarding.',
     features: ['SSO + role provisioning', 'Priority support + success manager', 'Custom integrations'],
     cta: 'Talk to sales',
+    mode: 'login' as AuthMode,
+    role: 'agent' as UserRole,
     highlighted: false,
   },
 ];
 
-export function PricingTierSection() {
+interface PricingTierSectionProps {
+  onTierCta: (mode: AuthMode, role: UserRole) => void;
+}
+
+export function PricingTierSection({ onTierCta }: PricingTierSectionProps) {
   return (
     <section id="pricing" className="container px-4 md:px-6 pb-16 md:pb-24">
       <div className="mx-auto max-w-3xl text-center">
@@ -66,7 +77,11 @@ export function PricingTierSection() {
               ))}
             </ul>
 
-            <Button variant={tier.highlighted ? 'default' : 'outline'} className="mt-6 w-full rounded-full">
+            <Button
+              variant={tier.highlighted ? 'default' : 'outline'}
+              className="mt-6 w-full rounded-full"
+              onClick={() => onTierCta(tier.mode, tier.role)}
+            >
               {tier.cta}
             </Button>
           </article>

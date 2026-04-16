@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { UserRole } from '@/lib/auth-flow';
+import { getDashboardRoute, setStoredRole, UserRole } from '@/lib/auth-flow';
 import { getSession, upsertProfile } from '@/lib/auth-service';
 import { Logo } from '@/components/brand/Logo';
 
@@ -11,13 +11,14 @@ export default function RoleOnboarding() {
 
   const chooseRole = async (role: UserRole) => {
     setSaving(true);
+    setStoredRole(role);
     const { session } = await getSession();
 
     if (session?.user?.id) {
       await upsertProfile(session.user.id, role, session.user.user_metadata?.full_name as string | undefined);
     }
 
-    navigate(role === 'agent' ? '/dashboard' : '/dashboard?view=athlete');
+    navigate(getDashboardRoute(role));
   };
 
   return (

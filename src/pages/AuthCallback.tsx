@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSession, resolveUserRole } from '@/lib/auth-service';
+import { getDashboardRoute } from '@/lib/auth-flow';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function AuthCallback() {
         return;
       }
 
-      navigate(role === 'agent' ? '/dashboard' : '/dashboard?view=athlete', { replace: true });
+      navigate(getDashboardRoute(role), { replace: true });
     };
 
     void handle();

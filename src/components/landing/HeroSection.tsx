@@ -33,33 +33,28 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
       <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.4)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.4)_1px,transparent_1px)] bg-[size:96px_96px]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,hsl(var(--accent)/0.22),transparent_40%)]" />
 
-      <div className="container relative px-4 md:px-6 py-14 md:py-20 lg:py-24">
-        <div className="mx-auto max-w-4xl text-center">
+      <div className="container relative px-4 md:px-6 py-16 md:py-24 lg:py-28">
+        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           <p className="inline-flex items-center rounded-full border border-border bg-background/80 px-4 py-1.5 text-sm text-muted-foreground shadow-sm">
             <Sparkles className="mr-2 h-3.5 w-3.5 text-accent" />
             Athlon Agent • AI-powered sports operations platform
           </p>
 
-          <h1 className="mx-auto mt-7 w-full max-w-[56rem] text-center font-bold leading-[1.08] tracking-tight text-foreground">
-            <span className="block whitespace-nowrap text-[clamp(0.95rem,4.4vw,4.25rem)]">
-              Outmanage the competition
-            </span>
-            <span className="mt-1 block whitespace-nowrap text-[clamp(0.62rem,3.35vw,3.35rem)] md:mt-2">
-              with the CRM platform built for sports agents.
-            </span>
+          <h1 className="mx-auto mt-7 max-w-3xl text-balance text-[clamp(2rem,6vw,4.3rem)] font-bold leading-[1.05] tracking-tight text-foreground">
+            Outmanage the competition with the CRM built for sports agents.
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Scale deal execution, athlete communication, and campaign delivery from one unified command center built for modern agencies.
+            Manage athletes, deals, deadlines, content, and communication in one place — with a streamlined athlete view that keeps everyone aligned.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button className="h-12 rounded-full px-7" onClick={onPrimaryCta}>
-              Get started
+              Get Started
               <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
             <Button variant="outline" className="h-12 rounded-full px-7" onClick={onSecondaryCta}>
-              Book a demo
+              Sign In
             </Button>
           </div>
 
