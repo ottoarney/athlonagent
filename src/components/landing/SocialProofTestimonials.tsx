@@ -8,8 +8,6 @@ type Testimonial = {
   accent: 'accent' | 'warning';
 };
 
-const agencyReferences = ['CAA', 'Wasserman / THE·TEAM', 'Excel Sports Management', 'Klutch Sports Group', 'Athletes First'];
-
 const testimonials: Testimonial[] = [
   {
     name: 'A. Rivera',
@@ -145,22 +143,6 @@ export function SocialProofTestimonials() {
             <p className="mt-4 text-base text-muted-foreground md:text-lg">
               Athlon Agent is designed for modern sports agencies, athlete reps, and high-performance teams that need
               structure, clarity, and execution as operations scale.
-            </p>
-          </div>
-
-          <div className="mt-8 rounded-2xl border border-border bg-primary/95 p-4 md:p-5">
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
-              {agencyReferences.map((agency) => (
-                <span
-                  key={agency}
-                  className="rounded-full border border-primary-foreground/15 bg-primary-foreground/5 px-3 py-1.5 text-xs font-medium text-primary-foreground/85 md:text-sm"
-                >
-                  {agency}
-                </span>
-              ))}
-            </div>
-            <p className="mt-4 text-center text-[11px] text-primary-foreground/45">
-              Agency names shown for industry context only. Not endorsements or affiliations.
             </p>
           </div>
 
