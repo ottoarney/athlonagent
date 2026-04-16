@@ -214,3 +214,23 @@
     transform: translateX(-50%);
   }
 }
+
+@layer components {
+  .animate-athlon-vertical-marquee {
+    animation: athlon-vertical-marquee 32s linear infinite;
+  }
+
+  .animate-athlon-vertical-marquee-reverse {
+    animation-direction: reverse;
+    animation-duration: 36s;
+  }
+}
+
+@keyframes athlon-vertical-marquee {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
