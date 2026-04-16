@@ -35,13 +35,15 @@ export function DealsPipeline() {
         {/* Pipeline stages header */}
         <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
           {stages.map((stage, index) => {
-            const count = deals.filter(d => d.stage === stage.key).length;
+            const count = deals.filter((deal) => deal.stage === stage.key).length;
             return (
               <div key={stage.key} className="flex items-center">
-                <div className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap",
-                  stageColors[stage.key]
-                )}>
+                <div
+                  className={cn(
+                    'px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap',
+                    stageColors[stage.key],
+                  )}
+                >
                   {stage.label} ({count})
                 </div>
                 {index < stages.length - 1 && (
@@ -56,8 +58,10 @@ export function DealsPipeline() {
         <div className="space-y-3">
           {deals.slice(0, 3).map((deal) => {
             const athlete = getAthlete(deal.athleteId);
-            const pendingDeliverables = deal.deliverables.filter(d => !d.completed).length;
-            
+            const pendingDeliverables = deal.deliverables.filter(
+              (deliverable) => !deliverable.completed,
+            ).length;
+
             return (
               <div
                 key={deal.id}
@@ -69,27 +73,29 @@ export function DealsPipeline() {
                     {deal.brand.slice(0, 2).toUpperCase()}
                   </span>
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <h4 className="font-semibold text-sm">{deal.brand}</h4>
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className={cn("text-[10px] capitalize", stageColors[deal.stage])}
                     >
                       {deal.stage}
                     </Badge>
                   </div>
+                  {/* Potential improvement: provide a fallback label when athlete is missing to avoid blank UI text. */}
                   <p className="text-xs text-muted-foreground">
                     {athlete?.name}
                     {pendingDeliverables > 0 && (
                       <span className="ml-2 text-warning">
-                        • {pendingDeliverables} deliverable{pendingDeliverables > 1 ? 's' : ''} pending
+                        • {pendingDeliverables} deliverable
+                        {pendingDeliverables > 1 ? 's' : ''} pending
                       </span>
                     )}
                   </p>
                 </div>
-                
+
                 <div className="text-right">
                   <p className="font-semibold text-sm">{formatCurrency(deal.value)}</p>
                   {deal.nextAction && (
