@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Index from './pages/Index';
 import DashboardHome from './pages/DashboardHome';
+import AthleteDashboard from './pages/AthleteDashboard';
 import Athletes from './pages/Athletes';
 import Tasks from './pages/Tasks';
 import Deals from './pages/Deals';
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/waitlist" element={<Waitlist />} />
 
           <Route path="/dashboard" element={<DashboardHome />} />
+          <Route path="/athlete-dashboard" element={<AthleteDashboard />} />
           <Route path="/athletes" element={<Athletes />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/deals" element={<Deals />} />

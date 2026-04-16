@@ -6,9 +6,11 @@ import { rolePaths } from './types';
 interface RolePathSectionProps {
   onSelectSignup: (path: string) => void;
   onSelectLogin: (path: string) => void;
+  onSeePlatform: () => void;
+  onJoinNow: () => void;
 }
 
-export function RolePathSection({ onSelectSignup, onSelectLogin }: RolePathSectionProps) {
+export function RolePathSection({ onSelectSignup, onSelectLogin, onSeePlatform, onJoinNow }: RolePathSectionProps) {
   return (
     <section id="pathways" className="container px-4 md:px-6 py-14 md:py-20">
       <div className="flex items-end justify-between flex-wrap gap-3">
@@ -16,7 +18,10 @@ export function RolePathSection({ onSelectSignup, onSelectLogin }: RolePathSecti
           <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Choose your path</p>
           <h2 className="text-3xl md:text-5xl mt-3">Tailored access from the first click.</h2>
         </div>
-        <div className="text-sm text-muted-foreground">Also available: <a className="underline" href="/demo">Request demo</a> • <a className="underline" href="/waitlist">Join waitlist</a></div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" className="rounded-full" onClick={onSeePlatform}>See Platform</Button>
+          <Button className="rounded-full" onClick={onJoinNow}>Join Now</Button>
+        </div>
       </div>
 
       <div className="mt-8 grid lg:grid-cols-2 gap-4">

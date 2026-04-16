@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { getStoredRole, isUserRole, setStoredRole, UserRole } from '@/lib/auth-flow';
+import { getDashboardRoute, getStoredRole, isUserRole, setStoredRole, UserRole } from '@/lib/auth-flow';
 import { isAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
 import { toast } from 'sonner';
 import { Logo } from '@/components/brand/Logo';
@@ -21,13 +21,19 @@ export default function AuthPortal() {
   const selectedRole: UserRole = isUserRole(role) ? role : getStoredRole() ?? 'agent';
 
   const redirectAfterAuth = (resolvedRole: UserRole) => {
-    const target = resolvedRole === 'agent' ? '/dashboard' : '/dashboard?view=athlete';
-    navigate(target);
+    navigate(getDashboardRoute(resolvedRole));
   };
 
   const handleGoogle = async () => {
     setLoading(true);
     try {
+      if (!isAuthEnabled()) {
+        setStoredRole(selectedRole);
+        toast.success('Demo sign-in complete.');
+        redirectAfterAuth(selectedRole);
+        return;
+      }
+
       await signInWithGoogle(selectedRole);
       toast.success('Redirecting to Google…');
     } catch (error) {
@@ -43,6 +49,12 @@ export default function AuthPortal() {
 
     try {
       setStoredRole(selectedRole);
+      if (!isAuthEnabled()) {
+        toast.success(safeMode === 'signup' ? 'Demo account created.' : 'Demo sign-in complete.');
+        redirectAfterAuth(selectedRole);
+        return;
+      }
+
       if (safeMode === 'signup') {
         await signUpWithPassword(email, password, selectedRole);
         toast.success('Account created. Check your email to confirm, then sign in.');
@@ -92,7 +104,7 @@ export default function AuthPortal() {
           <div className="p-8 md:p-10">
             {!isAuthEnabled() && (
               <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
-                Supabase env vars are missing. Configure <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> to enable live auth.
+                Supabase env vars are missing, so this page is running in demo auth mode with role-aware dashboard routing.
               </div>
             )}
             <Link
@@ -110,7 +122,7 @@ export default function AuthPortal() {
             </div>
 
             <div className="space-y-3">
-              <Button disabled={loading || !isAuthEnabled()} onClick={handleGoogle} className="w-full h-11">
+              <Button disabled={loading} onClick={handleGoogle} className="w-full h-11">
                 Continue with Google
               </Button>
               <div className="relative text-center text-xs text-muted-foreground py-2">
@@ -120,7 +132,7 @@ export default function AuthPortal() {
               <form onSubmit={handleSubmit} className="space-y-3">
                 <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="work@email.com" />
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="••••••••" />
-                <Button disabled={loading || !isAuthEnabled()} className="w-full h-11" type="submit">
+                <Button disabled={loading} className="w-full h-11" type="submit">
                   {safeMode === 'signup' ? 'Create account' : 'Sign in'} <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
               </form>

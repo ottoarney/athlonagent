@@ -12,6 +12,7 @@ import { athletes, Athlete } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getStoredRole } from '@/lib/auth-flow';
 
 interface AppHeaderProps {
   selectedAthlete: Athlete | null;
@@ -22,6 +23,7 @@ interface AppHeaderProps {
 export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = false }: AppHeaderProps) {
   const [notificationCount] = useState(3);
   const navigate = useNavigate();
+  const isAthlete = getStoredRole() === 'athlete';
 
   return (
     <header className="h-16 bg-background border-b border-border flex items-center justify-between px-6">
@@ -38,70 +40,73 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
 
       {/* Right Side */}
       <div className="flex items-center gap-3">
-        {/* Create Button */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
-              <Plus className="h-4 w-4" />
-              Create
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem>New Task</DropdownMenuItem>
-            <DropdownMenuItem>New Event</DropdownMenuItem>
-            <DropdownMenuItem>New Deal</DropdownMenuItem>
-            <DropdownMenuItem>New Content</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>New Athlete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {!isAthlete && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
+                <Plus className="h-4 w-4" />
+                Create
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem>New Task</DropdownMenuItem>
+              <DropdownMenuItem>New Event</DropdownMenuItem>
+              <DropdownMenuItem>New Deal</DropdownMenuItem>
+              <DropdownMenuItem>New Content</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>New Athlete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
         {/* Athlete Switcher */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2 min-w-[140px] justify-between">
-              {selectedAthlete ? (
-                <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-medium">
-                    {selectedAthlete.initials}
+        {!isAthlete && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2 min-w-[140px] justify-between">
+                {selectedAthlete ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-6 w-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-medium">
+                      {selectedAthlete.initials}
+                    </div>
+                    <span className="truncate">{selectedAthlete.name.split(' ')[0]}</span>
                   </div>
-                  <span className="truncate">{selectedAthlete.name.split(' ')[0]}</span>
-                </div>
-              ) : (
-                <span>All Athletes</span>
-              )}
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem onClick={() => onAthleteChange(null)}>
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                  <span className="text-xs font-medium">All</span>
-                </div>
-                <span>All Athletes</span>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {athletes.map((athlete) => (
-              <DropdownMenuItem 
-                key={athlete.id} 
-                onClick={() => onAthleteChange(athlete)}
-                className={cn(selectedAthlete?.id === athlete.id && "bg-accent/10")}
-              >
+                ) : (
+                  <span>All Athletes</span>
+                )}
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={() => onAthleteChange(null)}>
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
-                    <span className="text-xs font-medium">{athlete.initials}</span>
+                  <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                    <span className="text-xs font-medium">All</span>
                   </div>
-                  <div>
-                    <div className="font-medium">{athlete.name}</div>
-                    <div className="text-xs text-muted-foreground">{athlete.sport}</div>
-                  </div>
+                  <span>All Athletes</span>
                 </div>
               </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              {athletes.map((athlete) => (
+                <DropdownMenuItem
+                  key={athlete.id}
+                  onClick={() => onAthleteChange(athlete)}
+                  className={cn(selectedAthlete?.id === athlete.id && 'bg-accent/10')}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
+                      <span className="text-xs font-medium">{athlete.initials}</span>
+                    </div>
+                    <div>
+                      <div className="font-medium">{athlete.name}</div>
+                      <div className="text-xs text-muted-foreground">{athlete.sport}</div>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
