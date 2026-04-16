@@ -9,6 +9,7 @@ import { TrustMarquee } from '@/components/landing/TrustMarquee';
 import { ProductShowcase } from '@/components/landing/ProductShowcase';
 import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
+import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
 import { ChatFeaturePreview } from '@/components/landing/ChatFeaturePreview';
 import { setStoredRole } from '@/lib/auth-flow';
 import { Logo } from '@/components/brand/Logo';
@@ -77,6 +78,7 @@ export default function Index() {
         <ProductShowcase />
         <ChatFeaturePreview />
         <AgentAthleteToggle />
+        <SocialProofTestimonials />
         <PricingTierSection />
 
         <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
