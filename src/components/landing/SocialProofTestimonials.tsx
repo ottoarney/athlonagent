@@ -135,12 +135,10 @@ function TestimonialColumn({
 export function SocialProofTestimonials() {
   return (
     <section className="relative overflow-hidden py-20 md:py-24">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--accent)/0.10),transparent_55%)]" />
-
       <div className="container relative px-4 md:px-6">
         <div className="rounded-3xl border border-border/70 bg-gradient-to-b from-surface to-background p-6 md:p-10">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium tracking-[0.12em] text-accent">
+            <span className="inline-flex items-center rounded-full border border-black/30 bg-accent/10 px-3 py-1 text-xs font-medium tracking-[0.12em] text-[#000000]">
               Trusted by the people moving sports forward
             </span>
             <h2 className="mt-4 text-3xl font-semibold md:text-5xl">Trusted by elite representation teams</h2>
@@ -151,10 +149,7 @@ export function SocialProofTestimonials() {
           </div>
 
           <div className="mt-8 rounded-2xl border border-border bg-primary/95 p-4 md:p-5">
-            <p className="text-center text-xs uppercase tracking-[0.14em] text-primary-foreground/60">
-              Designed for the standard set by top sports agencies
-            </p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 md:gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
               {agencyReferences.map((agency) => (
                 <span
                   key={agency}
