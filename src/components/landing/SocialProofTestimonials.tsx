@@ -73,6 +73,16 @@ const columns = [
   testimonials.filter((_, index) => index % 3 === 2),
 ];
 
+function getAvatarText(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.replace(/[^A-Za-z]/g, '').charAt(0))
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
+
 function TestimonialCard({ item }: { item: Testimonial }) {
   return (
     <article className="rounded-2xl border border-accent/20 bg-primary/95 p-4 text-primary-foreground shadow-[0_8px_24px_hsl(0_0%_0%_/_0.22)] backdrop-blur-sm">
@@ -80,13 +90,13 @@ function TestimonialCard({ item }: { item: Testimonial }) {
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              'flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-xs font-semibold',
+              'flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border text-[10px] font-semibold leading-none whitespace-nowrap',
               item.accent === 'accent'
                 ? 'border-accent/40 bg-accent/15 text-accent'
                 : 'border-warning/40 bg-warning/15 text-warning',
             )}
           >
-            {item.name}
+            {getAvatarText(item.name)}
           </div>
           <div>
             <p className="text-sm font-semibold leading-none">{item.name}</p>
