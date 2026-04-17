@@ -9,7 +9,6 @@ import { TrustMarquee } from '@/components/landing/TrustMarquee';
 import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
-import { ChatFeaturePreview } from '@/components/landing/ChatFeaturePreview';
 import { AuthMode, getAuthRoute, getRoleSelectRoute, setStoredRole, UserRole } from '@/lib/auth-flow';
 import { Logo } from '@/components/brand/Logo';
 
@@ -102,7 +101,6 @@ export default function Index() {
           onJoinNow={() => beginAuth('signup')}
         />
         <TrustMarquee />
-        <ChatFeaturePreview />
         <AgentAthleteToggle />
         <SocialProofTestimonials />
         <PricingTierSection onTierCta={beginAuth} />
