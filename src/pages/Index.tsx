@@ -6,7 +6,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { HeroSection } from '@/components/landing/HeroSection';
 import { RolePathSection } from '@/components/landing/RolePathSection';
 import { TrustMarquee } from '@/components/landing/TrustMarquee';
-import { ProductShowcase } from '@/components/landing/ProductShowcase';
 import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
@@ -53,9 +52,7 @@ export default function Index() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 text-sm text-[#6b7280]">
-            {['#pathways', '#features'].map((item) => (
-              <a key={item} href={item} className="transition-colors hover:text-[#111827]">{item === '#pathways' ? 'Pathways' : 'Product'}</a>
-            ))}
+            <a href="#pathways" className="transition-colors hover:text-[#111827]">Pathways</a>
             <button className="transition-colors hover:text-[#111827]" onClick={() => beginAuth('signup')}>See Platform</button>
           </nav>
 
@@ -97,7 +94,6 @@ export default function Index() {
           onJoinNow={() => beginAuth('signup')}
         />
         <TrustMarquee />
-        <ProductShowcase />
         <ChatFeaturePreview />
         <AgentAthleteToggle />
         <SocialProofTestimonials />
