@@ -14,10 +14,18 @@ import { AuthMode, getAuthRoute, getRoleSelectRoute, setStoredRole, UserRole } f
 import { Logo } from '@/components/brand/Logo';
 
 const faqs = [
-  ['Is Athlon built only for agents?', 'No — Athlon includes a dedicated athlete portal with role-based visibility and communication.'],
-  ['Does Athlon support Google sign-in?', 'Yes. Agent and athlete onboarding now support Google OAuth plus email/password fallback.'],
-  ['Can teams use Athlon for operations?', 'Yes. Team staff and ops workflows are supported through the same command + canvas model and can scale to role permissions.'],
-  ['How does collaboration work?', 'Conversations, pinned updates, reminders, files, and task context live in one workspace thread instead of scattered apps.'],
+  ['Is Athlon Agent only for sports agents?', 'Athlon Agent is built first for sports agents, agencies, and athlete managers. It can also support athletes on their side of the platform with a simpler dashboard for visibility, tasks, and communication.'],
+  ['What can I manage inside Athlon Agent?', 'You can manage athletes, tasks, schedules, deals, files, contracts, and day to day operations in one place. The goal is to replace scattered spreadsheets, notes, and disconnected tools.'],
+  ['Is there a free plan?', 'Yes. The Solo plan is free for users managing one athlete. It is a simple way to start using the platform before moving up to a larger roster.'],
+  ['What is included in the Roster plan?', 'The Roster plan is built for agents managing multiple athletes. It includes deal tracking, task management, calendar tools, file storage, athlete dashboards, and workflow support for growing operations.'],
+  ['Do you offer a plan for agencies?', 'Yes. The Command plan is built for agencies and larger teams. It includes multi-user access, role permissions, shared dashboards, and stronger operational visibility across a full roster.'],
+  ['Can athletes log in too?', 'Yes. Athletes can log in to view what is relevant to them. This can include schedules, tasks, updates, and selected deal information depending on account structure.'],
+  ['How does collaboration work?', 'Athlon Agent is designed for shared visibility across agents, teams, and athletes. Different users can access the right information based on their role and level of access.'],
+  ['Does Athlon Agent support Google sign in?', 'Yes. Google sign in is supported to make onboarding faster and simpler. The login flow should route each user to the dashboard that matches their role.'],
+  ['Who is Athlon Agent best for?', 'Athlon Agent is best for sports agents, athlete managers, and agencies that need a cleaner way to manage operations. It is especially useful for groups handling multiple athletes, brand deals, scheduling, and internal coordination.'],
+  ['Why use Athlon Agent instead of spreadsheets?', 'Spreadsheets can track information but they do not run operations well. Athlon Agent gives you structure, visibility, and a system built around athlete management.'],
+  ['Is Athlon Agent built for NIL workflows?', 'Yes. The platform is meant to support modern athlete operations including NIL related organization, deal flow, content planning, and communication.'],
+  ['Can teams or interns be added to the account?', 'Yes on higher tier plans. Agency users can add team members and assign access based on role so operations stay organized without giving everyone the same permissions.'],
 ];
 
 export default function Index() {
