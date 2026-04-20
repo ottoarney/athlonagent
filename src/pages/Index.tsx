@@ -4,7 +4,6 @@ import { ChevronDown, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { HeroSection } from '@/components/landing/HeroSection';
-import { RolePathSection } from '@/components/landing/RolePathSection';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
 import { AuthMode, getAuthRoute, setStoredRole } from '@/lib/auth-flow';
@@ -70,12 +69,6 @@ export default function Index() {
       <main>
         <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
         <SocialProofTestimonials />
-        <RolePathSection
-          onSelectSignup={() => beginAuth('signup')}
-          onSelectLogin={() => beginAuth('login')}
-          onSeePlatform={() => beginAuth('signup')}
-          onJoinNow={() => beginAuth('signup')}
-        />
         <PricingTierSection onTierCta={beginAuth} />
 
         <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
