@@ -85,15 +85,6 @@ export default function Index() {
 
       <main>
         <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
-        <div className="border-t border-[#f3f4f6] bg-[#f9fafb]">
-          <div className="container flex items-center justify-center gap-3 px-4 py-3 text-center md:px-6">
-            <span aria-hidden="true" className="text-sm">🏈</span>
-            <p className="text-[0.75rem] uppercase tracking-[0.1em] text-[#9ca3af]">
-              Trusted by agents representing NFL · NBA · NIL athletes
-            </p>
-            <span aria-hidden="true" className="text-sm">🏀</span>
-          </div>
-        </div>
         <RolePathSection
           onSelectSignup={routeWithRole}
           onSelectLogin={routeWithRole}
