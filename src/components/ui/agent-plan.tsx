@@ -13,126 +13,48 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 interface Subtask {
   id: string;
   title: string;
-  description: string;
   status: "completed" | "in-progress" | "pending" | "need-help" | "failed";
-  priority: "high" | "medium" | "low";
-  tools?: string[];
 }
 
 interface Task {
   id: string;
   title: string;
-  description: string;
   status: "completed" | "in-progress" | "pending" | "need-help" | "failed";
-  priority: "high" | "medium" | "low";
-  level: number;
-  dependencies: string[];
   subtasks: Subtask[];
 }
 
 const initialTasks: Task[] = [
   {
     id: "1",
-    title: "Athlete obligations dashboard",
-    description: "Centralize contracts, appearances, NIL activations, and renewal obligations.",
+    title: "Athlete obligations board",
     status: "in-progress",
-    priority: "high",
-    level: 0,
-    dependencies: [],
     subtasks: [
       {
         id: "1.1",
-        title: "Import active athlete obligations",
-        description: "Pull signed deal obligations and upcoming commitments for each athlete.",
+        title: "Load active obligations",
         status: "completed",
-        priority: "high",
-        tools: ["contracts", "athlete-records"],
       },
       {
         id: "1.2",
-        title: "Flag compliance deadlines",
-        description: "Surface deliverables due in the next 14 days so nothing gets missed.",
+        title: "Flag next 14-day deadlines",
         status: "in-progress",
-        priority: "high",
-        tools: ["deadline-rules", "calendar"],
-      },
-      {
-        id: "1.3",
-        title: "Escalate blocked obligations",
-        description: "Highlight dependencies that need athlete, brand, or legal follow-up.",
-        status: "need-help",
-        priority: "medium",
-        tools: ["task-routing", "notifications"],
       },
     ],
   },
   {
     id: "2",
     title: "Deal flow pipeline",
-    description: "Track opportunities from outreach to terms, approvals, and signature.",
-    status: "in-progress",
-    priority: "high",
-    level: 0,
-    dependencies: [],
+    status: "pending",
     subtasks: [
       {
         id: "2.1",
-        title: "Qualify new partnership opportunities",
-        description: "Score opportunities by fit, revenue potential, and brand alignment.",
+        title: "Qualify new brand opportunities",
         status: "pending",
-        priority: "high",
-        tools: ["deal-scoring", "agency-notes"],
       },
       {
         id: "2.2",
         title: "Track term sheet revisions",
-        description: "Keep version history visible to agents, coordinators, and legal contacts.",
         status: "pending",
-        priority: "medium",
-        tools: ["version-history", "contracts"],
-      },
-      {
-        id: "2.3",
-        title: "Prepare signing checklist",
-        description: "Confirm deliverables, billing terms, and kickoff dates before close.",
-        status: "pending",
-        priority: "high",
-        tools: ["checklists", "approvals"],
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Agency operations calendar",
-    description: "Coordinate travel, media, content shoots, and internal priorities in one view.",
-    status: "pending",
-    priority: "high",
-    level: 1,
-    dependencies: ["1", "2"],
-    subtasks: [
-      {
-        id: "3.1",
-        title: "Sync athlete and staff calendars",
-        description: "Unify schedules across reps, athletes, and support staff.",
-        status: "pending",
-        priority: "high",
-        tools: ["calendar-sync", "availability"],
-      },
-      {
-        id: "3.2",
-        title: "Set reminder windows",
-        description: "Create pre-event reminders for prep, travel, and deliverable due dates.",
-        status: "pending",
-        priority: "medium",
-        tools: ["alerts", "timeline"],
-      },
-      {
-        id: "3.3",
-        title: "Review weekly execution board",
-        description: "Run Monday ops reviews with live status across every athlete.",
-        status: "pending",
-        priority: "medium",
-        tools: ["ops-board"],
       },
     ],
   },
@@ -151,7 +73,6 @@ const statusClassName: Record<Task["status"], string> = {
 export default function Plan() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [expandedTasks, setExpandedTasks] = useState<string[]>(["1"]);
-  const [expandedSubtasks, setExpandedSubtasks] = useState<Record<string, boolean>>({});
 
   const prefersReducedMotion = useMemo(
     () => (typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false),
@@ -220,19 +141,6 @@ export default function Plan() {
     },
   };
 
-  const subtaskDetailsVariants = {
-    hidden: { opacity: 0, height: 0, overflow: "hidden" },
-    visible: {
-      opacity: 1,
-      height: "auto",
-      overflow: "visible",
-      transition: {
-        duration: 0.25,
-        ease: [0.2, 0.65, 0.3, 0.9],
-      },
-    },
-  };
-
   const statusBadgeVariants = {
     initial: { scale: 1 },
     animate: {
@@ -246,14 +154,6 @@ export default function Plan() {
 
   const toggleTaskExpansion = (taskId: string) => {
     setExpandedTasks((prev) => (prev.includes(taskId) ? prev.filter((id) => id !== taskId) : [...prev, taskId]));
-  };
-
-  const toggleSubtaskExpansion = (taskId: string, subtaskId: string) => {
-    const key = `${taskId}-${subtaskId}`;
-    setExpandedSubtasks((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
   };
 
   const toggleTaskStatus = (taskId: string) => {
@@ -296,7 +196,7 @@ export default function Plan() {
   };
 
   return (
-    <div className="h-full overflow-auto rounded-2xl border border-border/70 bg-card p-2 text-foreground shadow-sm">
+    <div className="h-full min-h-[520px] overflow-auto rounded-2xl border border-border/70 bg-card p-2 text-foreground shadow-sm">
       <motion.div
         className="overflow-hidden rounded-xl border border-accent/20 bg-background"
         initial={{ opacity: 0, y: 10 }}
@@ -357,33 +257,12 @@ export default function Plan() {
                         </AnimatePresence>
                       </motion.div>
 
-                      <motion.div
-                        className="flex min-w-0 flex-grow cursor-pointer items-center justify-between"
-                        onClick={() => toggleTaskExpansion(task.id)}
-                      >
+                      <motion.div className="flex min-w-0 flex-grow cursor-pointer items-center justify-between" onClick={() => toggleTaskExpansion(task.id)}>
                         <div className="mr-2 flex-1 truncate">
                           <span className={isCompleted ? "text-muted-foreground line-through" : ""}>{task.title}</span>
                         </div>
 
-                        <div className="flex flex-shrink-0 items-center space-x-2 text-xs">
-                          {task.dependencies.length > 0 && (
-                            <div className="mr-2 flex items-center">
-                              <div className="flex flex-wrap gap-1">
-                                {task.dependencies.map((dep, idx) => (
-                                  <motion.span
-                                    key={dep}
-                                    className="rounded border border-accent/20 bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-foreground shadow-sm"
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.2, delay: idx * 0.05 }}
-                                  >
-                                    depends on {dep}
-                                  </motion.span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
+                        <div className="flex flex-shrink-0 items-center text-xs">
                           <motion.span
                             className={`rounded px-1.5 py-0.5 ${statusClassName[task.status]}`}
                             variants={statusBadgeVariants}
@@ -403,14 +282,10 @@ export default function Plan() {
                           <div className="absolute bottom-0 left-[20px] top-0 border-l-2 border-dashed border-accent/30" />
                           <ul className="border-muted mb-1.5 ml-3 mr-2 mt-1 space-y-0.5">
                             {task.subtasks.map((subtask) => {
-                              const subtaskKey = `${task.id}-${subtask.id}`;
-                              const isSubtaskExpanded = expandedSubtasks[subtaskKey];
-
                               return (
                                 <motion.li
                                   key={subtask.id}
                                   className="group flex flex-col py-0.5 pl-6"
-                                  onClick={() => toggleSubtaskExpansion(task.id, subtask.id)}
                                   variants={subtaskVariants}
                                   initial="hidden"
                                   animate="visible"
@@ -462,45 +337,6 @@ export default function Plan() {
                                       {subtask.title}
                                     </span>
                                   </motion.div>
-
-                                  <AnimatePresence mode="wait">
-                                    {isSubtaskExpanded && (
-                                      <motion.div
-                                        className="text-muted-foreground mt-1 ml-1.5 overflow-hidden border-l border-dashed border-accent/30 pl-5 text-xs"
-                                        variants={subtaskDetailsVariants}
-                                        initial="hidden"
-                                        animate="visible"
-                                        exit="hidden"
-                                        layout
-                                      >
-                                        <p className="py-1">{subtask.description}</p>
-                                        {subtask.tools && subtask.tools.length > 0 && (
-                                          <div className="mb-1 mt-0.5 flex flex-wrap items-center gap-1.5">
-                                            <span className="font-medium text-muted-foreground">Workstreams:</span>
-                                            <div className="flex flex-wrap gap-1">
-                                              {subtask.tools.map((tool, idx) => (
-                                                <motion.span
-                                                  key={tool}
-                                                  className="rounded border border-accent/20 bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-foreground shadow-sm"
-                                                  initial={{ opacity: 0, y: -5 }}
-                                                  animate={{
-                                                    opacity: 1,
-                                                    y: 0,
-                                                    transition: {
-                                                      duration: 0.2,
-                                                      delay: idx * 0.05,
-                                                    },
-                                                  }}
-                                                >
-                                                  {tool}
-                                                </motion.span>
-                                              ))}
-                                            </div>
-                                          </div>
-                                        )}
-                                      </motion.div>
-                                    )}
-                                  </AnimatePresence>
                                 </motion.li>
                               );
                             })}
