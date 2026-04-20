@@ -64,8 +64,8 @@ export default function Index() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button variant="outline" className="rounded-full border-[#d1d5db] text-[#374151]" onClick={() => beginAuth('login')}>Sign In</Button>
-            <Button className="rounded-full bg-[#16a34a] text-white hover:bg-[#16a34a]/95" onClick={() => beginAuth('signup')}>Get Started</Button>
+            <Button variant="outline" className="rounded-full" onClick={() => beginAuth('login')}>Sign In</Button>
+            <Button className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]" onClick={() => beginAuth('signup')}>Get Started</Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>

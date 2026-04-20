@@ -27,7 +27,7 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button
-              className="h-12 rounded-[9999px] bg-[#16a34a] px-7 text-white transition-all duration-200 ease-in-out hover:scale-[1.02] hover:bg-[#16a34a]/95"
+              className="h-12 rounded-[9999px] bg-[#01FB64] px-7 text-black transition-all duration-200 ease-in-out hover:scale-[1.02] hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]"
               onClick={onPrimaryCta}
             >
               Get Started
@@ -35,7 +35,7 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
             </Button>
             <Button
               variant="outline"
-              className="h-12 rounded-[9999px] border-[1.5px] border-[#d1d5db] bg-white px-7 text-[#374151] transition-all duration-200 ease-in-out hover:scale-[1.02] hover:bg-white hover:text-[#374151]"
+              className="h-12 rounded-[9999px] px-7 transition-all duration-200 ease-in-out hover:scale-[1.02]"
               onClick={onSecondaryCta}
             >
               Sign In

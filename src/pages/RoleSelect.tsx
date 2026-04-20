@@ -34,11 +34,11 @@ export default function RoleSelect() {
         <p className="text-muted-foreground mt-3">Select your path so Athlon can route and personalize your experience.</p>
 
         <div className="mt-8 grid md:grid-cols-2 gap-4">
-          <button className="rounded-2xl border border-border bg-surface p-5 text-left hover:border-accent/60 transition-all" onClick={() => handleRoleSelect('agent')}>
+          <button className="rounded-2xl border border-border bg-surface p-5 text-left hover:border-[#01FB64] transition-all" onClick={() => handleRoleSelect('agent')}>
             <p className="font-semibold text-lg">Agent / Agency</p>
             <p className="text-sm text-muted-foreground mt-2">Manage athletes, deals, tasks, schedules, and deliverables in one place.</p>
           </button>
-          <button className="rounded-2xl border border-border bg-surface p-5 text-left hover:border-accent/60 transition-all" onClick={() => handleRoleSelect('athlete')}>
+          <button className="rounded-2xl border border-border bg-surface p-5 text-left hover:border-[#01FB64] transition-all" onClick={() => handleRoleSelect('athlete')}>
             <p className="font-semibold text-lg">Athlete</p>
             <p className="text-sm text-muted-foreground mt-2">Track obligations, view deal status, and stay aligned with your team.</p>
           </button>

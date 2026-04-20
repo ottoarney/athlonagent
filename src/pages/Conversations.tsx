@@ -27,7 +27,7 @@ export default function Conversations() {
             <p className="text-sm font-medium">Conversations</p>
             <div className="mt-3 space-y-2">
               {mockConversations.map((conversation) => (
-                <button key={conversation.id} onClick={() => setActiveConversation(conversation)} className={`w-full rounded-xl border p-3 text-left ${activeConversation.id === conversation.id ? 'border-accent/60 bg-background' : 'border-border bg-card'}`}>
+                <button key={conversation.id} onClick={() => setActiveConversation(conversation)} className={`w-full rounded-xl border p-3 text-left ${activeConversation.id === conversation.id ? 'border-[#01FB64] bg-background' : 'border-border bg-card'}`}>
                   <p className="text-sm font-medium">{conversation.name}</p>
                   <p className="text-xs text-muted-foreground mt-1">{conversation.note}</p>
                 </button>
