@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { RolePathSection } from '@/components/landing/RolePathSection';
-import { TrustMarquee } from '@/components/landing/TrustMarquee';
 import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
@@ -77,7 +76,6 @@ export default function Index() {
           onSeePlatform={() => beginAuth('signup')}
           onJoinNow={() => beginAuth('signup')}
         />
-        <TrustMarquee />
         <AgentAthleteToggle />
         <SocialProofTestimonials />
         <PricingTierSection onTierCta={beginAuth} />
