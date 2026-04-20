@@ -6,6 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { HeroSection } from '@/components/landing/HeroSection';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
+import { OperationsFeatureSection } from '@/components/landing/OperationsFeatureSection';
 import { AuthMode, getAuthRoute, setStoredRole } from '@/lib/auth-flow';
 import { Logo } from '@/components/brand/Logo';
 
@@ -69,6 +70,7 @@ export default function Index() {
       <main>
         <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
         <SocialProofTestimonials />
+        <OperationsFeatureSection onPrimaryCta={beginAuth} />
         <PricingTierSection onTierCta={beginAuth} />
 
         <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
