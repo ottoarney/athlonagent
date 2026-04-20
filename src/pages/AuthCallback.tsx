@@ -9,19 +9,14 @@ export default function AuthCallback() {
   useEffect(() => {
     const handle = async () => {
       const { session } = await getSession();
-      const role = await resolveUserRole(session?.user ?? null);
 
       if (!session?.user) {
-        navigate('/signup/agent', { replace: true });
+        navigate('/signup', { replace: true });
         return;
       }
 
-      if (!role) {
-        navigate('/onboarding/role', { replace: true });
-        return;
-      }
-
-      navigate(getDashboardRoute(role), { replace: true });
+      await resolveUserRole(session.user);
+      navigate(getDashboardRoute(), { replace: true });
     };
 
     void handle();

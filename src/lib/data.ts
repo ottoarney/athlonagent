@@ -35,7 +35,7 @@ export interface Task {
   priority: TaskPriority;
   status: TaskStatus;
   tags: string[];
-  owner: 'agent' | 'athlete';
+  owner: 'agent';
   checklist?: { id: string; text: string; completed: boolean }[];
 }
 
@@ -177,7 +177,7 @@ export const tasks: Task[] = [
     priority: 'low',
     status: 'todo',
     tags: ['content', 'photoshoot'],
-    owner: 'athlete',
+    owner: 'agent',
   },
 ];
 

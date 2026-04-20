@@ -1,6 +1,6 @@
 import { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { getStoredRole, isUserRole, setStoredRole, UserRole } from '@/lib/auth-flow';
+import { getStoredRole, setStoredRole } from '@/lib/auth-flow';
 import { supabaseEnv } from './supabase-env';
 
 export type AuthUser = User;
@@ -9,16 +9,12 @@ export function isAuthEnabled() {
   return Boolean(supabase);
 }
 
-export async function signInWithGoogle(role?: UserRole) {
+export async function signInWithGoogle() {
   if (!supabase) {
     throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.');
   }
 
-  if (role) {
-    setStoredRole(role);
-  }
-
-  const selectedRole = role ?? getStoredRole();
+  setStoredRole('agent');
   const redirectTo = supabaseEnv.redirectTo ?? `${window.location.origin}/auth/callback`;
 
   const { error } = await supabase.auth.signInWithOAuth({
@@ -29,7 +25,7 @@ export async function signInWithGoogle(role?: UserRole) {
         access_type: 'offline',
         prompt: 'consent',
       },
-      ...(selectedRole ? { data: { role: selectedRole } } : {}),
+      data: { role: 'agent' },
     },
   });
 
@@ -49,19 +45,19 @@ export async function signInWithPassword(email: string, password: string) {
   return data;
 }
 
-export async function signUpWithPassword(email: string, password: string, role: UserRole) {
+export async function signUpWithPassword(email: string, password: string) {
   if (!supabase) {
     throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.');
   }
 
-  setStoredRole(role);
+  setStoredRole('agent');
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        role,
+        role: 'agent',
       },
       emailRedirectTo: supabaseEnv.redirectTo ?? `${window.location.origin}/auth/callback`,
     },
@@ -83,13 +79,13 @@ export async function signOut() {
   await supabase.auth.signOut();
 }
 
-export async function upsertProfile(userId: string, role: UserRole, fullName?: string | null) {
+export async function upsertProfile(userId: string, fullName?: string | null) {
   if (!supabase) return;
 
   await (supabase as any).from('profiles').upsert(
     {
       id: userId,
-      role,
+      role: 'agent',
       full_name: fullName ?? null,
       onboarding_completed: true,
       updated_at: new Date().toISOString(),
@@ -98,24 +94,27 @@ export async function upsertProfile(userId: string, role: UserRole, fullName?: s
   );
 }
 
-export async function resolveUserRole(user: User | null): Promise<UserRole | null> {
+export async function resolveUserRole(user: User | null): Promise<'agent' | null> {
   if (!user) return null;
 
-  const metadataRole = user.user_metadata?.role;
-  if (isUserRole(metadataRole)) {
-    setStoredRole(metadataRole);
-    return metadataRole;
-  }
+  setStoredRole('agent');
 
   if (supabase) {
-    const { data } = await (supabase as any).from('profiles').select('role').eq('id', user.id).maybeSingle();
-    if (isUserRole(data?.role)) {
-      setStoredRole(data.role);
-      return data.role;
-    }
+    await (supabase as any)
+      .from('profiles')
+      .upsert(
+        {
+          id: user.id,
+          role: 'agent',
+          full_name: user.user_metadata?.full_name ?? null,
+          onboarding_completed: true,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'id' },
+      );
   }
 
-  return getStoredRole();
+  return getStoredRole() ?? 'agent';
 }
 
 export function onAuthStateChange(callback: (event: AuthChangeEvent, session: Session | null) => void) {

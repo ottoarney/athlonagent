@@ -1,40 +1,38 @@
 import { FormEvent, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { getDashboardRoute, getStoredRole, isUserRole, setStoredRole, UserRole } from '@/lib/auth-flow';
+import { getDashboardRoute, setStoredRole } from '@/lib/auth-flow';
 import { isAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
 import { toast } from 'sonner';
 import { Logo } from '@/components/brand/Logo';
 
 export default function AuthPortal() {
   const navigate = useNavigate();
-  const { mode, role } = useParams<{ mode: 'signup' | 'login'; role: string }>();
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const safeMode = location.pathname.startsWith('/login') || mode === 'login' ? 'login' : 'signup';
-  const selectedRole: UserRole = isUserRole(role) ? role : getStoredRole() ?? 'agent';
+  const safeMode = location.pathname.startsWith('/login') ? 'login' : 'signup';
 
-  const redirectAfterAuth = (resolvedRole: UserRole) => {
-    navigate(getDashboardRoute(resolvedRole));
+  const redirectAfterAuth = () => {
+    navigate(getDashboardRoute());
   };
 
   const handleGoogle = async () => {
     setLoading(true);
     try {
       if (!isAuthEnabled()) {
-        setStoredRole(selectedRole);
+        setStoredRole('agent');
         toast.success('Demo sign-in complete.');
-        redirectAfterAuth(selectedRole);
+        redirectAfterAuth();
         return;
       }
 
-      await signInWithGoogle(selectedRole);
+      await signInWithGoogle();
       toast.success('Redirecting to Google…');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Unable to start Google sign-in');
@@ -48,20 +46,20 @@ export default function AuthPortal() {
     setLoading(true);
 
     try {
-      setStoredRole(selectedRole);
+      setStoredRole('agent');
       if (!isAuthEnabled()) {
         toast.success(safeMode === 'signup' ? 'Demo account created.' : 'Demo sign-in complete.');
-        redirectAfterAuth(selectedRole);
+        redirectAfterAuth();
         return;
       }
 
       if (safeMode === 'signup') {
-        await signUpWithPassword(email, password, selectedRole);
+        await signUpWithPassword(email, password);
         toast.success('Account created. Check your email to confirm, then sign in.');
       } else {
         await signInWithPassword(email, password);
         toast.success('Signed in successfully.');
-        redirectAfterAuth(selectedRole);
+        redirectAfterAuth();
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Authentication failed');
@@ -87,11 +85,15 @@ export default function AuthPortal() {
               <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-4 w-4" /> Back to Athlon
               </Link>
-              <Badge className="rounded-full border-accent/30 bg-accent/15 text-foreground">{safeMode === 'signup' ? 'Role onboarding' : 'Role sign-in'}</Badge>
-              <h1 className="text-4xl md:text-5xl leading-[0.95] capitalize">{safeMode === 'signup' ? 'Build your' : 'Enter your'} {selectedRole} workspace.</h1>
-              <p className="text-muted-foreground">Athlon keeps athlete communication, deadlines, and deal execution aligned in one operational system.</p>
+              <Badge className="rounded-full border-accent/30 bg-accent/15 text-foreground">
+                {safeMode === 'signup' ? 'Agency onboarding' : 'Agency sign-in'}
+              </Badge>
+              <h1 className="text-4xl md:text-5xl leading-[0.95]">
+                {safeMode === 'signup' ? 'Build your' : 'Enter your'} agency workspace.
+              </h1>
+              <p className="text-muted-foreground">Athlon keeps deadlines, deal execution, and team communication aligned in one operational system.</p>
               <div className="space-y-3 text-sm">
-                {['Google OAuth + email fallback', 'Role-aware routing and onboarding', 'Expandable permissions + profile model'].map((item) => (
+                {['Google OAuth + email fallback', 'Agency-first dashboard routing', 'Expandable permissions + profile model'].map((item) => (
                   <div key={item} className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent" />
                     <span>{item}</span>
@@ -104,7 +106,7 @@ export default function AuthPortal() {
           <div className="p-8 md:p-10">
             {!isAuthEnabled() && (
               <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
-                Supabase env vars are missing, so this page is running in demo auth mode with role-aware dashboard routing.
+                Supabase env vars are missing, so this page is running in demo auth mode with dashboard routing.
               </div>
             )}
             <Link
@@ -116,9 +118,6 @@ export default function AuthPortal() {
             </Link>
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-semibold">{safeMode === 'signup' ? 'Create account' : 'Sign in'}</h2>
-              <Button variant="ghost" className="capitalize" onClick={() => navigate(`/${safeMode}/${selectedRole === 'agent' ? 'athlete' : 'agent'}`)}>
-                Switch to {selectedRole === 'agent' ? 'athlete' : 'agent'}
-              </Button>
             </div>
 
             <div className="space-y-3">
@@ -139,15 +138,15 @@ export default function AuthPortal() {
             </div>
 
             <div className="mt-6 text-sm text-muted-foreground">
-              {safeMode === 'signup' ? 'Already have access?' : "Need an account?"}{' '}
-              <button className="text-foreground underline underline-offset-4" onClick={() => navigate(`/${safeMode === 'signup' ? 'login' : 'signup'}/${selectedRole}`)}>
+              {safeMode === 'signup' ? 'Already have access?' : 'Need an account?'}{' '}
+              <button className="text-foreground underline underline-offset-4" onClick={() => navigate(`/${safeMode === 'signup' ? 'login' : 'signup'}`)}>
                 {safeMode === 'signup' ? 'Sign in instead' : 'Create account'}
               </button>
             </div>
 
             <div className="mt-8 rounded-xl border border-border bg-surface p-4 text-sm">
-              <p className="font-medium">Path selected</p>
-              <p className="text-muted-foreground mt-1 capitalize">{selectedRole} • {safeMode}</p>
+              <p className="font-medium">Portal selected</p>
+              <p className="text-muted-foreground mt-1">Agent / Agency • {safeMode}</p>
             </div>
           </div>
         </div>

@@ -81,16 +81,7 @@ export default function Settings() {
               <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full">
                 Your role
               </span>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Athlete</p>
-                <p className="text-sm text-muted-foreground">Limited access to their own data</p>
-              </div>
-              <Button variant="outline" size="sm">Configure</Button>
-            </div>
-            <Separator />
+            </div>            <Separator />
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Parent/Guardian</p>

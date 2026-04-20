@@ -16,7 +16,7 @@ export default function Waitlist() {
     <div className="min-h-screen bg-surface grid place-items-center p-4">
       <div className="w-full max-w-2xl rounded-3xl border border-border bg-card p-8">
         <h1 className="text-4xl">Join the Athlon waitlist</h1>
-        <p className="mt-3 text-muted-foreground">Get notified when new agency tools, athlete portal upgrades, and workspace collaboration releases ship.</p>
+        <p className="mt-3 text-muted-foreground">Get notified when new agency tools and workspace collaboration releases ship.</p>
         <form className="mt-6 flex flex-col sm:flex-row gap-3" onSubmit={onSubmit}>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@agency.com" />
           <Button type="submit">Join waitlist</Button>

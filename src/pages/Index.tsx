@@ -9,41 +9,29 @@ import { TrustMarquee } from '@/components/landing/TrustMarquee';
 import { AgentAthleteToggle } from '@/components/landing/AgentAthleteToggle';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
-import { AuthMode, getAuthRoute, getRoleSelectRoute, setStoredRole, UserRole } from '@/lib/auth-flow';
+import { AuthMode, getAuthRoute, setStoredRole } from '@/lib/auth-flow';
 import { Logo } from '@/components/brand/Logo';
 
 const faqs = [
-  ['Is Athlon Agent only for sports agents?', 'Athlon Agent is built first for sports agents, agencies, and athlete managers. It can also support athletes on their side of the platform with a simpler dashboard for visibility, tasks, and communication.'],
-  ['What can I manage inside Athlon Agent?', 'You can manage athletes, tasks, schedules, deals, files, contracts, and day to day operations in one place. The goal is to replace scattered spreadsheets, notes, and disconnected tools.'],
-  ['Is there a free plan?', 'Yes. The Solo plan is free for users managing one athlete. It is a simple way to start using the platform before moving up to a larger roster.'],
-  ['What is included in the Roster plan?', 'The Roster plan is built for agents managing multiple athletes. It includes deal tracking, task management, calendar tools, file storage, athlete dashboards, and workflow support for growing operations.'],
-  ['Do you offer a plan for agencies?', 'Yes. The Command plan is built for agencies and larger teams. It includes multi-user access, role permissions, shared dashboards, and stronger operational visibility across a full roster.'],
-  ['Can athletes log in too?', 'Yes. Athletes can log in to view what is relevant to them. This can include schedules, tasks, updates, and selected deal information depending on account structure.'],
-  ['How does collaboration work?', 'Athlon Agent is designed for shared visibility across agents, teams, and athletes. Different users can access the right information based on their role and level of access.'],
-  ['Does Athlon Agent support Google sign in?', 'Yes. Google sign in is supported to make onboarding faster and simpler. The login flow should route each user to the dashboard that matches their role.'],
-  ['Who is Athlon Agent best for?', 'Athlon Agent is best for sports agents, athlete managers, and agencies that need a cleaner way to manage operations. It is especially useful for groups handling multiple athletes, brand deals, scheduling, and internal coordination.'],
-  ['Why use Athlon Agent instead of spreadsheets?', 'Spreadsheets can track information but they do not run operations well. Athlon Agent gives you structure, visibility, and a system built around athlete management.'],
-  ['Is Athlon Agent built for NIL workflows?', 'Yes. The platform is meant to support modern athlete operations including NIL related organization, deal flow, content planning, and communication.'],
-  ['Can teams or interns be added to the account?', 'Yes on higher tier plans. Agency users can add team members and assign access based on role so operations stay organized without giving everyone the same permissions.'],
+  ['Is Athlon Agent only for sports agents?', 'Athlon Agent is purpose-built for sports agents, agencies, and athlete managers who need one operating system for execution.'],
+  ['What can I manage inside Athlon Agent?', 'You can manage athletes, tasks, schedules, deals, files, contracts, and day-to-day operations in one place.'],
+  ['Is there a free plan?', 'Yes. The Solo plan is free for users managing one athlete. It is a simple way to start before moving up to a larger roster.'],
+  ['What is included in the Roster plan?', 'The Roster plan is built for agents managing multiple athletes. It includes deal tracking, task management, calendar tools, file storage, and workflow support for growing operations.'],
+  ['Do you offer a plan for agencies?', 'Yes. The Command plan is built for agencies and larger teams with multi-user access, role permissions, and shared dashboards.'],
+  ['Does Athlon Agent support Google sign in?', 'Yes. Google sign in is supported to make onboarding faster and simpler for agencies and their teams.'],
+  ['Who is Athlon Agent best for?', 'Athlon Agent is best for sports agents, athlete managers, and agencies that need a cleaner way to run operations.'],
+  ['Why use Athlon Agent instead of spreadsheets?', 'Spreadsheets can track information but they do not run operations well. Athlon Agent gives your team structure, accountability, and visibility.'],
+  ['Is Athlon Agent built for NIL workflows?', 'Yes. The platform supports modern athlete operations including NIL deal flow, content planning, and team coordination.'],
+  ['Can teams or interns be added to the account?', 'Yes on higher tier plans. Agency users can add team members and assign access based on role.'],
 ];
 
 export default function Index() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const beginAuth = (mode: AuthMode, role?: UserRole) => {
-    if (role) {
-      setStoredRole(role);
-      navigate(getAuthRoute(mode, role));
-      return;
-    }
 
-    navigate(getRoleSelectRoute(mode));
-  };
-
-  const routeWithRole = (path: string) => {
-    const role = path.includes('athlete') ? 'athlete' : 'agent';
-    const mode = path.includes('/login') ? 'login' : 'signup';
-    beginAuth(mode, role);
+  const beginAuth = (mode: AuthMode) => {
+    setStoredRole('agent');
+    navigate(getAuthRoute(mode));
   };
 
   return (
@@ -75,8 +63,6 @@ export default function Index() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
-            <Button variant="outline" onClick={() => beginAuth('signup', 'agent')}>Agent / Agency</Button>
-            <Button variant="outline" onClick={() => beginAuth('signup', 'athlete')}>Athlete</Button>
             <Button variant="outline" onClick={() => beginAuth('login')}>Sign In</Button>
             <Button variant="outline" onClick={() => beginAuth('signup')}>Get Started</Button>
           </div>
@@ -86,8 +72,8 @@ export default function Index() {
       <main>
         <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
         <RolePathSection
-          onSelectSignup={routeWithRole}
-          onSelectLogin={routeWithRole}
+          onSelectSignup={() => beginAuth('signup')}
+          onSelectLogin={() => beginAuth('login')}
           onSeePlatform={() => beginAuth('signup')}
           onJoinNow={() => beginAuth('signup')}
         />
@@ -115,11 +101,10 @@ export default function Index() {
             <Link to="/" aria-label="Athlon home" className="inline-flex items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85">
               <Logo size="sm" />
             </Link>
-            <p className="text-muted-foreground">Premium sports-agent and athlete operations platform.</p>
+            <p className="text-muted-foreground">Premium sports-agent operations platform.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button className="underline" onClick={() => beginAuth('signup', 'agent')}>Agent signup</button>
-            <button className="underline" onClick={() => beginAuth('signup', 'athlete')}>Athlete signup</button>
+            <button className="underline" onClick={() => beginAuth('signup')}>Agent signup</button>
             <button className="underline" onClick={() => beginAuth('login')}>Sign in</button>
             <button className="underline" onClick={() => beginAuth('signup')}>Start free</button>
           </div>

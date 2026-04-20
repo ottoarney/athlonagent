@@ -74,7 +74,7 @@ Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/c
 
 ## Athlon auth + cloud setup
 
-The app now includes role-aware auth (agent/athlete), Google OAuth, and Supabase-ready profile onboarding.
+The app now includes agency-focused auth, Google OAuth, and Supabase-ready profile onboarding.
 
 ### Required environment variables
 

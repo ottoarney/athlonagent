@@ -12,7 +12,6 @@ import { athletes, Athlete } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getStoredRole } from '@/lib/auth-flow';
 
 interface AppHeaderProps {
   selectedAthlete: Athlete | null;
@@ -23,7 +22,6 @@ interface AppHeaderProps {
 export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = false }: AppHeaderProps) {
   const [notificationCount] = useState(3);
   const navigate = useNavigate();
-  const isAthlete = getStoredRole() === 'athlete';
 
   return (
     <header className="h-16 bg-background border-b border-border flex items-center justify-between px-6">
@@ -40,8 +38,7 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
 
       {/* Right Side */}
       <div className="flex items-center gap-3">
-        {!isAthlete && (
-          <DropdownMenu>
+        <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="gap-2">
                 <Plus className="h-4 w-4" />
@@ -57,11 +54,9 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
               <DropdownMenuItem>New Athlete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
 
         {/* Athlete Switcher */}
-        {!isAthlete && (
-          <DropdownMenu>
+        <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2 min-w-[140px] justify-between">
                 {selectedAthlete ? (
@@ -106,7 +101,6 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
 
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
@@ -121,7 +115,7 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
         {/* Profile / Auth Links */}
         {showAuthLinks ? (
           <div className="flex items-center gap-2 ml-2">
-            <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => navigate('/login/agent')}>
+            <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => navigate('/login')}>
               Sign in
             </Button>
             <Button variant="outline" size="sm" onClick={() => navigate('/demo')}>

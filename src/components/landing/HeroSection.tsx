@@ -25,7 +25,7 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
             </h1>
 
             <p className="mt-6 max-w-[60ch] text-base leading-relaxed text-[#6b7280] md:text-lg">
-              Manage athletes, deals, deadlines, content, and communication in one place — with a streamlined athlete view that keeps everyone aligned.
+              Manage athletes, deals, deadlines, content, and communication in one place so your agency runs with speed and clarity.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -46,7 +46,7 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
             </div>
 
             <p className="mt-4 text-sm text-[#6b7280]">
-              ⊙ No credit card needed · Built for agents, athletes, and team ops
+              ⊙ No credit card needed · Built for agents, agencies, and team ops
             </p>
           </div>
 

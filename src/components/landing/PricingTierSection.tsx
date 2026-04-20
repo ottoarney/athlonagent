@@ -1,6 +1,6 @@
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AuthMode, UserRole } from '@/lib/auth-flow';
+import { AuthMode } from '@/lib/auth-flow';
 
 const pricingTiers = [
   {
@@ -17,7 +17,6 @@ const pricingTiers = [
     ],
     cta: 'Start free',
     mode: 'signup' as AuthMode,
-    role: 'agent' as UserRole,
     highlighted: false,
   },
   {
@@ -37,7 +36,6 @@ const pricingTiers = [
     ],
     cta: 'Choose Roster',
     mode: 'signup' as AuthMode,
-    role: 'agent' as UserRole,
     highlighted: true,
   },
   {
@@ -58,13 +56,12 @@ const pricingTiers = [
     ],
     cta: 'Get Command',
     mode: 'login' as AuthMode,
-    role: 'agent' as UserRole,
     highlighted: false,
   },
 ];
 
 interface PricingTierSectionProps {
-  onTierCta: (mode: AuthMode, role: UserRole) => void;
+  onTierCta: (mode: AuthMode) => void;
 }
 
 export function PricingTierSection({ onTierCta }: PricingTierSectionProps) {
@@ -105,7 +102,7 @@ export function PricingTierSection({ onTierCta }: PricingTierSectionProps) {
             <Button
               variant={tier.highlighted ? 'default' : 'outline'}
               className="mt-6 w-full rounded-full"
-              onClick={() => onTierCta(tier.mode, tier.role)}
+              onClick={() => onTierCta(tier.mode)}
             >
               {tier.cta}
             </Button>

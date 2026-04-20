@@ -16,7 +16,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Logo } from '@/components/brand/Logo';
-import { getStoredRole } from '@/lib/auth-flow';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Overview', path: '/dashboard' },
@@ -30,22 +29,9 @@ const navItems = [
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
-const athleteNavItems = [
-  { icon: LayoutDashboard, label: 'Overview', path: '/athlete-dashboard' },
-  { icon: Calendar, label: 'Schedule', path: '/calendar' },
-  { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
-  { icon: DollarSign, label: 'Deal Status', path: '/deals' },
-  { icon: FileText, label: 'Content Requests', path: '/content' },
-  { icon: MessageSquare, label: 'Updates', path: '/conversations' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
-];
-
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const storedRole = getStoredRole();
-  const isAthleteView = location.pathname.startsWith('/athlete-dashboard') || storedRole === 'athlete';
-  const visibleNavItems = isAthleteView ? athleteNavItems : navItems;
 
   return (
     <aside className={cn('h-screen bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300', collapsed ? 'w-20' : 'w-60')}>
@@ -63,7 +49,7 @@ export function AppSidebar() {
       </div>
 
       <nav className="flex-1 py-4 px-2 space-y-1">
-        {visibleNavItems.map((item) => {
+        {navItems.map((item) => {
           const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
 
           return (
