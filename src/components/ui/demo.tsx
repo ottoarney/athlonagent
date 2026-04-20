@@ -1,11 +1,11 @@
-import { Hero } from "@/components/ui/animated-hero";
+"use client";
 
-function HeroDemo() {
+import Plan from "@/components/ui/agent-plan";
+
+export function Demo() {
   return (
-    <div className="block">
-      <Hero />
+    <div className="flex h-full w-full flex-col p-4">
+      <Plan />
     </div>
   );
 }
-
-export { HeroDemo };
