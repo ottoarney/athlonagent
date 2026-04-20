@@ -6,8 +6,6 @@ import { DeadlinesCard } from '@/components/dashboard/DeadlinesCard';
 import { NotificationsPanel } from '@/components/dashboard/NotificationsPanel';
 import { DealsPipeline } from '@/components/dashboard/DealsPipeline';
 import { ContentPreview } from '@/components/dashboard/ContentPreview';
-import { getStoredRole } from '@/lib/auth-flow';
-import { Navigate } from 'react-router-dom';
 
 const fadeIn = {
   initial: { opacity: 0, y: 10 },
@@ -24,10 +22,6 @@ const stagger = {
 };
 
 const DashboardHome = () => {
-  if (getStoredRole() === 'athlete') {
-    return <Navigate to="/athlete-dashboard" replace />;
-  }
-
   return (
     <AppLayout showAuthLinks>
       <motion.div 

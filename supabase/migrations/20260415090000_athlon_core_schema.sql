@@ -1,7 +1,7 @@
--- Athlon core schema for auth + role-aware athlete operations
+-- Athlon core schema for auth + agency operations
 create extension if not exists pgcrypto;
 
-create type public.app_role as enum ('agent', 'athlete', 'staff');
+create type public.app_role as enum ('agent', 'staff');
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,

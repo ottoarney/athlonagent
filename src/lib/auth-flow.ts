@@ -1,10 +1,10 @@
-export type UserRole = 'agent' | 'athlete';
+export type UserRole = 'agent';
 export type AuthMode = 'signup' | 'login';
 
 export const ROLE_STORAGE_KEY = 'athlon:selected-role';
 
 export const isUserRole = (value: string | null | undefined): value is UserRole =>
-  value === 'agent' || value === 'athlete';
+  value === 'agent';
 
 export function getStoredRole(): UserRole | null {
   if (typeof window === 'undefined') {
@@ -15,7 +15,7 @@ export function getStoredRole(): UserRole | null {
   return isUserRole(role) ? role : null;
 }
 
-export function setStoredRole(role: UserRole) {
+export function setStoredRole(role: UserRole = 'agent') {
   if (typeof window === 'undefined') {
     return;
   }
@@ -23,14 +23,10 @@ export function setStoredRole(role: UserRole) {
   window.localStorage.setItem(ROLE_STORAGE_KEY, role);
 }
 
-export function getAuthRoute(mode: AuthMode, role: UserRole) {
-  return `/${mode}/${role}`;
+export function getAuthRoute(mode: AuthMode) {
+  return `/${mode}`;
 }
 
-export function getRoleSelectRoute(mode: AuthMode = 'signup') {
-  return `/auth?mode=${mode}`;
-}
-
-export function getDashboardRoute(role: UserRole) {
-  return role === 'agent' ? '/dashboard' : '/athlete-dashboard';
+export function getDashboardRoute() {
+  return '/dashboard';
 }
