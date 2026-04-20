@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useMemo, useState } from "react";
 import {
   CheckCircle2,
@@ -243,15 +241,15 @@ export default function Plan() {
                             transition={{ duration: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }}
                           >
                             {task.status === "completed" ? (
-                              <CheckCircle2 className="h-4.5 w-4.5 text-accent" />
+                              <CheckCircle2 className="h-4 w-4 text-accent" />
                             ) : task.status === "in-progress" ? (
-                              <CircleDotDashed className="h-4.5 w-4.5 text-accent" />
+                              <CircleDotDashed className="h-4 w-4 text-accent" />
                             ) : task.status === "need-help" ? (
-                              <CircleAlert className="h-4.5 w-4.5 text-warning" />
+                              <CircleAlert className="h-4 w-4 text-warning" />
                             ) : task.status === "failed" ? (
-                              <CircleX className="h-4.5 w-4.5 text-destructive" />
+                              <CircleX className="h-4 w-4 text-destructive" />
                             ) : (
-                              <Circle className="h-4.5 w-4.5 text-muted-foreground" />
+                              <Circle className="h-4 w-4 text-muted-foreground" />
                             )}
                           </motion.div>
                         </AnimatePresence>
