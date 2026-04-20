@@ -18,7 +18,7 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
           </p>
 
           <h1 className="mx-auto mt-7 max-w-3xl text-balance text-[clamp(2rem,6vw,4.3rem)] font-bold leading-[1.05] tracking-tight text-[#0f0f0f]">
-            Outmanage the competition with the CRM built for <span className="text-[#16a34a]">sports agents</span>.
+            Outmanage the competition with the CRM built for <span className="text-[#01FB64]">sports agents.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-[540px] text-lg leading-[1.7] text-[#6b7280] md:text-xl">
