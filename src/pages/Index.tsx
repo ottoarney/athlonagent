@@ -70,6 +70,7 @@ export default function Index() {
 
       <main>
         <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
+        <SocialProofTestimonials />
         <RolePathSection
           onSelectSignup={() => beginAuth('signup')}
           onSelectLogin={() => beginAuth('login')}
@@ -77,7 +78,6 @@ export default function Index() {
           onJoinNow={() => beginAuth('signup')}
         />
         <AgentAthleteToggle />
-        <SocialProofTestimonials />
         <PricingTierSection onTierCta={beginAuth} />
 
         <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
