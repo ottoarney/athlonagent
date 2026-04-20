@@ -10,22 +10,22 @@ interface OperationsFeatureSectionProps {
 const featurePills = [
   {
     title: 'Athlete obligations',
-    detail: 'Deadlines, deliverables, approvals, and contract requirements always visible.',
+    detail: 'See critical deadlines, approvals, and deliverables in one place.',
     icon: ClipboardCheck,
   },
   {
     title: 'Deal flow control',
-    detail: 'Move opportunities from outreach to signed terms without losing ownership.',
+    detail: 'Move deals from outreach to signed terms with full visibility.',
     icon: Handshake,
   },
   {
     title: 'Calendar + task sync',
-    detail: 'Keep meetings, media, travel, and execution tasks aligned across your agency.',
+    detail: 'Keep travel, media, and execution work aligned by athlete.',
     icon: CalendarClock,
   },
   {
     title: 'Content tracking',
-    detail: 'Know what is planned, approved, posted, and still pending for each athlete.',
+    detail: 'Track planned, approved, and pending content at a glance.',
     icon: PlaySquare,
   },
 ];
@@ -35,7 +35,7 @@ export function OperationsFeatureSection({ onPrimaryCta }: OperationsFeatureSect
     <section className="py-20 md:py-24">
       <div className="container px-4 md:px-6">
         <div className="rounded-3xl border border-border/70 bg-gradient-to-b from-white to-surface p-6 md:p-10">
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-10">
             <div>
               <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium tracking-[0.12em] text-[#0f0f0f]">
                 Built for elite sports representation teams
@@ -43,9 +43,9 @@ export function OperationsFeatureSection({ onPrimaryCta }: OperationsFeatureSect
               <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
                 Run athlete operations with <span className="text-[#01FB64]">precision</span>
               </h2>
-              <p className="mt-4 max-w-[56ch] text-base text-muted-foreground md:text-lg">
-                Athlon Agent gives sports agents and agencies one operating system for athlete management, deal flow,
-                calendars, tasks, content, and daily execution.
+              <p className="mt-4 max-w-[52ch] text-base text-muted-foreground md:text-lg">
+                Athlon Agent unifies athlete obligations, deal flow, calendar execution, and content ops for modern
+                sports agencies.
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -55,7 +55,7 @@ export function OperationsFeatureSection({ onPrimaryCta }: OperationsFeatureSect
                       <Icon className="h-4 w-4" />
                     </div>
                     <h3 className="mt-3 text-sm font-semibold md:text-base">{title}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{detail}</p>
+                    <p className="mt-1 text-sm text-muted-foreground/90">{detail}</p>
                   </article>
                 ))}
               </div>
@@ -72,7 +72,7 @@ export function OperationsFeatureSection({ onPrimaryCta }: OperationsFeatureSect
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-2 shadow-sm">
+            <div className="rounded-2xl border border-border bg-card p-2 shadow-sm lg:self-center lg:min-h-[540px]">
               <Plan />
             </div>
           </div>
