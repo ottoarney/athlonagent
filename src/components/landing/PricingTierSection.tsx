@@ -4,57 +4,47 @@ import { AuthMode } from '@/lib/auth-flow';
 
 const pricingTiers = [
   {
-    name: 'Solo',
-    price: 'Free',
-    frequency: '',
-    description: 'Run one athlete the right way.',
+    name: 'Agent',
+    description: 'For individual agents managing their own roster.',
+    limits: ['Up to 10 athletes'],
     features: [
-      '1 athlete profile',
-      'Basic task and calendar system',
-      'Simple deal tracker (limited deals)',
-      'Limited storage',
-      'Basic athlete dashboard',
+      'Manage up to 10 athletes',
+      'Task and calendar system',
+      'Deal and contract tracking',
+      'Content planning tools',
+      'Basic performance analytics',
     ],
-    cta: 'Start free',
+    cta: 'Start as Agent',
     mode: 'signup' as AuthMode,
     highlighted: false,
   },
   {
-    name: 'Roster',
-    price: '$59/month',
-    frequency: 'or $590/year',
-    description: 'Outmanage the competition.',
+    name: 'Agency',
+    description: 'For agents working within a shared agency.',
+    limits: ['Up to 10 agents per agency', 'Each agent can manage up to 10 athletes'],
     features: [
-      'Everything in Solo',
-      'Manage 5–50 athletes',
-      'Unlimited deals',
-      'Content planning system',
-      'Contract and file storage',
-      'Full athlete dashboards',
-      'Notifications and reminders',
-      'Basic analytics',
+      'Up to 10 agents per agency',
+      'Each agent manages up to 10 athletes',
+      'Shared agency dashboard',
+      'Role-based permissions',
+      'Advanced analytics across roster',
     ],
-    cta: 'Choose Roster',
+    cta: 'Join an Agency',
     mode: 'signup' as AuthMode,
     highlighted: true,
   },
   {
-    name: 'Command',
-    price: '$399/month',
-    frequency: '',
-    description: 'Operate like a top agency.',
+    name: 'Enterprise',
+    description: 'For large agencies or organizations.',
+    limits: ['Unlimited agents and athletes', 'Demo call required before access'],
     features: [
-      'Everything in Roster',
-      'Unlimited athletes',
-      'Multi-agent team access',
-      'Role permissions',
-      'Shared agency dashboard',
-      'Advanced analytics',
-      'NIL valuation tool',
-      'Priority support',
-      'Onboarding assistance',
+      'Unlimited agents and athletes',
+      'Custom workflows and integrations',
+      'Dedicated support and onboarding',
+      'NIL valuation and advanced insights',
+      'API and data export access',
     ],
-    cta: 'Get Command',
+    cta: 'Request Demo',
     mode: 'login' as AuthMode,
     highlighted: false,
   },
@@ -70,27 +60,29 @@ export function PricingTierSection({ onTierCta }: PricingTierSectionProps) {
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Pricing</p>
         <h2 className="mt-3 text-3xl md:text-5xl">Pick the plan that fits your roster</h2>
-        <p className="mt-4 text-muted-foreground md:text-lg">
-          Transparent per-seat pricing for agencies of every size, with enterprise options when you need more control.
-        </p>
+        <p className="mt-4 text-muted-foreground md:text-lg">Simple plans for agents, agencies, and large organizations.</p>
       </div>
 
       <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
         {pricingTiers.map((tier) => (
           <article
             key={tier.name}
-            className={`rounded-2xl border p-6 shadow-sm ${
+            className={`flex h-full flex-col rounded-2xl border p-6 shadow-sm ${
               tier.highlighted ? 'border-primary bg-surface/80 ring-1 ring-primary/20' : 'border-border bg-card'
             }`}
           >
             <h3 className="text-xl font-semibold">{tier.name}</h3>
-            <p className="mt-3 text-3xl font-bold">
-              {tier.price}
-              {tier.frequency && <span className="ml-1 text-base font-medium text-muted-foreground">{tier.frequency}</span>}
-            </p>
             <p className="mt-3 min-h-12 text-sm text-muted-foreground">{tier.description}</p>
 
-            <ul className="mt-5 space-y-2 text-sm">
+            <div className="mt-3 min-h-14 space-y-1">
+              {tier.limits.map((limit) => (
+                <p key={limit} className="text-sm font-medium text-foreground/90">
+                  {limit}
+                </p>
+              ))}
+            </div>
+
+            <ul className="mt-5 flex-1 space-y-2 text-sm">
               {tier.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
