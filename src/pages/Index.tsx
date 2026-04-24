@@ -32,6 +32,10 @@ export default function Index() {
     navigate(getAuthRoute(mode));
   };
 
+  const goToDashboard = () => {
+    window.location.href = '/dashboard.html';
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-[#f3f4f6] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.04)] backdrop-blur-xl">
@@ -50,8 +54,8 @@ export default function Index() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button variant="outline" className="rounded-full" onClick={() => beginAuth('login')}>Sign In</Button>
-            <Button className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]" onClick={() => beginAuth('signup')}>Get Started</Button>
+            <Button variant="outline" className="rounded-full" onClick={goToDashboard}>Sign In</Button>
+            <Button className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]" onClick={goToDashboard}>Get Started</Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>
@@ -61,14 +65,14 @@ export default function Index() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
-            <Button variant="outline" onClick={() => beginAuth('login')}>Sign In</Button>
-            <Button variant="outline" onClick={() => beginAuth('signup')}>Get Started</Button>
+            <Button variant="outline" onClick={goToDashboard}>Sign In</Button>
+            <Button variant="outline" onClick={goToDashboard}>Get Started</Button>
           </div>
         )}
       </header>
 
       <main>
-        <HeroSection onPrimaryCta={() => beginAuth('signup')} onSecondaryCta={() => beginAuth('login')} />
+        <HeroSection onPrimaryCta={goToDashboard} onSecondaryCta={goToDashboard} />
         <SocialProofTestimonials />
         <OperationsFeatureSection onPrimaryCta={beginAuth} />
         <PricingTierSection onTierCta={beginAuth} />
@@ -96,8 +100,8 @@ export default function Index() {
           </div>
           <div className="flex flex-wrap gap-3">
             <button className="underline" onClick={() => beginAuth('signup')}>Agent signup</button>
-            <button className="underline" onClick={() => beginAuth('login')}>Sign in</button>
-            <button className="underline" onClick={() => beginAuth('signup')}>Start free</button>
+            <button className="underline" onClick={goToDashboard}>Sign in</button>
+            <button className="underline" onClick={goToDashboard}>Start free</button>
           </div>
         </div>
       </footer>
