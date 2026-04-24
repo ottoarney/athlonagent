@@ -33,7 +33,7 @@ export default function Index() {
   };
 
   const goToDashboard = () => {
-    window.location.href = '/dashboard.html';
+    navigate('/dashboard');
   };
 
   return (
