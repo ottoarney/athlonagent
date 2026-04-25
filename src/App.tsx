@@ -12,6 +12,7 @@ import Deals from './pages/Deals';
 import Calendar from './pages/Calendar';
 import Content from './pages/Content';
 import Settings from './pages/Settings';
+import Team from './pages/Team';
 import AuthPortal from './pages/AuthPortal';
 import AuthCallback from './pages/AuthCallback';
 import Demo from './pages/Demo';
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/dashboard/deals" element={<Deals />} />
               <Route path="/dashboard/content" element={<Content />} />
               <Route path="/dashboard/conversations" element={<Conversations />} />
+              <Route path="/dashboard/team" element={<Team />} />
               <Route path="/dashboard/settings" element={<Settings />} />
               <Route path="/dashboard/files" element={<Navigate to="/dashboard" replace />} />
 
