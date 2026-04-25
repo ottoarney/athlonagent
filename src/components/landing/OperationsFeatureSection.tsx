@@ -1,10 +1,10 @@
 import { ArrowRight, CalendarClock, ClipboardCheck, Handshake, PlaySquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Plan from '@/components/ui/agent-plan';
 import { Button } from '@/components/ui/button';
-import type { AuthMode } from '@/lib/auth-flow';
 
 interface OperationsFeatureSectionProps {
-  onPrimaryCta: (mode: AuthMode) => void;
+  dashboardRoute: string;
 }
 
 const featurePills = [
@@ -30,7 +30,7 @@ const featurePills = [
   },
 ];
 
-export function OperationsFeatureSection({ onPrimaryCta }: OperationsFeatureSectionProps) {
+export function OperationsFeatureSection({ dashboardRoute }: OperationsFeatureSectionProps) {
   return (
     <section className="py-20 md:py-24">
       <div className="container px-4 md:px-6">
@@ -62,11 +62,13 @@ export function OperationsFeatureSection({ onPrimaryCta }: OperationsFeatureSect
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Button
+                  asChild
                   className="h-11 rounded-full bg-[#01FB64] px-6 text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]"
-                  onClick={() => onPrimaryCta('signup')}
                 >
-                  See Athlon in action
-                  <ArrowRight className="ml-1 h-4 w-4" />
+                  <Link to={dashboardRoute}>
+                    See Athlon in action
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
                 </Button>
                 <p className="text-sm text-muted-foreground">Purpose-built for agents, agencies, and athlete ops teams.</p>
               </div>
