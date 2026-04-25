@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { athletes as seedAthletes, deals as seedDeals, tasks as seedTasks, events, formatCurrency } from '@/lib/data';
 import type { Athlete, Task } from '@/lib/data';
 
-export type CampaignStage = 'pitching' | 'active' | 'in-review' | 'complete';
+export type CampaignStage = 'pitching' | 'active' | 'review' | 'complete';
 
 export interface Campaign {
   id: string;
@@ -49,17 +49,17 @@ interface DashboardContextValue {
 const mapStage = (stage: string): CampaignStage => {
   if (stage === 'lead' || stage === 'negotiation') return 'pitching';
   if (stage === 'contracted') return 'active';
-  if (stage === 'deliverables') return 'in-review';
+  if (stage === 'deliverables') return 'review';
   return 'complete';
 };
 
 const DashboardContext = createContext<DashboardContextValue | undefined>(undefined);
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
-  const [athletes, setAthletes] = useState<Athlete[]>(seedAthletes);
-  const [tasks, setTasks] = useState<Task[]>(seedTasks);
+  const [athletes, setAthletes] = useState<Athlete[]>(seedAthletes ?? []);
+  const [tasks, setTasks] = useState<Task[]>(seedTasks ?? []);
   const [campaigns, setCampaigns] = useState<Campaign[]>(
-    seedDeals.map((deal) => ({
+    (seedDeals ?? []).map((deal) => ({
       id: deal.id,
       brand: deal.brand,
       athleteId: deal.athleteId,
@@ -67,7 +67,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       stage: mapStage(deal.stage),
       starred: false,
       archived: false,
-      deliverables: deal.deliverables,
+      deliverables: deal.deliverables ?? [],
     })),
   );
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,9 +77,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const openModal = (type: Exclude<ModalType, null>) => setActiveModal(type);
 
   const addAthlete: DashboardContextValue['addAthlete'] = (payload) => {
-    const initials = payload.name
+    const initials = (payload.name || 'NA')
       .split(' ')
-      .map((part) => part[0])
+      .map((part) => part?.[0] ?? '')
       .join('')
       .slice(0, 2)
       .toUpperCase();
@@ -145,18 +145,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   const query = searchQuery.trim().toLowerCase();
 
-  const filteredAthletes = athletes.filter((athlete) => {
+  const filteredAthletes = (athletes ?? []).filter((athlete) => {
     if (!query) return true;
     return [athlete.name, athlete.sport, athlete.team, athlete.position].join(' ').toLowerCase().includes(query);
   });
 
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = (tasks ?? []).filter((task) => {
     if (!query) return true;
     const athlete = athletes.find((entry) => entry.id === task.athleteId);
     return [task.title, task.description ?? '', athlete?.name ?? ''].join(' ').toLowerCase().includes(query);
   });
 
-  const filteredCampaigns = campaigns.filter((campaign) => {
+  const filteredCampaigns = (campaigns ?? []).filter((campaign) => {
     if (!query) return true;
     const athlete = athletes.find((entry) => entry.id === campaign.athleteId);
     return [campaign.brand, athlete?.name ?? '', campaign.stage].join(' ').toLowerCase().includes(query);
@@ -172,7 +172,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return { id: task.id, title: task.title, dueDate: task.dueDate, type: 'task' as const, campaignOrAthlete: athlete?.name ?? 'Unknown athlete' };
     }),
     ...filteredCampaigns.flatMap((campaign) =>
-      campaign.deliverables.map((deliverable) => ({
+      (campaign.deliverables ?? []).map((deliverable) => ({
         id: `${campaign.id}-${deliverable.id}`,
         title: deliverable.title,
         dueDate: deliverable.dueDate,
@@ -181,12 +181,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       })),
     ),
   ]
-    .filter((entry) => entry.dueDate >= now && entry.dueDate <= in14Days)
+    .filter((entry) => entry.dueDate instanceof Date && !Number.isNaN(entry.dueDate.getTime()) && entry.dueDate >= now && entry.dueDate <= in14Days)
     .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 
   const pipelineValue = filteredCampaigns.filter((campaign) => !campaign.archived).reduce((sum, campaign) => sum + campaign.value, 0);
   const activeCampaignValue = filteredCampaigns
-    .filter((campaign) => campaign.stage === 'active' || campaign.stage === 'in-review')
+    .filter((campaign) => campaign.stage === 'active' || campaign.stage === 'review')
     .reduce((sum, campaign) => sum + campaign.value, 0);
 
   const kpis = {
@@ -218,7 +218,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       toggleCampaignArchive,
       kpis,
       upcoming14Days,
-      eventsNextWeek: events,
+      eventsNextWeek: events ?? [],
     }),
     [
       athletes,
