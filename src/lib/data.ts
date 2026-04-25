@@ -334,19 +334,34 @@ export const getContentByAthlete = (athleteId: string) => contentItems.filter(c 
 export const formatCurrency = (value: number) => 
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
 
-export const formatDate = (date: Date) => 
-  new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(date);
-
-export const formatTime = (date: Date) =>
-  new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(date);
-
-export const isToday = (date: Date) => {
-  const today = new Date();
-  return date.toDateString() === today.toDateString();
+const toSafeDate = (value: Date | string | number) => {
+  const normalized = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(normalized.getTime()) ? null : normalized;
 };
 
-export const isPastDue = (date: Date) => {
+export const formatDate = (date: Date | string | number) => {
+  const safeDate = toSafeDate(date);
+  if (!safeDate) return 'Invalid date';
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(safeDate);
+};
+
+export const formatTime = (date: Date | string | number) => {
+  const safeDate = toSafeDate(date);
+  if (!safeDate) return 'Invalid time';
+  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(safeDate);
+};
+
+export const isToday = (date: Date | string | number) => {
+  const safeDate = toSafeDate(date);
+  if (!safeDate) return false;
+  const today = new Date();
+  return safeDate.toDateString() === today.toDateString();
+};
+
+export const isPastDue = (date: Date | string | number) => {
+  const safeDate = toSafeDate(date);
+  if (!safeDate) return false;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return date < today;
+  return safeDate < today;
 };

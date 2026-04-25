@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useDashboardData, type CampaignStage } from '@/context/dashboard-context';
 import { formatCurrency, formatDate, formatTime } from '@/lib/data';
@@ -7,12 +6,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Archive, Plus, Star } from 'lucide-react';
-
-const fadeIn = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.3 },
-};
 
 const stageLabels: Record<CampaignStage, string> = {
   pitching: 'Pitching',
@@ -52,8 +45,8 @@ export default function DashboardHome() {
 
   return (
     <AppLayout showAuthLinks>
-      <motion.div className="max-w-[1600px] mx-auto space-y-5" initial="initial" animate="animate">
-        <motion.div variants={fadeIn} className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div className="max-w-[1600px] mx-auto space-y-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl font-display font-semibold tracking-tight">Mission Control</h1>
             <p className="text-muted-foreground mt-1">Compact command center for roster, campaigns, and tasks.</p>
@@ -62,9 +55,9 @@ export default function DashboardHome() {
             <Button variant="outline" onClick={() => openModal('athlete')}>Add athlete</Button>
             <Button onClick={() => openModal('campaign')}>New campaign</Button>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div variants={fadeIn} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
             ['Athletes under management', kpis.athletesUnderManagement],
             ['Active campaign value', kpis.activeCampaignValue],
@@ -76,10 +69,10 @@ export default function DashboardHome() {
               <p className="text-2xl font-semibold mt-1">{value}</p>
             </div>
           ))}
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-          <motion.div variants={fadeIn} className="xl:col-span-8 space-y-4">
+          <div className="xl:col-span-8 space-y-4">
             <section className="p-4 rounded-xl border border-border bg-card">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-semibold">Campaign pipeline spread</h2>
@@ -161,9 +154,9 @@ export default function DashboardHome() {
                 </div>
               </div>
             </section>
-          </motion.div>
+          </div>
 
-          <motion.div variants={fadeIn} className="xl:col-span-4 space-y-4">
+          <div className="xl:col-span-4 space-y-4">
             <section className="p-4 rounded-xl border border-border bg-card">
               <h2 className="font-semibold mb-3">Schedule</h2>
               <div className="space-y-2">
@@ -207,9 +200,9 @@ export default function DashboardHome() {
                 <Button variant="outline" onClick={() => openModal('campaign')}>Log deal activity</Button>
               </div>
             </section>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </AppLayout>
   );
 }
