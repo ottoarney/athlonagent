@@ -10,12 +10,15 @@ import {
   MessageSquare,
   ChevronLeft,
   ChevronRight,
+  Star,
+  Archive,
 } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Logo } from '@/components/brand/Logo';
+import { useDashboardData } from '@/context/dashboard-context';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Overview', path: '/dashboard' },
@@ -32,6 +35,11 @@ const navItems = [
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { filteredCampaigns } = useDashboardData();
+
+  const starred = filteredCampaigns.filter((campaign) => campaign.starred && !campaign.archived);
+  const activeCampaigns = filteredCampaigns.filter((campaign) => !campaign.archived);
+  const archived = filteredCampaigns.filter((campaign) => campaign.archived);
 
   return (
     <aside className={cn('h-screen bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300', collapsed ? 'w-20' : 'w-60')}>
@@ -48,7 +56,7 @@ export function AppSidebar() {
         </NavLink>
       </div>
 
-      <nav className="flex-1 py-4 px-2 space-y-1">
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
 
@@ -67,6 +75,36 @@ export function AppSidebar() {
             </NavLink>
           );
         })}
+
+        {!collapsed && (
+          <div className="pt-3 mt-3 border-t border-sidebar-border space-y-3 px-1">
+            {[
+              { icon: Star, label: 'Starred campaigns', items: starred },
+              { icon: FolderOpen, label: 'Campaigns', items: activeCampaigns },
+              { icon: Archive, label: 'Archived', items: archived },
+            ].map((group) => (
+              <div key={group.label}>
+                <div className="flex items-center gap-2 px-2 mb-1.5 text-[11px] uppercase tracking-wide text-muted-foreground/80">
+                  <group.icon className="h-3.5 w-3.5" />
+                  <span>{group.label}</span>
+                  <span className="ml-auto">{group.items.length}</span>
+                </div>
+                <div className="space-y-1">
+                  {group.items.slice(0, 5).map((campaign) => (
+                    <NavLink
+                      key={campaign.id}
+                      to="/dashboard"
+                      className="block px-2 py-1.5 text-xs rounded-md text-muted-foreground hover:bg-sidebar-accent"
+                    >
+                      {campaign.brand}
+                    </NavLink>
+                  ))}
+                  {group.items.length === 0 && <p className="px-2 text-xs text-muted-foreground/70">No campaigns</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </nav>
 
       <div className="p-2 border-t border-sidebar-border">
