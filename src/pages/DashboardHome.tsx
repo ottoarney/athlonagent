@@ -1,208 +1,217 @@
-import { AppLayout } from '@/components/layout/AppLayout';
-import { useDashboardData, type CampaignStage } from '@/context/dashboard-context';
-import { formatCurrency, formatDate, formatTime } from '@/lib/data';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Archive, Plus, Star } from 'lucide-react';
 
-const stageLabels: Record<CampaignStage, string> = {
-  pitching: 'Pitching',
-  active: 'Active',
-  'in-review': 'In Review',
-  complete: 'Complete',
-};
+interface TaskItem {
+  id: string;
+  title: string;
+  dueLabel: string;
+  status: 'todo' | 'done';
+}
+
+interface CampaignItem {
+  id: string;
+  name: string;
+  stage: string;
+}
+
+interface PipelineItem {
+  id: string;
+  label: string;
+  count: number;
+}
+
+interface SportRosterItem {
+  sport: string;
+  count: number;
+}
+
+interface UpcomingItem {
+  id: string;
+  title: string;
+  dueLabel: string;
+  owner: string;
+}
+
+const navItems = [
+  { label: 'Overview', path: '/dashboard' },
+  { label: 'Calendar', path: '/calendar' },
+  { label: 'Tasks', path: '/tasks' },
+  { label: 'Athletes', path: '/athletes' },
+  { label: 'Deals', path: '/deals' },
+  { label: 'Content', path: '/content' },
+  { label: 'Conversations', path: '/conversations' },
+  { label: 'Settings', path: '/settings' },
+];
 
 export default function DashboardHome() {
-  const {
-    filteredAthletes,
-    filteredCampaigns,
-    filteredTasks,
-    kpis,
-    openModal,
-    toggleTaskComplete,
-    updateCampaignStage,
-    toggleCampaignArchive,
-    toggleCampaignStar,
-    upcoming14Days,
-    eventsNextWeek,
-  } = useDashboardData();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const stageSpread: CampaignStage[] = ['pitching', 'active', 'in-review', 'complete'];
+  // Safe local state only (no auth, API, async loading, or protected-route behavior).
+  const athletes: string[] = [];
+  const campaigns: CampaignItem[] = [];
+  const tasks: TaskItem[] = [];
+  const deals: string[] = [];
 
-  const myTasks = filteredTasks.slice().sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
-  const notifications = [
-    '2 deals need follow-up before Friday.',
-    '1 payment milestone posted for Nike campaign.',
-    'Deliverables due this week: 3.',
+  const pipelineStatus: PipelineItem[] = useMemo(
+    () => [
+      { id: 'pitching', label: 'Pitching', count: campaigns?.filter((campaign) => campaign?.stage === 'Pitching')?.length ?? 0 },
+      { id: 'active', label: 'Active', count: campaigns?.filter((campaign) => campaign?.stage === 'Active')?.length ?? 0 },
+      { id: 'review', label: 'In Review', count: campaigns?.filter((campaign) => campaign?.stage === 'In Review')?.length ?? 0 },
+      { id: 'complete', label: 'Complete', count: campaigns?.filter((campaign) => campaign?.stage === 'Complete')?.length ?? 0 },
+    ],
+    [campaigns],
+  );
+
+  const rosterBySport: SportRosterItem[] = useMemo(() => [], []);
+  const upcoming14Days: UpcomingItem[] = useMemo(() => [], []);
+
+  const metricCards = [
+    { label: 'Athletes under management', value: athletes?.length ?? 0 },
+    { label: 'Active campaigns', value: campaigns?.length ?? 0 },
+    { label: 'Open tasks', value: tasks?.filter((task) => task?.status !== 'done')?.length ?? 0 },
+    { label: 'Deals in pipeline', value: deals?.length ?? 0 },
   ];
 
-  const sportBreakdown = filteredAthletes.reduce<Record<string, number>>((acc, athlete) => {
-    acc[athlete.sport] = (acc[athlete.sport] ?? 0) + 1;
-    return acc;
-  }, {});
+  const filteredCampaigns = (campaigns ?? []).filter((campaign) => {
+    if (!searchQuery?.trim()) return true;
+
+    const query = searchQuery.toLowerCase();
+    return campaign?.name?.toLowerCase()?.includes(query) || campaign?.stage?.toLowerCase()?.includes(query);
+  });
 
   return (
-    <AppLayout>
-      <div className="max-w-[1600px] mx-auto space-y-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-display font-semibold tracking-tight">Mission Control</h1>
-            <p className="text-muted-foreground mt-1">Compact command center for roster, campaigns, and tasks.</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => openModal('athlete')}>Add athlete</Button>
-            <Button onClick={() => openModal('campaign')}>New campaign</Button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="flex min-h-screen">
+        <aside className="hidden lg:flex lg:w-64 border-r border-border bg-card/40 p-4 flex-col gap-4">
+          <Link to="/" className="text-xl font-semibold tracking-tight px-2 py-1">Athlon</Link>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {[
-            ['Athletes under management', kpis.athletesUnderManagement],
-            ['Active campaign value', kpis.activeCampaignValue],
-            ['Athlete earnings YTD', kpis.athleteEarningsYtd],
-            ['Pipeline value', kpis.pipelineValue],
-          ].map(([label, value]) => (
-            <div key={String(label)} className="p-4 rounded-xl border border-border bg-card">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
-              <p className="text-2xl font-semibold mt-1">{value}</p>
+          <nav className="space-y-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`block rounded-md px-3 py-2 text-sm ${item.path === '/dashboard' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <section className="mt-3 border-t border-border pt-3">
+            <h2 className="px-2 text-xs uppercase tracking-wide text-muted-foreground">Campaigns</h2>
+            <div className="mt-2 space-y-1">
+              {(filteredCampaigns ?? []).slice(0, 5).map((campaign) => (
+                <div key={campaign?.id ?? campaign?.name} className="rounded-md border border-border px-2 py-1.5 text-xs">
+                  {campaign?.name ?? 'Unnamed campaign'}
+                </div>
+              ))}
+              {(filteredCampaigns?.length ?? 0) === 0 && (
+                <p className="px-2 text-xs text-muted-foreground">No campaigns yet.</p>
+              )}
             </div>
-          ))}
-        </div>
+          </section>
+        </aside>
 
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-          <div className="xl:col-span-8 space-y-4">
-            <section className="p-4 rounded-xl border border-border bg-card">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="font-semibold">Campaign pipeline spread</h2>
-                <Button size="sm" variant="outline" onClick={() => openModal('campaign')}>Add campaign</Button>
+        <main className="flex-1 p-4 md:p-6">
+          <div className="mx-auto max-w-7xl space-y-4">
+            <header className="rounded-xl border border-border bg-card p-3 md:p-4">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search dashboard"
+                  className="pl-9"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value ?? '')}
+                />
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                {stageSpread.map((stage) => {
-                  const stageCampaigns = filteredCampaigns.filter((campaign) => campaign.stage === stage && !campaign.archived);
-                  const stageValue = stageCampaigns.reduce((sum, campaign) => sum + campaign.value, 0);
-                  return (
-                    <div key={stage} className="rounded-lg border border-border bg-surface px-3 py-2">
-                      <p className="text-xs text-muted-foreground">{stageLabels[stage]}</p>
-                      <p className="font-semibold">{stageCampaigns.length}</p>
-                      <p className="text-xs text-muted-foreground">{formatCurrency(stageValue)}</p>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="space-y-2 max-h-[320px] overflow-auto pr-1">
-                {filteredCampaigns.filter((campaign) => !campaign.archived).map((campaign) => {
-                  const athlete = filteredAthletes.find((entry) => entry.id === campaign.athleteId);
-                  return (
-                    <div key={campaign.id} className="rounded-lg border border-border p-3 flex flex-col sm:flex-row sm:items-center gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium">{campaign.brand}</p>
-                        <p className="text-sm text-muted-foreground">{athlete?.name ?? 'Unknown athlete'} • {formatCurrency(campaign.value)}</p>
-                      </div>
-                      <Select value={campaign.stage} onValueChange={(value) => updateCampaignStage(campaign.id, value as CampaignStage)}>
-                        <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          {stageSpread.map((stage) => (<SelectItem key={stage} value={stage}>{stageLabels[stage]}</SelectItem>))}
-                        </SelectContent>
-                      </Select>
-                      <div className="flex gap-1">
-                        <Button size="icon" variant="ghost" onClick={() => toggleCampaignStar(campaign.id)} aria-label="Toggle star">
-                          <Star className={`h-4 w-4 ${campaign.starred ? 'fill-current text-primary' : 'text-muted-foreground'}`} />
-                        </Button>
-                        <Button size="icon" variant="ghost" onClick={() => toggleCampaignArchive(campaign.id)} aria-label="Archive campaign">
-                          <Archive className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            </header>
+
+            <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+              {metricCards.map((metric) => (
+                <div key={metric.label} className="rounded-xl border border-border bg-card p-4">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">{metric.label}</p>
+                  <p className="mt-1 text-2xl font-semibold">{metric.value}</p>
+                </div>
+              ))}
             </section>
 
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl border border-border bg-card">
-                <div className="flex items-center justify-between mb-3">
+            <section className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+              <div className="xl:col-span-8 space-y-4">
+                <article className="rounded-xl border border-border bg-card p-4">
                   <h2 className="font-semibold">My Tasks</h2>
-                  <Button size="sm" variant="outline" onClick={() => openModal('task')}>
-                    <Plus className="h-3.5 w-3.5 mr-1" />Add task
-                  </Button>
-                </div>
-                <div className="space-y-2 max-h-[240px] overflow-auto pr-1">
-                  {myTasks.map((task) => (
-                    <div key={task.id} className="flex items-start gap-2 rounded-lg border border-border px-3 py-2">
-                      <Checkbox checked={task.status === 'done'} onCheckedChange={() => toggleTaskComplete(task.id)} className="mt-1" />
-                      <div className="min-w-0">
-                        <p className={`text-sm font-medium ${task.status === 'done' ? 'line-through text-muted-foreground' : ''}`}>{task.title}</p>
-                        <p className="text-xs text-muted-foreground">Due {formatDate(task.dueDate)}</p>
+                  <div className="mt-3 space-y-2">
+                    {(tasks ?? []).map((task) => (
+                      <div key={task?.id ?? task?.title} className="rounded-lg border border-border px-3 py-2 text-sm">
+                        <p className="font-medium">{task?.title ?? 'Untitled task'}</p>
+                        <p className="text-xs text-muted-foreground">{task?.dueLabel ?? 'No due date'}</p>
                       </div>
-                    </div>
-                  ))}
-                  {myTasks.length === 0 && <p className="text-sm text-muted-foreground">No tasks found.</p>}
-                </div>
+                    ))}
+                    {(tasks?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No tasks assigned.</p>}
+                  </div>
+                </article>
+
+                <article className="rounded-xl border border-border bg-card p-4">
+                  <h2 className="font-semibold">Pipeline status</h2>
+                  <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {(pipelineStatus ?? []).map((item) => (
+                      <div key={item?.id ?? item?.label} className="rounded-lg border border-border px-3 py-2">
+                        <p className="text-xs text-muted-foreground">{item?.label ?? 'Unknown'}</p>
+                        <p className="text-lg font-semibold">{item?.count ?? 0}</p>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+
+                <article className="rounded-xl border border-border bg-card p-4">
+                  <h2 className="font-semibold">Roster by sport</h2>
+                  <div className="mt-3 space-y-2">
+                    {(rosterBySport ?? []).map((entry) => (
+                      <div key={entry?.sport} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
+                        <span>{entry?.sport ?? 'Unknown sport'}</span>
+                        <Badge variant="secondary">{entry?.count ?? 0}</Badge>
+                      </div>
+                    ))}
+                    {(rosterBySport?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No roster data.</p>}
+                  </div>
+                </article>
               </div>
 
-              <div className="p-4 rounded-xl border border-border bg-card">
-                <h2 className="font-semibold mb-3">Roster breakdown by sport</h2>
-                <div className="space-y-2">
-                  {Object.entries(sportBreakdown).map(([sport, count]) => (
-                    <div key={sport} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
-                      <span>{sport}</span>
-                      <Badge variant="secondary">{count}</Badge>
-                    </div>
-                  ))}
-                </div>
+              <div className="xl:col-span-4 space-y-4">
+                <article className="rounded-xl border border-border bg-card p-4">
+                  <h2 className="font-semibold">Next 14 days</h2>
+                  <div className="mt-3 space-y-2">
+                    {(upcoming14Days ?? []).map((item) => (
+                      <div key={item?.id ?? item?.title} className="rounded-lg border border-border px-3 py-2 text-sm">
+                        <p className="font-medium">{item?.title ?? 'Untitled'}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {(item?.owner ?? 'Unknown')} • {(item?.dueLabel ?? 'No due date')}
+                        </p>
+                      </div>
+                    ))}
+                    {(upcoming14Days?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No upcoming items.</p>}
+                  </div>
+                </article>
+
+                <article className="rounded-xl border border-border bg-card p-4">
+                  <h2 className="font-semibold">Campaigns</h2>
+                  <div className="mt-3 space-y-2">
+                    {(filteredCampaigns ?? []).map((campaign) => (
+                      <div key={campaign?.id ?? campaign?.name} className="rounded-lg border border-border px-3 py-2 text-sm">
+                        <p className="font-medium">{campaign?.name ?? 'Unnamed campaign'}</p>
+                        <p className="text-xs text-muted-foreground">{campaign?.stage ?? 'No stage'}</p>
+                      </div>
+                    ))}
+                    {(filteredCampaigns?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No campaigns to display.</p>}
+                  </div>
+                </article>
               </div>
             </section>
           </div>
-
-          <div className="xl:col-span-4 space-y-4">
-            <section className="p-4 rounded-xl border border-border bg-card">
-              <h2 className="font-semibold mb-3">Schedule</h2>
-              <div className="space-y-2">
-                {eventsNextWeek.slice(0, 4).map((event) => (
-                  <div key={event.id} className="rounded-lg border border-border px-3 py-2">
-                    <p className="text-sm font-medium">{event.title}</p>
-                    <p className="text-xs text-muted-foreground">{formatDate(event.startDate)} • {formatTime(event.startDate)}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="p-4 rounded-xl border border-border bg-card">
-              <h2 className="font-semibold mb-3">Next 14 days</h2>
-              <div className="space-y-2 max-h-[220px] overflow-auto pr-1">
-                {upcoming14Days.map((entry) => (
-                  <div key={entry.id} className="rounded-lg border border-border px-3 py-2">
-                    <p className="text-sm font-medium">{entry.title}</p>
-                    <p className="text-xs text-muted-foreground">{entry.campaignOrAthlete} • {formatDate(entry.dueDate)}</p>
-                  </div>
-                ))}
-                {upcoming14Days.length === 0 && <p className="text-sm text-muted-foreground">No upcoming deliverables.</p>}
-              </div>
-            </section>
-
-            <section className="p-4 rounded-xl border border-border bg-card">
-              <h2 className="font-semibold mb-3">Notifications</h2>
-              <div className="space-y-2">
-                {notifications.map((notification) => (
-                  <div key={notification} className="text-sm rounded-lg border border-border px-3 py-2">{notification}</div>
-                ))}
-              </div>
-            </section>
-
-            <section className="p-4 rounded-xl border border-border bg-card">
-              <h2 className="font-semibold mb-3">Quick actions</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <Button variant="outline" onClick={() => openModal('athlete')}>Add athlete</Button>
-                <Button variant="outline" onClick={() => openModal('campaign')}>Add campaign</Button>
-                <Button variant="outline" onClick={() => openModal('task')}>Create task</Button>
-                <Button variant="outline" onClick={() => openModal('campaign')}>Log deal activity</Button>
-              </div>
-            </section>
-          </div>
-        </div>
+        </main>
       </div>
-    </AppLayout>
+    </div>
   );
 }
