@@ -1,12 +1,12 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 interface HeroSectionProps {
-  onPrimaryCta: () => void;
-  onSecondaryCta: () => void;
+  dashboardRoute: string;
 }
 
-export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) {
+export function HeroSection({ dashboardRoute }: HeroSectionProps) {
   return (
     <section className="border-b border-[#f3f4f6] bg-white">
       <div className="container px-4 py-16 md:px-6 md:py-24 lg:py-28">
@@ -30,18 +30,20 @@ export function HeroSection({ onPrimaryCta, onSecondaryCta }: HeroSectionProps) 
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button
+                asChild
                 className="h-12 rounded-full bg-[#01FB64] px-7 text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]"
-                onClick={onPrimaryCta}
               >
-                Get Started
-                <ArrowRight className="ml-1 h-4 w-4" />
+                <Link to={dashboardRoute}>
+                  Get Started
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
               </Button>
               <Button
+                asChild
                 variant="outline"
                 className="h-12 rounded-full border-[#d1d5db] bg-transparent px-7 text-[#111827] hover:bg-[#f9fafb]"
-                onClick={onSecondaryCta}
               >
-                Sign In
+                <Link to={dashboardRoute}>Sign In</Link>
               </Button>
             </div>
 
