@@ -9,6 +9,7 @@ import DashboardOverview from './pages/DashboardOverview';
 import Athletes from './pages/Athletes';
 import Tasks from './pages/Tasks';
 import Deals from './pages/Deals';
+import Clients from './pages/Clients';
 import Calendar from './pages/Calendar';
 import Content from './pages/Content';
 import Settings from './pages/Settings';
@@ -49,7 +50,9 @@ const App = () => (
               <Route path="/dashboard/calendar" element={<Calendar />} />
               <Route path="/dashboard/tasks" element={<Tasks />} />
               <Route path="/dashboard/athletes" element={<Athletes />} />
-              <Route path="/dashboard/deals" element={<Deals />} />
+              <Route path="/dashboard/clients" element={<Clients />} />
+              <Route path="/dashboard/campaigns" element={<Deals />} />
+              <Route path="/dashboard/deals" element={<Navigate to="/dashboard/campaigns" replace />} />
               <Route path="/dashboard/content" element={<Content />} />
               <Route path="/dashboard/conversations" element={<Conversations />} />
               <Route path="/dashboard/team" element={<Team />} />
@@ -59,7 +62,7 @@ const App = () => (
               <Route path="/calendar" element={<Navigate to="/dashboard/calendar" replace />} />
               <Route path="/tasks" element={<Navigate to="/dashboard/tasks" replace />} />
               <Route path="/athletes" element={<Navigate to="/dashboard/athletes" replace />} />
-              <Route path="/deals" element={<Navigate to="/dashboard/deals" replace />} />
+              <Route path="/deals" element={<Navigate to="/dashboard/campaigns" replace />} />
               <Route path="/content" element={<Navigate to="/dashboard/content" replace />} />
               <Route path="/conversations" element={<Navigate to="/dashboard/conversations" replace />} />
               <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />

@@ -38,10 +38,10 @@ interface SidebarCampaign {
 const primaryNavItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', count: null },
   { icon: Users, label: 'Athletes', path: '/dashboard/athletes', count: 8 },
-  { icon: Briefcase, label: 'Clients', path: '/dashboard/deals', count: 7 },
+  { icon: Briefcase, label: 'Clients', path: '/dashboard/clients', count: 7 },
   { icon: Users, label: 'Team', path: '/dashboard/team', count: 12 },
   { icon: Megaphone, label: 'Content Planner', path: '/dashboard/content', count: 6 },
-  { icon: Target, label: 'Campaigns overview', path: '/dashboard/deals', count: 6 },
+  { icon: Target, label: 'Campaigns overview', path: '/dashboard/campaigns', count: 6 },
 ] as const;
 
 const seedCampaigns: SidebarCampaign[] = [
