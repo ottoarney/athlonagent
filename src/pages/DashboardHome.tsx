@@ -44,7 +44,7 @@ export default function DashboardHome() {
   }, {});
 
   return (
-    <AppLayout showAuthLinks>
+    <AppLayout>
       <div className="max-w-[1600px] mx-auto space-y-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>

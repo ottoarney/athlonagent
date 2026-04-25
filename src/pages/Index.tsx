@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -7,7 +7,6 @@ import { HeroSection } from '@/components/landing/HeroSection';
 import { PricingTierSection } from '@/components/landing/PricingTierSection';
 import { SocialProofTestimonials } from '@/components/landing/SocialProofTestimonials';
 import { OperationsFeatureSection } from '@/components/landing/OperationsFeatureSection';
-import { AuthMode, getAuthRoute, setStoredRole } from '@/lib/auth-flow';
 import { Logo } from '@/components/brand/Logo';
 
 const faqs = [
@@ -24,14 +23,8 @@ const faqs = [
 ];
 
 export default function Index() {
-  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const dashboardRoute = '/dashboard';
-
-  const beginAuth = (mode: AuthMode) => {
-    setStoredRole('agent');
-    navigate(getAuthRoute(mode));
-  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -47,7 +40,7 @@ export default function Index() {
 
           <nav className="hidden lg:flex items-center gap-6 text-sm text-[#6b7280]">
             <a href="#pathways" className="transition-colors hover:text-[#111827]">Pathways</a>
-            <button className="transition-colors hover:text-[#111827]" onClick={() => beginAuth('signup')}>See Platform</button>
+            <Link className="transition-colors hover:text-[#111827]" to={dashboardRoute}>See Platform</Link>
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
@@ -71,8 +64,8 @@ export default function Index() {
       <main>
         <HeroSection dashboardRoute={dashboardRoute} />
         <SocialProofTestimonials />
-        <OperationsFeatureSection onPrimaryCta={beginAuth} />
-        <PricingTierSection onTierCta={beginAuth} />
+        <OperationsFeatureSection dashboardRoute={dashboardRoute} />
+        <PricingTierSection dashboardRoute={dashboardRoute} />
 
         <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
           <h2 className="text-3xl md:text-5xl">Frequently asked questions</h2>
@@ -96,7 +89,7 @@ export default function Index() {
             <p className="text-muted-foreground">Premium sports-agent operations platform.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button className="underline" onClick={() => beginAuth('signup')}>Agent signup</button>
+            <Link className="underline" to={dashboardRoute}>Agent signup</Link>
             <Link className="underline" to={dashboardRoute}>Sign in</Link>
             <Link className="underline" to={dashboardRoute}>Start free</Link>
           </div>

@@ -1,6 +1,6 @@
 import { CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { AuthMode } from '@/lib/auth-flow';
 
 const pricingTiers = [
   {
@@ -15,7 +15,6 @@ const pricingTiers = [
       'Basic performance analytics',
     ],
     cta: 'Start as Agent',
-    mode: 'signup' as AuthMode,
     highlighted: false,
   },
   {
@@ -30,7 +29,6 @@ const pricingTiers = [
       'Advanced analytics across roster',
     ],
     cta: 'Join an Agency',
-    mode: 'signup' as AuthMode,
     highlighted: true,
   },
   {
@@ -45,16 +43,15 @@ const pricingTiers = [
       'API and data export access',
     ],
     cta: 'Request Demo',
-    mode: 'login' as AuthMode,
     highlighted: false,
   },
 ];
 
 interface PricingTierSectionProps {
-  onTierCta: (mode: AuthMode) => void;
+  dashboardRoute: string;
 }
 
-export function PricingTierSection({ onTierCta }: PricingTierSectionProps) {
+export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) {
   return (
     <section id="pricing" className="container px-4 md:px-6 pb-16 md:pb-24">
       <div className="mx-auto max-w-3xl text-center">
@@ -92,11 +89,11 @@ export function PricingTierSection({ onTierCta }: PricingTierSectionProps) {
             </ul>
 
             <Button
+              asChild
               variant={tier.highlighted ? 'default' : 'outline'}
               className="mt-6 w-full rounded-full"
-              onClick={() => onTierCta(tier.mode)}
             >
-              {tier.cta}
+              <Link to={dashboardRoute}>{tier.cta}</Link>
             </Button>
           </article>
         ))}
