@@ -39,7 +39,7 @@ export class DashboardErrorBoundary extends Component<DashboardErrorBoundaryProp
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10 text-destructive">
                 <AlertTriangle className="h-5 w-5" />
               </div>
-              <h1 className="text-xl font-semibold">Dashboard failed to load</h1>
+              <h1 className="text-xl font-semibold">View failed to load</h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 Something went wrong while loading this dashboard view. Try again.
               </p>

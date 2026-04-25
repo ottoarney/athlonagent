@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,17 +9,23 @@ import { useDashboardData, type CampaignStage } from '@/context/dashboard-contex
 const stageOptions: { value: CampaignStage; label: string }[] = [
   { value: 'pitching', label: 'Pitching' },
   { value: 'active', label: 'Active' },
-  { value: 'in-review', label: 'In Review' },
+  { value: 'review', label: 'In Review' },
   { value: 'complete', label: 'Complete' },
 ];
 
 export function DashboardCreateDialog() {
   const { activeModal, closeModal, addAthlete, addCampaign, addTask, athletes } = useDashboardData();
+  const hasAthletes = athletes.length > 0;
 
-  const defaultAthleteId = athletes[0]?.id ?? '';
+  const defaultAthleteId = athletes?.[0]?.id ?? '';
   const [athleteForm, setAthleteForm] = useState({ name: '', sport: '', team: '', position: '', classYear: '', location: '' });
   const [campaignForm, setCampaignForm] = useState({ brand: '', athleteId: defaultAthleteId, value: '', stage: 'pitching' as CampaignStage });
   const [taskForm, setTaskForm] = useState({ title: '', athleteId: defaultAthleteId, dueDate: '', priority: 'medium' as const });
+
+  useEffect(() => {
+    setCampaignForm((prev) => ({ ...prev, athleteId: prev.athleteId || defaultAthleteId }));
+    setTaskForm((prev) => ({ ...prev, athleteId: prev.athleteId || defaultAthleteId }));
+  }, [defaultAthleteId]);
 
   const title = useMemo(() => {
     if (activeModal === 'athlete') return 'Add Athlete';
@@ -39,7 +45,7 @@ export function DashboardCreateDialog() {
     event.preventDefault();
     addCampaign({
       brand: campaignForm.brand,
-      athleteId: campaignForm.athleteId,
+      athleteId: campaignForm.athleteId || defaultAthleteId,
       value: Number(campaignForm.value),
       stage: campaignForm.stage,
     });
@@ -49,7 +55,7 @@ export function DashboardCreateDialog() {
 
   const handleTaskSubmit = (event: FormEvent) => {
     event.preventDefault();
-    addTask(taskForm);
+    addTask({ ...taskForm, athleteId: taskForm.athleteId || defaultAthleteId });
     setTaskForm({ title: '', athleteId: defaultAthleteId, dueDate: '', priority: 'medium' });
     closeModal();
   };
@@ -98,12 +104,13 @@ export function DashboardCreateDialog() {
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label>Athlete</Label>
-                <Select value={campaignForm.athleteId} onValueChange={(value) => setCampaignForm((prev) => ({ ...prev, athleteId: value }))}>
+                <Select value={campaignForm.athleteId} onValueChange={(value) => setCampaignForm((prev) => ({ ...prev, athleteId: value }))} disabled={!hasAthletes}>
                   <SelectTrigger><SelectValue placeholder="Select athlete" /></SelectTrigger>
                   <SelectContent>
                     {athletes.map((athlete) => (<SelectItem key={athlete.id} value={athlete.id}>{athlete.name}</SelectItem>))}
                   </SelectContent>
                 </Select>
+                {!hasAthletes && <p className="text-xs text-muted-foreground">Add an athlete first to create a campaign.</p>}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="value">Campaign value</Label>
@@ -119,7 +126,7 @@ export function DashboardCreateDialog() {
                 </SelectContent>
               </Select>
             </div>
-            <Button type="submit" className="w-full">Create campaign</Button>
+            <Button type="submit" className="w-full" disabled={!hasAthletes}>Create campaign</Button>
           </form>
         )}
 
@@ -132,12 +139,13 @@ export function DashboardCreateDialog() {
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label>Athlete</Label>
-                <Select value={taskForm.athleteId} onValueChange={(value) => setTaskForm((prev) => ({ ...prev, athleteId: value }))}>
+                <Select value={taskForm.athleteId} onValueChange={(value) => setTaskForm((prev) => ({ ...prev, athleteId: value }))} disabled={!hasAthletes}>
                   <SelectTrigger><SelectValue placeholder="Select athlete" /></SelectTrigger>
                   <SelectContent>
                     {athletes.map((athlete) => (<SelectItem key={athlete.id} value={athlete.id}>{athlete.name}</SelectItem>))}
                   </SelectContent>
                 </Select>
+                {!hasAthletes && <p className="text-xs text-muted-foreground">Add an athlete first to create a task.</p>}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="dueDate">Due date</Label>
@@ -156,7 +164,7 @@ export function DashboardCreateDialog() {
                 </SelectContent>
               </Select>
             </div>
-            <Button type="submit" className="w-full">Create task</Button>
+            <Button type="submit" className="w-full" disabled={!hasAthletes}>Create task</Button>
           </form>
         )}
       </DialogContent>

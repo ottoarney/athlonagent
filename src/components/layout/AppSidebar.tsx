@@ -35,7 +35,7 @@ const navItems = [
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const { filteredCampaigns } = useDashboardData();
+  const { filteredCampaigns, toggleCampaignArchive, toggleCampaignStar } = useDashboardData();
 
   const starred = filteredCampaigns.filter((campaign) => campaign.starred && !campaign.archived);
   const activeCampaigns = filteredCampaigns.filter((campaign) => !campaign.archived);
@@ -91,13 +91,27 @@ export function AppSidebar() {
                 </div>
                 <div className="space-y-1">
                   {group.items.slice(0, 5).map((campaign) => (
-                    <NavLink
-                      key={campaign.id}
-                      to="/dashboard"
-                      className="block px-2 py-1.5 text-xs rounded-md text-muted-foreground hover:bg-sidebar-accent"
-                    >
-                      {campaign.brand}
-                    </NavLink>
+                    <div key={campaign.id} className="group/item flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent">
+                      <NavLink to="/dashboard" className="min-w-0 flex-1 truncate">
+                        {campaign.brand}
+                      </NavLink>
+                      <button
+                        type="button"
+                        className="opacity-70 transition hover:opacity-100"
+                        onClick={() => toggleCampaignStar(campaign.id)}
+                        aria-label={campaign.starred ? 'Unstar campaign' : 'Star campaign'}
+                      >
+                        <Star className={cn('h-3.5 w-3.5', campaign.starred && 'fill-current text-primary')} />
+                      </button>
+                      <button
+                        type="button"
+                        className="opacity-70 transition hover:opacity-100"
+                        onClick={() => toggleCampaignArchive(campaign.id)}
+                        aria-label={campaign.archived ? 'Restore campaign' : 'Archive campaign'}
+                      >
+                        <Archive className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   ))}
                   {group.items.length === 0 && <p className="px-2 text-xs text-muted-foreground/70">No campaigns</p>}
                 </div>

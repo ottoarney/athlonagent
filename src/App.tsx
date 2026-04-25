@@ -19,7 +19,6 @@ import Waitlist from './pages/Waitlist';
 import Conversations from './pages/Conversations';
 import NotFound from './pages/NotFound';
 import { AppErrorBoundary } from './components/app/AppErrorBoundary';
-import { DashboardErrorBoundary } from './components/dashboard/DashboardErrorBoundary';
 
 const queryClient = new QueryClient();
 
@@ -45,14 +44,14 @@ const App = () => (
               <Route path="/demo" element={<Demo />} />
               <Route path="/waitlist" element={<Waitlist />} />
 
-              <Route path="/dashboard" element={<DashboardErrorBoundary><DashboardHome /></DashboardErrorBoundary>} />
-              <Route path="/athletes" element={<DashboardErrorBoundary><Athletes /></DashboardErrorBoundary>} />
-              <Route path="/tasks" element={<DashboardErrorBoundary><Tasks /></DashboardErrorBoundary>} />
-              <Route path="/deals" element={<DashboardErrorBoundary><Deals /></DashboardErrorBoundary>} />
-              <Route path="/calendar" element={<DashboardErrorBoundary><Calendar /></DashboardErrorBoundary>} />
-              <Route path="/content" element={<DashboardErrorBoundary><Content /></DashboardErrorBoundary>} />
-              <Route path="/conversations" element={<DashboardErrorBoundary><Conversations /></DashboardErrorBoundary>} />
-              <Route path="/settings" element={<DashboardErrorBoundary><Settings /></DashboardErrorBoundary>} />
+              <Route path="/dashboard" element={<DashboardHome />} />
+              <Route path="/athletes" element={<Athletes />} />
+              <Route path="/tasks" element={<Tasks />} />
+              <Route path="/deals" element={<Deals />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/content" element={<Content />} />
+              <Route path="/conversations" element={<Conversations />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/files" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
