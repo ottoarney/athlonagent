@@ -22,14 +22,14 @@ import { useDashboardData } from '@/context/dashboard-context';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Overview', path: '/dashboard' },
-  { icon: Calendar, label: 'Calendar', path: '/calendar' },
-  { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
-  { icon: Users, label: 'Athletes', path: '/athletes' },
-  { icon: DollarSign, label: 'Deals', path: '/deals' },
-  { icon: FileText, label: 'Content Plan', path: '/content' },
-  { icon: FolderOpen, label: 'Files', path: '/files' },
-  { icon: MessageSquare, label: 'Conversations', path: '/conversations' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+  { icon: Calendar, label: 'Calendar', path: '/dashboard/calendar' },
+  { icon: CheckSquare, label: 'Tasks', path: '/dashboard/tasks' },
+  { icon: Users, label: 'Athletes', path: '/dashboard/athletes' },
+  { icon: DollarSign, label: 'Deals', path: '/dashboard/deals' },
+  { icon: FileText, label: 'Content Plan', path: '/dashboard/content' },
+  { icon: FolderOpen, label: 'Files', path: '/dashboard/files' },
+  { icon: MessageSquare, label: 'Conversations', path: '/dashboard/conversations' },
+  { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
 ];
 
 export function AppSidebar() {
@@ -58,7 +58,9 @@ export function AppSidebar() {
 
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-auto">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+          const isActive =
+            location.pathname === item.path ||
+            (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
 
           return (
             <NavLink
