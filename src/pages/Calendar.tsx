@@ -5,6 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { events, getAthlete, formatTime, EventType } from '@/lib/data';
 import { cn } from '@/lib/utils';
+import { useDashboardData } from '@/context/dashboard-context';
 
 const fadeIn = {
   initial: { opacity: 0, y: 10 },
@@ -24,6 +25,7 @@ const eventTypeColors: Record<EventType, string> = {
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week' | 'agenda'>('week');
+  const { openModal } = useDashboardData();
 
   const today = new Date();
   
@@ -105,7 +107,7 @@ export default function Calendar() {
                 </Button>
               ))}
             </div>
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={() => openModal('task')}>
               <Plus className="h-4 w-4" />
               Add Event
             </Button>

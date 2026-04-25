@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Index from './pages/Index';
-import DashboardHome from './pages/DashboardHome';
+import DashboardOverview from './pages/DashboardOverview';
 import Athletes from './pages/Athletes';
 import Tasks from './pages/Tasks';
 import Deals from './pages/Deals';
@@ -19,7 +19,6 @@ import Waitlist from './pages/Waitlist';
 import Conversations from './pages/Conversations';
 import NotFound from './pages/NotFound';
 import { AppErrorBoundary } from './components/app/AppErrorBoundary';
-import { DashboardErrorBoundary } from './components/dashboard/DashboardErrorBoundary';
 
 const queryClient = new QueryClient();
 
@@ -45,14 +44,23 @@ const App = () => (
               <Route path="/demo" element={<Demo />} />
               <Route path="/waitlist" element={<Waitlist />} />
 
-              <Route path="/dashboard" element={<DashboardErrorBoundary><DashboardHome /></DashboardErrorBoundary>} />
-              <Route path="/athletes" element={<DashboardErrorBoundary><Athletes /></DashboardErrorBoundary>} />
-              <Route path="/tasks" element={<DashboardErrorBoundary><Tasks /></DashboardErrorBoundary>} />
-              <Route path="/deals" element={<DashboardErrorBoundary><Deals /></DashboardErrorBoundary>} />
-              <Route path="/calendar" element={<DashboardErrorBoundary><Calendar /></DashboardErrorBoundary>} />
-              <Route path="/content" element={<DashboardErrorBoundary><Content /></DashboardErrorBoundary>} />
-              <Route path="/conversations" element={<DashboardErrorBoundary><Conversations /></DashboardErrorBoundary>} />
-              <Route path="/settings" element={<DashboardErrorBoundary><Settings /></DashboardErrorBoundary>} />
+              <Route path="/dashboard" element={<DashboardOverview />} />
+              <Route path="/dashboard/calendar" element={<Calendar />} />
+              <Route path="/dashboard/tasks" element={<Tasks />} />
+              <Route path="/dashboard/athletes" element={<Athletes />} />
+              <Route path="/dashboard/deals" element={<Deals />} />
+              <Route path="/dashboard/content" element={<Content />} />
+              <Route path="/dashboard/conversations" element={<Conversations />} />
+              <Route path="/dashboard/settings" element={<Settings />} />
+              <Route path="/dashboard/files" element={<Navigate to="/dashboard" replace />} />
+
+              <Route path="/calendar" element={<Navigate to="/dashboard/calendar" replace />} />
+              <Route path="/tasks" element={<Navigate to="/dashboard/tasks" replace />} />
+              <Route path="/athletes" element={<Navigate to="/dashboard/athletes" replace />} />
+              <Route path="/deals" element={<Navigate to="/dashboard/deals" replace />} />
+              <Route path="/content" element={<Navigate to="/dashboard/content" replace />} />
+              <Route path="/conversations" element={<Navigate to="/dashboard/conversations" replace />} />
+              <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
               <Route path="/files" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
