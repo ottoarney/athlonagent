@@ -26,14 +26,11 @@ const faqs = [
 export default function Index() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const dashboardRoute = '/dashboard';
 
   const beginAuth = (mode: AuthMode) => {
     setStoredRole('agent');
     navigate(getAuthRoute(mode));
-  };
-
-  const goToDashboard = () => {
-    navigate('/dashboard');
   };
 
   return (
@@ -54,8 +51,8 @@ export default function Index() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button variant="outline" className="rounded-full" onClick={goToDashboard}>Sign In</Button>
-            <Button className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]" onClick={goToDashboard}>Get Started</Button>
+            <Button asChild variant="outline" className="rounded-full"><Link to={dashboardRoute}>Sign In</Link></Button>
+            <Button asChild className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]"><Link to={dashboardRoute}>Get Started</Link></Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>
@@ -65,14 +62,14 @@ export default function Index() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
-            <Button variant="outline" onClick={goToDashboard}>Sign In</Button>
-            <Button variant="outline" onClick={goToDashboard}>Get Started</Button>
+            <Button asChild variant="outline"><Link to={dashboardRoute}>Sign In</Link></Button>
+            <Button asChild variant="outline"><Link to={dashboardRoute}>Get Started</Link></Button>
           </div>
         )}
       </header>
 
       <main>
-        <HeroSection onPrimaryCta={goToDashboard} onSecondaryCta={goToDashboard} />
+        <HeroSection dashboardRoute={dashboardRoute} />
         <SocialProofTestimonials />
         <OperationsFeatureSection onPrimaryCta={beginAuth} />
         <PricingTierSection onTierCta={beginAuth} />
@@ -100,8 +97,8 @@ export default function Index() {
           </div>
           <div className="flex flex-wrap gap-3">
             <button className="underline" onClick={() => beginAuth('signup')}>Agent signup</button>
-            <button className="underline" onClick={goToDashboard}>Sign in</button>
-            <button className="underline" onClick={goToDashboard}>Start free</button>
+            <Link className="underline" to={dashboardRoute}>Sign in</Link>
+            <Link className="underline" to={dashboardRoute}>Start free</Link>
           </div>
         </div>
       </footer>
