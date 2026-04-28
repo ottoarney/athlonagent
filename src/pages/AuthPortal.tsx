@@ -72,12 +72,21 @@ export default function AuthPortal() {
       }
 
       if (safeMode === 'signup') {
-        const data = await signUpWithPassword(email, password);
-        if (!data.user) {
-          throw new Error('Unable to create account. Please try again.');
+        const { data, error } = await signUpWithPassword(email, password);
+
+        if (error) {
+          throw new Error(error.message || 'Unable to create account. Please try again.');
         }
 
-        setAuthMessage('Check your email to confirm your account.');
+        if (!data?.user && !data?.session) {
+          throw new Error('Sign-up was blocked or returned an empty response. Please try again or contact support.');
+        }
+
+        if (data?.session) {
+          setAuthMessage('Account created successfully.');
+        } else if (data?.user) {
+          setAuthMessage('Account created, but the confirmation email may be delayed or blocked. Check spam, or contact support.');
+        }
       } else {
         await signInWithPassword(email, password);
         toast.success('Signed in successfully.');
