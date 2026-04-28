@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getDashboardRoute, setStoredRole } from '@/lib/auth-flow';
-import { isAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
+import { isAuthEnabled, isGoogleOAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
 import { toast } from 'sonner';
 import { Logo } from '@/components/brand/Logo';
 
@@ -14,6 +14,7 @@ export default function AuthPortal() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
 
   const safeMode = location.pathname.startsWith('/login') ? 'login' : 'signup';
 
@@ -22,19 +23,31 @@ export default function AuthPortal() {
   };
 
   const handleGoogle = async () => {
+    setGoogleError(null);
+
+    if (!isAuthEnabled()) {
+      setStoredRole('agent');
+      toast.success('Demo sign-in complete.');
+      redirectAfterAuth();
+      return;
+    }
+
+    if (!isGoogleOAuthEnabled()) {
+      setGoogleError('Google sign-in is not enabled yet. Please use email and password for now.');
+      return;
+    }
+
     setLoading(true);
     try {
-      if (!isAuthEnabled()) {
-        setStoredRole('agent');
-        toast.success('Demo sign-in complete.');
-        redirectAfterAuth();
-        return;
-      }
-
       await signInWithGoogle();
       toast.success('Redirecting to Google…');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Unable to start Google sign-in');
+      const message = error instanceof Error ? error.message : 'Unable to start Google sign-in';
+      if (message.toLowerCase().includes('google sign-in is not enabled yet') || message.toLowerCase().includes('unsupported provider')) {
+        setGoogleError('Google sign-in is not enabled yet. Please use email and password for now.');
+      } else {
+        toast.error(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -120,6 +133,7 @@ export default function AuthPortal() {
               <Button disabled={loading} onClick={handleGoogle} className="w-full h-11">
                 Continue with Google
               </Button>
+              {googleError && <p className="text-sm text-destructive">{googleError}</p>}
               <div className="relative text-center text-xs text-muted-foreground py-2">
                 <span className="bg-background px-2 relative z-10">or use email</span>
                 <div className="absolute inset-x-0 top-1/2 border-t border-border" />
