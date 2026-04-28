@@ -2,8 +2,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Index from './pages/Index';
 import DashboardOverview from './pages/DashboardOverview';
 import Athletes from './pages/Athletes';
@@ -30,6 +30,23 @@ const LoadingFallback = () => (
   </div>
 );
 
+
+const HashScrollManager = () => {
+  const { hash, pathname } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return;
+
+    const targetId = hash.replace('#', '');
+    const element = document.getElementById(targetId);
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [hash, pathname]);
+
+  return null;
+};
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -38,6 +55,7 @@ const App = () => (
       <AppErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
           <BrowserRouter>
+            <HashScrollManager />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/signup" element={<AuthPortal />} />

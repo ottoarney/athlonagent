@@ -76,7 +76,7 @@ export default function AuthPortal() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--accent)/0.18),transparent_40%)]" />
             <div className="relative space-y-6">
               <Link
-                to="/"
+                to="/#hero"
                 aria-label="Athlon home"
                 className="inline-flex w-fit items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85"
               >
@@ -110,7 +110,7 @@ export default function AuthPortal() {
               </div>
             )}
             <Link
-              to="/"
+              to="/#hero"
               aria-label="Athlon home"
               className="mb-6 inline-flex w-fit items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85 lg:hidden"
             >

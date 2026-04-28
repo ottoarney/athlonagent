@@ -25,7 +25,7 @@ export default function Index() {
       <header className="sticky top-0 z-50 border-b border-[#f3f4f6] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.04)] backdrop-blur-xl">
         <div className="container px-4 md:px-6 h-20 flex items-center justify-between">
           <Link
-            to="/"
+            to="/#hero"
             aria-label="Athlon home"
             className="inline-flex items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
