@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -21,8 +23,13 @@ export default function Conversations() {
 
   return (
     <AppLayout>
-      <div className="max-w-[1400px] mx-auto rounded-2xl border border-border bg-card overflow-hidden">
-        <div className="grid lg:grid-cols-[0.85fr_1.15fr] min-h-[78vh]">
+      <PageTransition className="max-w-[1400px]">
+        <DashboardPageHeader
+          title="Conversations"
+          subtitle="Coordinate updates, approvals, and reminders across athletes and team threads."
+        />
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="grid min-h-[78vh] lg:grid-cols-[0.85fr_1.15fr]">
           <aside className="border-r border-border bg-surface p-4">
             <p className="text-sm font-medium">Conversations</p>
             <div className="mt-3 space-y-2">
@@ -37,7 +44,7 @@ export default function Conversations() {
 
           <section className="p-4 md:p-6 flex flex-col">
             <div className="pb-4 border-b border-border">
-              <h1 className="text-2xl">{activeConversation.name}</h1>
+              <h2 className="text-2xl">{activeConversation.name}</h2>
               <p className="text-sm text-muted-foreground mt-1">Shared thread with pinned notes, reminders, and context-aware updates.</p>
             </div>
 
@@ -57,7 +64,8 @@ export default function Conversations() {
             </form>
           </section>
         </div>
-      </div>
+        </div>
+      </PageTransition>
     </AppLayout>
   );
 }

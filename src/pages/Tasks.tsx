@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, List, LayoutGrid, GripVertical } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { tasks, getAthlete, formatDate, isPastDue, TaskStatus } from '@/lib/data';
@@ -32,43 +34,40 @@ export default function Tasks() {
 
   return (
     <AppLayout>
-      <motion.div 
-        className="h-full flex flex-col"
-        initial="initial"
-        animate="animate"
-      >
+      <PageTransition className="flex h-full flex-col">
         {/* Header */}
-        <motion.div variants={fadeIn} className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-display font-semibold tracking-tight">Tasks</h1>
-            <p className="text-muted-foreground mt-1">
-              Track deadlines and manage deliverables
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-lg p-1">
-              <Button
-                variant={view === 'kanban' ? 'secondary' : 'ghost'}
-                size="sm"
-                onClick={() => setView('kanban')}
-                className="gap-1.5"
-              >
-                <LayoutGrid className="h-4 w-4" />
-                Board
+        <motion.div variants={fadeIn}>
+          <DashboardPageHeader
+            title="Tasks"
+            subtitle="Track deadlines, deliverables, and execution across every active workflow."
+            actions={
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Task
               </Button>
-              <Button
-                variant={view === 'list' ? 'secondary' : 'ghost'}
-                size="sm"
-                onClick={() => setView('list')}
-                className="gap-1.5"
-              >
-                <List className="h-4 w-4" />
-                List
-              </Button>
-            </div>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Task
+            }
+          />
+        </motion.div>
+
+        <motion.div variants={fadeIn} className="flex items-center justify-end gap-2">
+          <div className="flex items-center rounded-lg border border-border p-1">
+            <Button
+              variant={view === 'kanban' ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setView('kanban')}
+              className="gap-1.5"
+            >
+              <LayoutGrid className="h-4 w-4" />
+              Board
+            </Button>
+            <Button
+              variant={view === 'list' ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setView('list')}
+              className="gap-1.5"
+            >
+              <List className="h-4 w-4" />
+              List
             </Button>
           </div>
         </motion.div>
@@ -193,7 +192,7 @@ export default function Tasks() {
             })}
           </motion.div>
         )}
-      </motion.div>
+      </PageTransition>
     </AppLayout>
   );
 }

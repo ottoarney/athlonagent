@@ -1,5 +1,7 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -158,15 +160,12 @@ export default function Team() {
 
   return (
     <AppLayout>
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">TEAM</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-foreground">Departments &amp; directory</h1>
-            <p className="mt-1 text-sm text-muted-foreground">12 teammates · 5 departments · 95 open tasks routed</p>
-          </div>
-          <Button onClick={() => setIsAddModalOpen(true)}>+ Add teammate</Button>
-        </header>
+      <PageTransition className="max-w-7xl gap-6">
+        <DashboardPageHeader
+          title="Team"
+          subtitle="Manage agency members, responsibilities, and internal workflow."
+          actions={<Button onClick={() => setIsAddModalOpen(true)}>+ Add teammate</Button>}
+        />
 
         <section className="rounded-xl border border-border bg-white p-4">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Departments</p>
@@ -322,7 +321,7 @@ export default function Team() {
             ) : null}
           </div>
         </section>
-      </div>
+      </PageTransition>
 
       <Dialog open={Boolean(selectedTeammate)} onOpenChange={(open) => (!open ? setSelectedTeammate(null) : null)}>
         <DialogContent>

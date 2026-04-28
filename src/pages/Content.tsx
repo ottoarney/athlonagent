@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Plus, Instagram, Youtube, ArrowRight } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { contentItems, getAthlete, formatDate, ContentStatus } from '@/lib/data';
@@ -43,23 +45,19 @@ const platformIcons: Record<string, React.ElementType> = {
 export default function Content() {
   return (
     <AppLayout>
-      <motion.div 
-        className="h-full flex flex-col"
-        initial="initial"
-        animate="animate"
-      >
+      <PageTransition className="flex h-full flex-col">
         {/* Header */}
-        <motion.div variants={fadeIn} className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-display font-semibold tracking-tight">Content Plan</h1>
-            <p className="text-muted-foreground mt-1">
-              Manage content pipeline and posting schedule
-            </p>
-          </div>
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            New Content
-          </Button>
+        <motion.div variants={fadeIn}>
+          <DashboardPageHeader
+            title="Content Planner"
+            subtitle="Plan, approve, and track athlete content across every channel."
+            actions={
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                New Content
+              </Button>
+            }
+          />
         </motion.div>
 
         {/* Pipeline Stages Header */}
@@ -182,7 +180,7 @@ export default function Content() {
             })}
           </div>
         </motion.div>
-      </motion.div>
+      </PageTransition>
     </AppLayout>
   );
 }

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Plus, MapPin } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { events, getAthlete, formatTime, EventType } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -63,54 +65,48 @@ export default function Calendar() {
 
   return (
     <AppLayout>
-      <motion.div 
-        className="h-full flex flex-col"
-        initial="initial"
-        animate="animate"
-      >
+      <PageTransition className="flex h-full flex-col">
         {/* Header */}
-        <motion.div variants={fadeIn} className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-display font-semibold tracking-tight">Calendar</h1>
-              <p className="text-muted-foreground mt-1">
-                {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-              </p>
-            </div>
-            <div className="flex items-center gap-1 ml-4">
-              <Button variant="outline" size="icon" onClick={() => navigateWeek('prev')}>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setCurrentDate(new Date())}
-              >
-                Today
-              </Button>
-              <Button variant="outline" size="icon" onClick={() => navigateWeek('next')}>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center border border-border rounded-lg p-1">
-              {['month', 'week', 'agenda'].map((v) => (
-                <Button
-                  key={v}
-                  variant={view === v ? 'secondary' : 'ghost'}
-                  size="sm"
-                  onClick={() => setView(v as typeof view)}
-                  className="capitalize"
-                >
-                  {v}
+        <motion.div variants={fadeIn} className="space-y-4">
+          <DashboardPageHeader
+            title="Calendar"
+            subtitle="Plan schedules, events, and key dates across athlete operations."
+            actions={
+              <div className="flex items-center gap-2">
+                <div className="flex items-center rounded-lg border border-border p-1">
+                  {['month', 'week', 'agenda'].map((v) => (
+                    <Button
+                      key={v}
+                      variant={view === v ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => setView(v as typeof view)}
+                      className="capitalize"
+                    >
+                      {v}
+                    </Button>
+                  ))}
+                </div>
+                <Button className="gap-2" onClick={() => openModal('task')}>
+                  <Plus className="h-4 w-4" />
+                  Add Event
                 </Button>
-              ))}
-            </div>
-            <Button className="gap-2" onClick={() => openModal('task')}>
-              <Plus className="h-4 w-4" />
-              Add Event
+              </div>
+            }
+          />
+
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="icon" onClick={() => navigateWeek('prev')}>
+              <ChevronLeft className="h-4 w-4" />
             </Button>
+            <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>
+              Today
+            </Button>
+            <Button variant="outline" size="icon" onClick={() => navigateWeek('next')}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <p className="ml-3 text-sm text-muted-foreground">
+              {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </p>
           </div>
         </motion.div>
 
@@ -278,7 +274,7 @@ export default function Calendar() {
             Month view coming soon...
           </motion.div>
         )}
-      </motion.div>
+      </PageTransition>
     </AppLayout>
   );
 }
