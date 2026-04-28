@@ -15,6 +15,8 @@ export default function AuthPortal() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
 
   const safeMode = location.pathname.startsWith('/login') ? 'login' : 'signup';
 
@@ -24,6 +26,8 @@ export default function AuthPortal() {
 
   const handleGoogle = async () => {
     setGoogleError(null);
+    setAuthError(null);
+    setAuthMessage(null);
 
     if (!isAuthEnabled()) {
       setStoredRole('agent');
@@ -55,6 +59,8 @@ export default function AuthPortal() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setAuthError(null);
+    setAuthMessage(null);
     setLoading(true);
 
     try {
@@ -66,15 +72,23 @@ export default function AuthPortal() {
       }
 
       if (safeMode === 'signup') {
-        await signUpWithPassword(email, password);
-        toast.success('Account created. Check your email to confirm, then sign in.');
+        const data = await signUpWithPassword(email, password);
+        if (!data.user) {
+          throw new Error('Unable to create account. Please try again.');
+        }
+
+        setAuthMessage('Check your email to confirm your account.');
       } else {
         await signInWithPassword(email, password);
         toast.success('Signed in successfully.');
         redirectAfterAuth();
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Authentication failed');
+      const message = error instanceof Error ? error.message : 'Authentication failed';
+      setAuthError(message);
+      if (safeMode !== 'signup') {
+        toast.error(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -141,6 +155,8 @@ export default function AuthPortal() {
               <form onSubmit={handleSubmit} className="space-y-3">
                 <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="work@email.com" />
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="••••••••" />
+                {authError && <p className="text-sm text-destructive">{authError}</p>}
+                {authMessage && <p className="text-sm text-emerald-600">{authMessage}</p>}
                 <Button disabled={loading} className="w-full h-11" type="submit">
                   {safeMode === 'signup' ? 'Create account' : 'Sign in'} <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>

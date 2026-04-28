@@ -13,6 +13,37 @@ export function isGoogleOAuthEnabled() {
   return isAuthEnabled() && isGoogleAuthEnabled;
 }
 
+function getAuthCallbackUrl() {
+  if (typeof window === 'undefined') {
+    return supabaseEnv.redirectTo ?? '/auth/callback';
+  }
+
+  const currentOriginCallback = `${window.location.origin}/auth/callback`;
+  const configuredRedirect = supabaseEnv.redirectTo?.trim();
+
+  if (!configuredRedirect) {
+    return currentOriginCallback;
+  }
+
+  try {
+    const configuredUrl = new URL(configuredRedirect, window.location.origin);
+
+    if (configuredUrl.pathname !== '/auth/callback') {
+      configuredUrl.pathname = '/auth/callback';
+      configuredUrl.search = '';
+      configuredUrl.hash = '';
+    }
+
+    if (window.location.hostname !== 'localhost' && configuredUrl.hostname === 'localhost') {
+      return currentOriginCallback;
+    }
+
+    return configuredUrl.toString();
+  } catch {
+    return currentOriginCallback;
+  }
+}
+
 export async function signInWithGoogle() {
   if (!supabase) {
     throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.');
@@ -23,7 +54,7 @@ export async function signInWithGoogle() {
   }
 
   setStoredRole('agent');
-  const redirectTo = supabaseEnv.redirectTo ?? `${window.location.origin}/auth/callback`;
+  const redirectTo = getAuthCallbackUrl();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -74,7 +105,7 @@ export async function signUpWithPassword(email: string, password: string) {
       data: {
         role: 'agent',
       },
-      emailRedirectTo: supabaseEnv.redirectTo ?? `${window.location.origin}/auth/callback`,
+      emailRedirectTo: getAuthCallbackUrl(),
     },
   });
 
