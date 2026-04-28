@@ -9,6 +9,7 @@ import DashboardOverview from './pages/DashboardOverview';
 import Athletes from './pages/Athletes';
 import Tasks from './pages/Tasks';
 import Deals from './pages/Deals';
+import CampaignDetail from './pages/CampaignDetail';
 import Clients from './pages/Clients';
 import Calendar from './pages/Calendar';
 import Content from './pages/Content';
@@ -70,6 +71,7 @@ const App = () => (
               <Route path="/dashboard/athletes" element={<Athletes />} />
               <Route path="/dashboard/clients" element={<Clients />} />
               <Route path="/dashboard/campaigns" element={<Deals />} />
+              <Route path="/dashboard/campaigns/:campaignId" element={<CampaignDetail />} />
               <Route path="/dashboard/deals" element={<Navigate to="/dashboard/campaigns" replace />} />
               <Route path="/dashboard/content" element={<Content />} />
               <Route path="/dashboard/conversations" element={<Conversations />} />
