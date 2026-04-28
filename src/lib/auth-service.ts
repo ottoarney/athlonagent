@@ -147,7 +147,14 @@ export async function signUpWithPasswordAndProfile(email: string, password: stri
     },
   });
 
-  if (error) return { data, error };
+  if (error) {
+    console.error('[auth.signup] supabase.auth.signUp returned an error', {
+      message: error.message,
+      status: (error as { status?: number }).status,
+      code: (error as { code?: string }).code,
+    });
+    return { data, error };
+  }
 
   if (data?.user) {
     // MVP note: email confirmation is intentionally disabled while validating session-based signup.
