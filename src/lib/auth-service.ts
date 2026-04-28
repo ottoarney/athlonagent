@@ -98,7 +98,6 @@ export async function signUpWithPassword(email: string, password: string) {
 
   setStoredRole('agent');
   const emailRedirectTo = getAuthCallbackUrl();
-  const currentOrigin = typeof window === 'undefined' ? null : window.location.origin;
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -110,11 +109,6 @@ export async function signUpWithPassword(email: string, password: string) {
       emailRedirectTo,
     },
   });
-
-  console.info('[AuthPortal Debug] signup response', data);
-  console.info('[AuthPortal Debug] signup error', error);
-  console.info('[AuthPortal Debug] emailRedirectTo', emailRedirectTo);
-  console.info('[AuthPortal Debug] window.location.origin', currentOrigin);
 
   return { data, error };
 }

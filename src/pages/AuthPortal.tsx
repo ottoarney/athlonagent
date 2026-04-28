@@ -23,7 +23,6 @@ export default function AuthPortal() {
   const [loading, setLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [authMessage, setAuthMessage] = useState<string | null>(null);
 
   const safeMode = location.pathname.startsWith('/login') ? 'login' : 'signup';
 
@@ -34,7 +33,6 @@ export default function AuthPortal() {
   const handleGoogle = async () => {
     setGoogleError(null);
     setAuthError(null);
-    setAuthMessage(null);
 
     if (!isAuthEnabled()) {
       setStoredRole('agent');
@@ -67,7 +65,6 @@ export default function AuthPortal() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setAuthError(null);
-    setAuthMessage(null);
 
     if (safeMode === 'signup') {
       if (!firstName.trim()) {
@@ -76,6 +73,14 @@ export default function AuthPortal() {
       }
       if (!lastName.trim()) {
         setAuthError('Last name is required.');
+        return;
+      }
+      if (!agencyCompanyName.trim()) {
+        setAuthError('Agency / Company name is required.');
+        return;
+      }
+      if (!signupRole.trim()) {
+        setAuthError('Role is required.');
         return;
       }
       if (password.length < 8) {
@@ -111,14 +116,14 @@ export default function AuthPortal() {
         }
 
         if (!data?.user && !data?.session) {
-          throw new Error('Sign-up was blocked or returned an empty response. Please try again or contact support.');
+          throw new Error('Signup created, but no active session was returned. Check Supabase Email provider settings.');
         }
 
         if (data?.session) {
           toast.success('Account created successfully.');
           redirectAfterAuth();
-        } else if (data?.user) {
-          throw new Error('Email confirmation is still enabled in Supabase. Disable Confirm email in Supabase Auth settings for MVP testing.');
+        } else {
+          throw new Error('Signup created, but no active session was returned. Check Supabase Email provider settings.');
         }
       } else {
         await signInWithPassword(email, password);
@@ -128,9 +133,6 @@ export default function AuthPortal() {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Authentication failed';
       setAuthError(message);
-      if (safeMode !== 'signup') {
-        toast.error(message);
-      }
     } finally {
       setLoading(false);
     }
@@ -186,9 +188,15 @@ export default function AuthPortal() {
             </div>
 
             <div className="space-y-3">
-              <Button disabled={loading} onClick={handleGoogle} className="w-full h-11">
-                Continue with Google
-              </Button>
+              {isGoogleOAuthEnabled() ? (
+                <Button disabled={loading} onClick={handleGoogle} className="w-full h-11">
+                  Continue with Google
+                </Button>
+              ) : (
+                <p className="rounded-md border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                  Google sign-in is not enabled yet. Please use email and password.
+                </p>
+              )}
               {googleError && <p className="text-sm text-destructive">{googleError}</p>}
               <div className="relative text-center text-xs text-muted-foreground py-2">
                 <span className="bg-background px-2 relative z-10">or use email</span>
@@ -208,11 +216,11 @@ export default function AuthPortal() {
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="companyName">Agency / Company name (optional)</Label>
-                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} placeholder="Athlon Sports" />
+                      <Label htmlFor="companyName">Agency / Company name</Label>
+                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} required placeholder="Athlon Sports" />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="role">Role (optional)</Label>
+                      <Label htmlFor="role">Role</Label>
                       <Select value={signupRole} onValueChange={setSignupRole}>
                         <SelectTrigger id="role">
                           <SelectValue placeholder="Select your role" />
@@ -234,7 +242,6 @@ export default function AuthPortal() {
                   <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8} placeholder="Confirm password" />
                 )}
                 {authError && <p className="text-sm text-destructive">{authError}</p>}
-                {authMessage && <p className="text-sm text-emerald-600">{authMessage}</p>}
                 <Button disabled={loading} className="w-full h-11" type="submit">
                   {safeMode === 'signup' ? 'Create account' : 'Sign in'} <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
