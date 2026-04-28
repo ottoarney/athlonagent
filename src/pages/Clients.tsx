@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -296,6 +297,7 @@ export default function Clients() {
   const openEditClient = (client: Client) => {
     setEditingClientId(client.id);
     populateFormFromClient(client);
+    setSelectedClient(null);
     setIsEditOpen(true);
   };
 
@@ -553,10 +555,33 @@ export default function Clients() {
       </Dialog>
 
       <Dialog open={Boolean(selectedClient)} onOpenChange={(open) => !open && setSelectedClient(null)}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{selectedClient?.name}</DialogTitle>
-            <DialogDescription>Client profile details.</DialogDescription>
+        <DialogContent className="sm:max-w-[760px] [&>button]:hidden">
+          <DialogHeader className="flex-row items-start justify-between space-y-0 gap-4 pr-1 text-left">
+            <div>
+              <DialogTitle>{selectedClient?.name}</DialogTitle>
+              <DialogDescription>Client profile details.</DialogDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  if (!selectedClient) return;
+                  openEditClient(selectedClient);
+                }}
+              >
+                Edit client
+              </Button>
+              <DialogClose asChild>
+                <button
+                  type="button"
+                  className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </DialogClose>
+            </div>
           </DialogHeader>
           {selectedClient && (
             <div className="space-y-4 text-sm">
@@ -595,30 +620,26 @@ export default function Clients() {
               </div>
             </div>
           )}
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (!selectedClient) return;
-                openEditClient(selectedClient);
-              }}
-            >
-              Edit client
-            </Button>
-            <Button variant="outline" onClick={() => setSelectedClient(null)}>
-              Close
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
+      <Dialog
+        open={isEditOpen}
+        onOpenChange={(open) => {
+          setIsEditOpen(open);
+          if (!open) {
+            setEditingClientId(null);
+            setForm(defaultForm);
+          }
+        }}
+      >
+        <DialogContent className="w-[90vw] max-w-[860px] h-auto max-h-[90vh] overflow-hidden p-0 [&>button]:hidden">
+          <DialogHeader className="border-b border-border px-5 py-4 text-left">
             <DialogTitle>Edit client</DialogTitle>
             <DialogDescription>Update client details and contact information.</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="overflow-y-auto px-5 py-4">
+          <div className="grid gap-2.5 md:grid-cols-2">
             <Field label="Client name">
               <Input value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} />
             </Field>
@@ -641,10 +662,10 @@ export default function Clients() {
             <Field label="Campaigns"><Input type="number" min={0} value={form.campaigns} onChange={(e) => setForm((prev) => ({ ...prev, campaigns: e.target.value }))} /></Field>
             <Field label="Active campaigns"><Input type="number" min={0} value={form.activeCampaigns} onChange={(e) => setForm((prev) => ({ ...prev, activeCampaigns: e.target.value }))} /></Field>
             <Field label="LTV"><Input value={form.ltv} onChange={(e) => setForm((prev) => ({ ...prev, ltv: e.target.value }))} /></Field>
-            <Field label="Contacts (comma-separated)" className="sm:col-span-2"><Input value={form.contacts} onChange={(e) => setForm((prev) => ({ ...prev, contacts: e.target.value }))} /></Field>
-            <div className="sm:col-span-2 mt-1 rounded-lg border border-border bg-muted/20 p-3">
+            <Field label="Contacts (comma-separated)" className="md:col-span-2"><Input value={form.contacts} onChange={(e) => setForm((prev) => ({ ...prev, contacts: e.target.value }))} /></Field>
+            <div className="md:col-span-2 rounded-lg border border-border bg-muted/20 p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Contact Information</p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <div className="mt-2 grid gap-2.5 md:grid-cols-2">
                 <Field label="Primary contact name"><Input value={form.primaryContactName} onChange={(e) => setForm((prev) => ({ ...prev, primaryContactName: e.target.value }))} /></Field>
                 <Field label="Contact role/title"><Input value={form.contactRoleTitle} onChange={(e) => setForm((prev) => ({ ...prev, contactRoleTitle: e.target.value }))} /></Field>
                 <Field label="Company/brand contact person"><Input value={form.companyBrandContactPerson} onChange={(e) => setForm((prev) => ({ ...prev, companyBrandContactPerson: e.target.value }))} /></Field>
@@ -659,11 +680,12 @@ export default function Clients() {
                 <Field label="Other social / notes"><Input value={form.otherSocialNotes} onChange={(e) => setForm((prev) => ({ ...prev, otherSocialNotes: e.target.value }))} /></Field>
                 <Field label="Last contacted date"><Input type="date" value={form.lastContactedDate} onChange={(e) => setForm((prev) => ({ ...prev, lastContactedDate: e.target.value }))} /></Field>
                 <Field label="Next follow-up date"><Input type="date" value={form.nextFollowUpDate} onChange={(e) => setForm((prev) => ({ ...prev, nextFollowUpDate: e.target.value }))} /></Field>
-                <Field label="General notes" className="sm:col-span-2"><Input value={form.generalNotes} onChange={(e) => setForm((prev) => ({ ...prev, generalNotes: e.target.value }))} /></Field>
+                <Field label="General notes" className="md:col-span-2"><Input value={form.generalNotes} onChange={(e) => setForm((prev) => ({ ...prev, generalNotes: e.target.value }))} /></Field>
               </div>
             </div>
           </div>
-          <DialogFooter>
+          </div>
+          <DialogFooter className="sticky bottom-0 border-t border-border bg-background px-5 py-4">
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button>
             <Button onClick={saveEditedClient} disabled={!form.name.trim()}>Save changes</Button>
           </DialogFooter>
