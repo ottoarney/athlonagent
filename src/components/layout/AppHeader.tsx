@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboardData } from '@/context/dashboard-context';
+import { signOut } from '@/lib/auth-service';
+import { clearStoredRole } from '@/lib/auth-flow';
 
 interface AppHeaderProps {
   selectedAthlete: Athlete | null;
@@ -24,6 +26,12 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
   const [notificationCount] = useState(3);
   const navigate = useNavigate();
   const { filteredAthletes, searchQuery, setSearchQuery, openModal } = useDashboardData();
+
+  const handleSignOut = async () => {
+    await signOut();
+    clearStoredRole();
+    navigate('/login');
+  };
 
   return (
     <header className="h-16 bg-background border-b border-border flex items-center justify-between px-6 gap-4">
@@ -132,7 +140,7 @@ export function AppHeader({ selectedAthlete, onAthleteChange, showAuthLinks = fa
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Sign out</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void handleSignOut()}>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
