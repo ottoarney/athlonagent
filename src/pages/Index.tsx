@@ -10,16 +10,10 @@ import { OperationsFeatureSection } from '@/components/landing/OperationsFeature
 import { Logo } from '@/components/brand/Logo';
 
 const faqs = [
-  ['Is Athlon Agent only for sports agents?', 'Athlon Agent is purpose-built for sports agents, agencies, and athlete managers who need one operating system for execution.'],
-  ['What can I manage inside Athlon Agent?', 'You can manage athletes, tasks, schedules, deals, files, contracts, and day-to-day operations in one place.'],
-  ['Is there a free plan?', 'Yes. The Solo plan is free for users managing one athlete. It is a simple way to start before moving up to a larger roster.'],
-  ['What is included in the Roster plan?', 'The Roster plan is built for agents managing multiple athletes. It includes deal tracking, task management, calendar tools, file storage, and workflow support for growing operations.'],
-  ['Do you offer a plan for agencies?', 'Yes. The Command plan is built for agencies and larger teams with multi-user access, role permissions, and shared dashboards.'],
-  ['Does Athlon Agent support Google sign in?', 'Yes. Google sign in is supported to make onboarding faster and simpler for agencies and their teams.'],
-  ['Who is Athlon Agent best for?', 'Athlon Agent is best for sports agents, athlete managers, and agencies that need a cleaner way to run operations.'],
-  ['Why use Athlon Agent instead of spreadsheets?', 'Spreadsheets can track information but they do not run operations well. Athlon Agent gives your team structure, accountability, and visibility.'],
-  ['Is Athlon Agent built for NIL workflows?', 'Yes. The platform supports modern athlete operations including NIL deal flow, content planning, and team coordination.'],
-  ['Can teams or interns be added to the account?', 'Yes on higher tier plans. Agency users can add team members and assign access based on role.'],
+  ['Who is Athlon built for?', 'Athlon is built for sports agents, athlete managers, and agencies running high-touch athlete operations.'],
+  ['Can agencies manage multiple agents?', 'Yes. Agency workspaces support multiple agents with shared visibility and role-based access controls.'],
+  ['Does Athlon track deals, deadlines, and content?', 'Yes. Athlon keeps deals, obligations, deadlines, and content workflows organized in one operational system.'],
+  ['How do I get access?', 'Choose a plan, create your account, and our team can help onboard your agency to Athlon quickly.'],
 ];
 
 export default function Index() {
@@ -39,8 +33,10 @@ export default function Index() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 text-sm text-[#6b7280]">
-            <a href="#pathways" className="transition-colors hover:text-[#111827]">Pathways</a>
-            <Link className="transition-colors hover:text-[#111827]" to={dashboardRoute}>See Platform</Link>
+            <a href="#platform" className="transition-colors hover:text-[#111827]">Platform</a>
+            <a href="#social-proof" className="transition-colors hover:text-[#111827]">Social Proof</a>
+            <a href="#pricing" className="transition-colors hover:text-[#111827]">Pricing</a>
+            <a href="#faq" className="transition-colors hover:text-[#111827]">FAQ</a>
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
@@ -55,6 +51,10 @@ export default function Index() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
+            <a href="#platform" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Platform</a>
+            <a href="#social-proof" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Social Proof</a>
+            <a href="#pricing" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Pricing</a>
+            <a href="#faq" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>FAQ</a>
             <Button asChild variant="outline"><Link to={dashboardRoute}>Sign In</Link></Button>
             <Button asChild variant="outline"><Link to={dashboardRoute}>Get Started</Link></Button>
           </div>
@@ -67,7 +67,7 @@ export default function Index() {
         <OperationsFeatureSection dashboardRoute={dashboardRoute} />
         <PricingTierSection dashboardRoute={dashboardRoute} />
 
-        <section id="faq" className="container px-4 md:px-6 pb-16 md:pb-24">
+        <section id="faq" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
           <h2 className="text-3xl md:text-5xl">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="mt-8 border rounded-2xl px-5 bg-card">
             {faqs.map(([q, a]) => (

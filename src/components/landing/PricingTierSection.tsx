@@ -53,7 +53,7 @@ interface PricingTierSectionProps {
 
 export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) {
   return (
-    <section id="pricing" className="container px-4 md:px-6 pb-16 md:pb-24">
+    <section id="pricing" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Pricing</p>
         <h2 className="mt-3 text-3xl md:text-5xl">Pick the plan that fits your roster</h2>

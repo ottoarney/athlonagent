@@ -132,7 +132,7 @@ function TestimonialColumn({
 
 export function SocialProofTestimonials() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-24">
+    <section id="social-proof" className="scroll-mt-24 relative overflow-hidden py-20 md:py-24">
       <div className="container relative px-4 md:px-6">
         <div className="rounded-3xl border border-border/70 bg-gradient-to-b from-surface to-background p-6 md:p-10">
           <div className="mx-auto max-w-3xl text-center">
