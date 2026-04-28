@@ -111,20 +111,32 @@ export default function AuthPortal() {
           role: signupRole || undefined,
         });
 
+        console.log('SIGNUP DATA:', data);
+        console.log('SIGNUP ERROR:', error);
+
+        console.log('[auth.signup] signup result user', data?.user ?? null);
+        console.log('[auth.signup] signup result session', data?.session ?? null);
+        console.log('[auth.signup] signup error', error ?? null);
+
         if (error) {
-          throw new Error(error.message || 'Unable to create account. Please try again.');
+          throw error;
         }
 
-        if (!data?.user && !data?.session) {
-          throw new Error('Signup created, but no active session was returned. Check Supabase Email provider settings.');
+        if (!data?.user) {
+          throw new Error('Signup failed: no auth user was created.');
         }
 
         if (data?.session) {
           toast.success('Account created successfully.');
           redirectAfterAuth();
-        } else {
-          throw new Error('Signup created, but no active session was returned. Check Supabase Email provider settings.');
+          return;
         }
+
+        const signinFallback = await signInWithPassword(email, password);
+        console.log('[auth.signup] signin fallback result', signinFallback ?? null);
+
+        toast.success('Account created successfully.');
+        redirectAfterAuth();
       } else {
         await signInWithPassword(email, password);
         toast.success('Signed in successfully.');

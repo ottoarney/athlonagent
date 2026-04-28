@@ -130,12 +130,10 @@ export async function signUpWithPasswordAndProfile(email: string, password: stri
   const fullName = `${profile.firstName} ${profile.lastName}`.trim();
 
   const metadata = {
-    role: 'agent',
     first_name: profile.firstName,
     last_name: profile.lastName,
-    full_name: fullName,
     agency_company_name: profile.agencyCompanyName || null,
-    signup_role: profile.role || null,
+    role: profile.role || 'agent',
   };
 
   const { data, error } = await supabase.auth.signUp({
@@ -148,11 +146,6 @@ export async function signUpWithPasswordAndProfile(email: string, password: stri
   });
 
   if (error) {
-    console.error('[auth.signup] supabase.auth.signUp returned an error', {
-      message: error.message,
-      status: (error as { status?: number }).status,
-      code: (error as { code?: string }).code,
-    });
     return { data, error };
   }
 
