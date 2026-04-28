@@ -1,7 +1,7 @@
 import { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { getStoredRole, setStoredRole } from '@/lib/auth-flow';
-import { supabaseEnv } from './supabase-env';
+import { isGoogleAuthEnabled, supabaseEnv } from './supabase-env';
 
 export type AuthUser = User;
 
@@ -9,17 +9,26 @@ export function isAuthEnabled() {
   return Boolean(supabase);
 }
 
+export function isGoogleOAuthEnabled() {
+  return isAuthEnabled() && isGoogleAuthEnabled;
+}
+
 export async function signInWithGoogle() {
   if (!supabase) {
     throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.');
   }
 
+  if (!isGoogleAuthEnabled) {
+    throw new Error('Google sign-in is not enabled yet. Please use email and password for now.');
+  }
+
   setStoredRole('agent');
   const redirectTo = supabaseEnv.redirectTo ?? `${window.location.origin}/auth/callback`;
 
-  const { error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
+      skipBrowserRedirect: true,
       redirectTo,
       queryParams: {
         access_type: 'offline',
@@ -32,6 +41,12 @@ export async function signInWithGoogle() {
   if (error) {
     throw error;
   }
+
+  if (!data?.url) {
+    throw new Error('Google sign-in is not enabled yet. Please use email and password for now.');
+  }
+
+  window.location.assign(data.url);
 }
 
 export async function signInWithPassword(email: string, password: string) {
