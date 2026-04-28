@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ dashboardRoute }: HeroSectionProps) {
   return (
-    <section className="border-b border-[#f3f4f6] bg-white">
+    <section id="hero" className="border-b border-[#f3f4f6] bg-white">
       <div className="container px-4 py-16 md:px-6 md:py-24 lg:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="flex flex-col justify-center">
