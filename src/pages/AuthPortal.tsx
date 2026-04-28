@@ -118,7 +118,18 @@ export default function AuthPortal() {
           toast.success('Account created successfully.');
           redirectAfterAuth();
         } else if (data?.user) {
-          setAuthMessage('Account created, but Supabase is still requiring email confirmation. Disable Confirm Email in Supabase Auth settings to allow direct dashboard access.');
+          try {
+            await signInWithPassword(email, password);
+            toast.success('Account created successfully.');
+            redirectAfterAuth();
+          } catch (signInError) {
+            const message = signInError instanceof Error ? signInError.message : 'Unable to sign in after signup.';
+            if (message.toLowerCase().includes('email') && message.toLowerCase().includes('confirm')) {
+              setAuthError('Email confirmation is still enabled in Supabase. Turn it off in Authentication → Providers → Email.');
+            } else {
+              setAuthError(message);
+            }
+          }
         }
       } else {
         await signInWithPassword(email, password);
