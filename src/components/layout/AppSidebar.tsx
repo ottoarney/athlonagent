@@ -12,9 +12,9 @@ import {
   Megaphone,
   Target,
   FolderOpen,
-  Square,
 } from 'lucide-react';
 
+import { Logo } from '@/components/brand/Logo';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -119,14 +119,8 @@ export function AppSidebar() {
   return (
     <aside className="h-screen w-80 border-r border-sidebar-border bg-sidebar text-sidebar-foreground flex flex-col">
       <div className="border-b border-sidebar-border px-4 py-4">
-        <NavLink to="/dashboard" className="flex items-center gap-3 rounded-lg p-2 hover:bg-sidebar-accent/60 transition-colors">
-          <div className="h-9 w-9 rounded-md bg-primary/20 border border-primary/30 flex items-center justify-center text-primary">
-            <Square className="h-4 w-4 fill-current" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold leading-tight truncate">Oregon Accelerator</p>
-            <p className="text-[11px] tracking-[0.18em] uppercase text-primary/90">MISSION CONTROL</p>
-          </div>
+        <NavLink to="/" aria-label="Athlon home" className="flex items-center rounded-lg p-2 hover:bg-sidebar-accent/60 transition-colors">
+          <Logo size="md" priority />
         </NavLink>
       </div>
 
