@@ -18,7 +18,8 @@ const faqs = [
 
 export default function Index() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const dashboardRoute = '/dashboard';
+  const signupRoute = '/signup';
+  const loginRoute = '/login';
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -40,8 +41,8 @@ export default function Index() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
-            <Button asChild variant="outline" className="rounded-full"><Link to={dashboardRoute}>Sign In</Link></Button>
-            <Button asChild className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]"><Link to={dashboardRoute}>Get Started</Link></Button>
+            <Button asChild variant="outline" className="rounded-full"><Link to={loginRoute}>Sign In</Link></Button>
+            <Button asChild className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]"><Link to={signupRoute}>Get Started</Link></Button>
           </div>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen((v) => !v)}>
@@ -55,17 +56,17 @@ export default function Index() {
             <a href="#social-proof" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Social Proof</a>
             <a href="#pricing" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Pricing</a>
             <a href="#faq" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>FAQ</a>
-            <Button asChild variant="outline"><Link to={dashboardRoute}>Sign In</Link></Button>
-            <Button asChild variant="outline"><Link to={dashboardRoute}>Get Started</Link></Button>
+            <Button asChild variant="outline"><Link to={loginRoute}>Sign In</Link></Button>
+            <Button asChild variant="outline"><Link to={signupRoute}>Get Started</Link></Button>
           </div>
         )}
       </header>
 
       <main>
-        <HeroSection dashboardRoute={dashboardRoute} />
+        <HeroSection dashboardRoute={signupRoute} />
         <SocialProofTestimonials />
-        <OperationsFeatureSection dashboardRoute={dashboardRoute} />
-        <PricingTierSection dashboardRoute={dashboardRoute} />
+        <OperationsFeatureSection dashboardRoute={signupRoute} />
+        <PricingTierSection dashboardRoute={signupRoute} />
 
         <section id="faq" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
           <h2 className="text-3xl md:text-5xl">Frequently asked questions</h2>
@@ -89,9 +90,9 @@ export default function Index() {
             <p className="text-muted-foreground">Premium sports-agent operations platform.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link className="underline" to={dashboardRoute}>Agent signup</Link>
-            <Link className="underline" to={dashboardRoute}>Sign in</Link>
-            <Link className="underline" to={dashboardRoute}>Start free</Link>
+            <Link className="underline" to={signupRoute}>Agent signup</Link>
+            <Link className="underline" to={loginRoute}>Sign in</Link>
+            <Link className="underline" to={signupRoute}>Start free</Link>
           </div>
         </div>
       </footer>
