@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Building2, Users, Bell, Shield, Palette } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,17 +18,13 @@ const fadeIn = {
 export default function Settings() {
   return (
     <AppLayout>
-      <motion.div 
-        className="max-w-3xl mx-auto space-y-8"
-        initial="initial"
-        animate="animate"
-      >
+      <PageTransition className="max-w-3xl space-y-8">
         {/* Header */}
         <motion.div variants={fadeIn}>
-          <h1 className="text-2xl font-display font-semibold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your workspace and preferences
-          </p>
+          <DashboardPageHeader
+            title="Settings"
+            subtitle="Manage workspace controls, permissions, notifications, and preferences."
+          />
         </motion.div>
 
         {/* Organization */}
@@ -203,7 +201,7 @@ export default function Settings() {
         <motion.div variants={fadeIn} className="flex justify-end pb-8">
           <Button size="lg">Save Changes</Button>
         </motion.div>
-      </motion.div>
+      </PageTransition>
     </AppLayout>
   );
 }

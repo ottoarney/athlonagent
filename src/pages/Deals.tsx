@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { deals, getAthlete, formatCurrency, formatDate, DealStage } from '@/lib/data';
 import { cn } from '@/lib/utils';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 
 const fadeIn = {
   initial: { opacity: 0, y: 10 },
@@ -44,23 +46,19 @@ export default function Deals() {
 
   return (
     <AppLayout>
-      <motion.div 
-        className="h-full flex flex-col"
-        initial="initial"
-        animate="animate"
-      >
+      <PageTransition className="flex h-full flex-col">
         {/* Header */}
-        <motion.div variants={fadeIn} className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-display font-semibold tracking-tight">Deals & NIL</h1>
-            <p className="text-muted-foreground mt-1">
-              Track brand partnerships and NIL opportunities
-            </p>
-          </div>
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            New Deal
-          </Button>
+        <motion.div variants={fadeIn}>
+          <DashboardPageHeader
+            title="Campaigns"
+            subtitle="Monitor campaigns, deliverables, timelines, and performance."
+            actions={
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                New Deal
+              </Button>
+            }
+          />
         </motion.div>
 
         {/* Summary Stats */}
@@ -216,7 +214,7 @@ export default function Deals() {
             })}
           </div>
         </motion.div>
-      </motion.div>
+      </PageTransition>
     </AppLayout>
   );
 }

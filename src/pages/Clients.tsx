@@ -1,5 +1,7 @@
 import { ReactNode, useMemo, useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -202,15 +204,12 @@ export default function Clients() {
 
   return (
     <AppLayout>
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Clients</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight text-foreground">Brand directory</h1>
-            <p className="mt-1 text-sm text-muted-foreground">7 clients · 4 active · 2 pitching · $1.4M lifetime</p>
-          </div>
-          <Button onClick={() => setIsAddOpen(true)}>+ Add client</Button>
-        </header>
+      <PageTransition className="max-w-7xl gap-6">
+        <DashboardPageHeader
+          title="Clients"
+          subtitle="Track brand relationships, deal status, and partnership opportunities."
+          actions={<Button onClick={() => setIsAddOpen(true)}>+ Add client</Button>}
+        />
 
         <section className="space-y-4 rounded-xl border border-border bg-card p-4">
           <div>
@@ -296,7 +295,7 @@ export default function Clients() {
             </button>
           ))}
         </section>
-      </div>
+      </PageTransition>
 
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="sm:max-w-xl">
