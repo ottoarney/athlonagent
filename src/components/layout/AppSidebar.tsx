@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   ChevronDown,
   ChevronRight,
@@ -18,6 +18,7 @@ import { Logo } from '@/components/brand/Logo';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -26,14 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-
-interface SidebarCampaign {
-  id: string;
-  name: string;
-  icon: string;
-  starred: boolean;
-  archived: boolean;
-}
+import { createCampaignId, SidebarCampaign, useSidebarCampaigns } from '@/hooks/useSidebarCampaigns';
 
 const primaryNavItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', count: null },
@@ -44,25 +38,22 @@ const primaryNavItems = [
   { icon: Target, label: 'Campaigns overview', path: '/dashboard/campaigns', count: 6 },
 ] as const;
 
-const seedCampaigns: SidebarCampaign[] = [
-  { id: 'camp-1', name: 'Nike Swoosh Drop', icon: '👟', starred: true, archived: false },
-  { id: 'camp-2', name: 'Dutch Bros Study Break', icon: '☕', starred: false, archived: false },
-  { id: 'camp-3', name: 'Moda Health Mental Performance', icon: '🧠', starred: true, archived: false },
-  { id: 'camp-4', name: 'Columbia PNW Trails', icon: '🥾', starred: false, archived: false },
-  { id: 'camp-5', name: 'Ruffles Ridges Game Day', icon: '🥔', starred: false, archived: false },
-  { id: 'camp-6', name: 'Leatherman Multi-Tool', icon: '🛠️', starred: false, archived: true },
-];
-
 export function AppSidebar() {
   const location = useLocation();
-  const [campaigns, setCampaigns] = useState<SidebarCampaign[]>(seedCampaigns);
+  const navigate = useNavigate();
+  const { campaigns, setCampaigns } = useSidebarCampaigns();
   const [sections, setSections] = useState({
     starred: true,
     campaigns: true,
     archived: true,
   });
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [newCampaignName, setNewCampaignName] = useState('');
+  const [newCampaignForm, setNewCampaignForm] = useState({
+    name: '',
+    brand: '',
+    athlete: '',
+    dealValue: '',
+  });
 
   const starredCampaigns = useMemo(() => campaigns.filter((item) => item.starred && !item.archived), [campaigns]);
   const activeCampaigns = useMemo(() => campaigns.filter((item) => !item.archived), [campaigns]);
@@ -91,26 +82,29 @@ export function AppSidebar() {
   };
 
   const openCreateModal = () => {
-    setNewCampaignName('');
+    setNewCampaignForm({ name: '', brand: '', athlete: '', dealValue: '' });
     setIsAddOpen(true);
   };
 
   const handleCreateCampaign = () => {
-    const trimmed = newCampaignName.trim();
-    if (!trimmed) return;
+    const trimmedName = newCampaignForm.name.trim();
+    if (!trimmedName) return;
 
     const campaign: SidebarCampaign = {
-      id: `camp-${Date.now()}`,
-      name: trimmed,
+      id: createCampaignId(trimmedName),
+      name: trimmedName,
       icon: '🗂️',
       starred: false,
       archived: false,
+      brand: newCampaignForm.brand.trim() || trimmedName,
+      athlete: newCampaignForm.athlete.trim() || 'Unassigned athlete',
+      dealValue: Number(newCampaignForm.dealValue) || 0,
     };
 
     setCampaigns((prev) => [campaign, ...prev]);
     setSections((prev) => ({ ...prev, campaigns: true }));
     setIsAddOpen(false);
-    setNewCampaignName('');
+    navigate(`/dashboard/campaigns/${campaign.id}`);
   };
 
   const isPrimaryItemActive = (path: string) =>
@@ -266,29 +260,55 @@ export function AppSidebar() {
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add campaign</DialogTitle>
+            <DialogTitle>New campaign</DialogTitle>
             <DialogDescription>Create a campaign and add it directly to your active list.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
-            <label htmlFor="campaign-name" className="text-sm font-medium">
-              Campaign name
-            </label>
-            <Input
-              id="campaign-name"
-              value={newCampaignName}
-              onChange={(event) => setNewCampaignName(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  handleCreateCampaign();
-                }
-              }}
-              placeholder="Enter campaign name"
-            />
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="campaign-name">Campaign Name</Label>
+              <Input
+                id="campaign-name"
+                value={newCampaignForm.name}
+                onChange={(event) => setNewCampaignForm((prev) => ({ ...prev, name: event.target.value }))}
+                placeholder="Enter campaign name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="campaign-brand">Brand (optional)</Label>
+              <Input
+                id="campaign-brand"
+                value={newCampaignForm.brand}
+                onChange={(event) => setNewCampaignForm((prev) => ({ ...prev, brand: event.target.value }))}
+                placeholder="Nike"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="campaign-athlete">Athlete (optional)</Label>
+              <Input
+                id="campaign-athlete"
+                value={newCampaignForm.athlete}
+                onChange={(event) => setNewCampaignForm((prev) => ({ ...prev, athlete: event.target.value }))}
+                placeholder="Jordan Lee"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="campaign-value">Deal Value (optional)</Label>
+              <Input
+                id="campaign-value"
+                type="number"
+                min={0}
+                value={newCampaignForm.dealValue}
+                onChange={(event) => setNewCampaignForm((prev) => ({ ...prev, dealValue: event.target.value }))}
+                placeholder="25000"
+              />
+            </div>
           </div>
-          <DialogFooter>
-            <Button type="button" onClick={handleCreateCampaign} disabled={!newCampaignName.trim()}>
-              Add campaign
+          <DialogFooter className="gap-2">
+            <Button type="button" variant="outline" onClick={() => setIsAddOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleCreateCampaign} disabled={!newCampaignForm.name.trim()}>
+              Create
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -337,9 +357,15 @@ function CampaignSection({
             <p className="px-2 py-1 text-xs text-muted-foreground/80">{emptyMessage}</p>
           ) : (
             campaigns.map((campaign) => (
-              <div
+              <NavLink
                 key={campaign.id}
-                className="group flex items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-sidebar-accent transition-colors"
+                to={`/dashboard/campaigns/${campaign.id}`}
+                className={({ isActive }) =>
+                  cn(
+                    'group flex items-center gap-2 rounded-md px-2 py-1.5 text-xs transition-colors',
+                    isActive ? 'bg-primary/15 text-foreground' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-sidebar-foreground',
+                  )
+                }
               >
                 <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-primary/15 text-[11px]">
                   {campaign.icon}
@@ -348,7 +374,7 @@ function CampaignSection({
                   {campaign.name}
                 </span>
                 <div className="opacity-75 group-hover:opacity-100">{renderActions(campaign)}</div>
-              </div>
+              </NavLink>
             ))
           )}
         </div>
