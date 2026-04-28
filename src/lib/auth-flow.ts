@@ -23,6 +23,14 @@ export function setStoredRole(role: UserRole = 'agent') {
   window.localStorage.setItem(ROLE_STORAGE_KEY, role);
 }
 
+export function clearStoredRole() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.localStorage.removeItem(ROLE_STORAGE_KEY);
+}
+
 export function getAuthRoute(mode: AuthMode) {
   return `/${mode}`;
 }

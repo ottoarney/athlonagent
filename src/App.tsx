@@ -22,6 +22,7 @@ import Waitlist from './pages/Waitlist';
 import Conversations from './pages/Conversations';
 import NotFound from './pages/NotFound';
 import { AppErrorBoundary } from './components/app/AppErrorBoundary';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 const queryClient = new QueryClient();
 
@@ -65,19 +66,19 @@ const App = () => (
               <Route path="/demo" element={<Demo />} />
               <Route path="/waitlist" element={<Waitlist />} />
 
-              <Route path="/dashboard" element={<DashboardOverview />} />
-              <Route path="/dashboard/calendar" element={<Calendar />} />
-              <Route path="/dashboard/tasks" element={<Tasks />} />
-              <Route path="/dashboard/athletes" element={<Athletes />} />
-              <Route path="/dashboard/clients" element={<Clients />} />
-              <Route path="/dashboard/campaigns" element={<Deals />} />
-              <Route path="/dashboard/campaigns/:campaignId" element={<CampaignDetail />} />
-              <Route path="/dashboard/deals" element={<Navigate to="/dashboard/campaigns" replace />} />
-              <Route path="/dashboard/content" element={<Content />} />
-              <Route path="/dashboard/conversations" element={<Conversations />} />
-              <Route path="/dashboard/team" element={<Team />} />
-              <Route path="/dashboard/settings" element={<Settings />} />
-              <Route path="/dashboard/files" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardOverview /></ProtectedRoute>} />
+              <Route path="/dashboard/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
+              <Route path="/dashboard/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+              <Route path="/dashboard/athletes" element={<ProtectedRoute><Athletes /></ProtectedRoute>} />
+              <Route path="/dashboard/clients" element={<ProtectedRoute><Clients /></ProtectedRoute>} />
+              <Route path="/dashboard/campaigns" element={<ProtectedRoute><Deals /></ProtectedRoute>} />
+              <Route path="/dashboard/campaigns/:campaignId" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
+              <Route path="/dashboard/deals" element={<ProtectedRoute><Navigate to="/dashboard/campaigns" replace /></ProtectedRoute>} />
+              <Route path="/dashboard/content" element={<ProtectedRoute><Content /></ProtectedRoute>} />
+              <Route path="/dashboard/conversations" element={<ProtectedRoute><Conversations /></ProtectedRoute>} />
+              <Route path="/dashboard/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
+              <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/dashboard/files" element={<ProtectedRoute><Navigate to="/dashboard" replace /></ProtectedRoute>} />
 
               <Route path="/calendar" element={<Navigate to="/dashboard/calendar" replace />} />
               <Route path="/tasks" element={<Navigate to="/dashboard/tasks" replace />} />
