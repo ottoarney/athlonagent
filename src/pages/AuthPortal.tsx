@@ -4,15 +4,22 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getDashboardRoute, setStoredRole } from '@/lib/auth-flow';
-import { isAuthEnabled, isGoogleOAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
+import { isAuthEnabled, isGoogleOAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPasswordAndProfile } from '@/lib/auth-service';
 import { toast } from 'sonner';
 import { Logo } from '@/components/brand/Logo';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function AuthPortal() {
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [agencyCompanyName, setAgencyCompanyName] = useState('');
+  const [signupRole, setSignupRole] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -61,6 +68,26 @@ export default function AuthPortal() {
     event.preventDefault();
     setAuthError(null);
     setAuthMessage(null);
+
+    if (safeMode === 'signup') {
+      if (!firstName.trim()) {
+        setAuthError('First name is required.');
+        return;
+      }
+      if (!lastName.trim()) {
+        setAuthError('Last name is required.');
+        return;
+      }
+      if (password.length < 8) {
+        setAuthError('Password must be at least 8 characters.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        setAuthError('Password and confirm password must match.');
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
@@ -72,10 +99,15 @@ export default function AuthPortal() {
       }
 
       if (safeMode === 'signup') {
-        const { data, error } = await signUpWithPassword(email, password);
+        const { data, error } = await signUpWithPasswordAndProfile(email, password, {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          agencyCompanyName: agencyCompanyName.trim() || undefined,
+          role: signupRole || undefined,
+        });
 
         if (error) {
-          throw new Error(error.message || 'Unable to create account. Please try again.');
+          throw new Error(error.message);
         }
 
         if (!data?.user && !data?.session) {
@@ -83,9 +115,10 @@ export default function AuthPortal() {
         }
 
         if (data?.session) {
-          setAuthMessage('Account created successfully.');
+          toast.success('Account created successfully.');
+          redirectAfterAuth();
         } else if (data?.user) {
-          setAuthMessage('Account created, but the confirmation email may be delayed or blocked. Check spam, or contact support.');
+          setAuthMessage('Account created, but Supabase is still requiring email confirmation. Disable Confirm Email in Supabase Auth settings to allow direct dashboard access.');
         }
       } else {
         await signInWithPassword(email, password);
@@ -162,8 +195,44 @@ export default function AuthPortal() {
                 <div className="absolute inset-x-0 top-1/2 border-t border-border" />
               </div>
               <form onSubmit={handleSubmit} className="space-y-3">
+                {safeMode === 'signup' && (
+                  <>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="firstName">First name</Label>
+                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required placeholder="Jordan" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="lastName">Last name</Label>
+                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required placeholder="Lee" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="companyName">Agency / Company name (optional)</Label>
+                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} placeholder="Athlon Sports" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="role">Role (optional)</Label>
+                      <Select value={signupRole} onValueChange={setSignupRole}>
+                        <SelectTrigger id="role">
+                          <SelectValue placeholder="Select your role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Agent">Agent</SelectItem>
+                          <SelectItem value="Agency Owner">Agency Owner</SelectItem>
+                          <SelectItem value="Marketing Manager">Marketing Manager</SelectItem>
+                          <SelectItem value="Athlete Ops">Athlete Ops</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
                 <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="work@email.com" />
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="••••••••" />
+                {safeMode === 'signup' && (
+                  <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8} placeholder="Confirm password" />
+                )}
                 {authError && <p className="text-sm text-destructive">{authError}</p>}
                 {authMessage && <p className="text-sm text-emerald-600">{authMessage}</p>}
                 <Button disabled={loading} className="w-full h-11" type="submit">

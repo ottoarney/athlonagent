@@ -119,6 +119,59 @@ export async function signUpWithPassword(email: string, password: string) {
   return { data, error };
 }
 
+export type SignupProfileInput = {
+  firstName: string;
+  lastName: string;
+  agencyCompanyName?: string;
+  role?: string;
+};
+
+export async function signUpWithPasswordAndProfile(email: string, password: string, profile: SignupProfileInput) {
+  if (!supabase) {
+    throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.');
+  }
+
+  setStoredRole('agent');
+  const emailRedirectTo = getAuthCallbackUrl();
+  const fullName = `${profile.firstName} ${profile.lastName}`.trim();
+
+  const metadata = {
+    role: 'agent',
+    first_name: profile.firstName,
+    last_name: profile.lastName,
+    full_name: fullName,
+    agency_company_name: profile.agencyCompanyName || null,
+    signup_role: profile.role || null,
+  };
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: metadata,
+      emailRedirectTo,
+    },
+  });
+
+  if (error) return { data, error };
+
+  if (data?.user) {
+    // MVP note: email confirmation is intentionally disabled while validating session-based signup.
+    await (supabase as any).from('profiles').upsert(
+      {
+        id: data.user.id,
+        role: 'agent',
+        full_name: fullName,
+        onboarding_completed: true,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'id' },
+    );
+  }
+
+  return { data, error };
+}
+
 export async function getSession() {
   if (!supabase) return { session: null as Session | null };
 
