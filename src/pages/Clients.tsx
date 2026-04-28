@@ -32,12 +32,7 @@ interface Client {
   primaryContactName?: string;
   email?: string;
   phoneNumber?: string;
-  instagramHandle?: string;
-  tiktokHandle?: string;
-  xTwitterHandle?: string;
-  linkedInUrl?: string;
-  website?: string;
-  otherSocialNotes?: string;
+  socialHandle?: string;
   contactRoleTitle?: string;
   companyBrandContactPerson?: string;
   preferredContactMethod?: string;
@@ -59,12 +54,7 @@ interface ClientFormState {
   primaryContactName: string;
   email: string;
   phoneNumber: string;
-  instagramHandle: string;
-  tiktokHandle: string;
-  xTwitterHandle: string;
-  linkedInUrl: string;
-  website: string;
-  otherSocialNotes: string;
+  socialHandle: string;
   contactRoleTitle: string;
   companyBrandContactPerson: string;
   preferredContactMethod: string;
@@ -176,12 +166,7 @@ const defaultForm: ClientFormState = {
   primaryContactName: '',
   email: '',
   phoneNumber: '',
-  instagramHandle: '',
-  tiktokHandle: '',
-  xTwitterHandle: '',
-  linkedInUrl: '',
-  website: '',
-  otherSocialNotes: '',
+  socialHandle: '',
   contactRoleTitle: '',
   companyBrandContactPerson: '',
   preferredContactMethod: '',
@@ -245,12 +230,7 @@ export default function Clients() {
       primaryContactName: form.primaryContactName.trim(),
       email: form.email.trim(),
       phoneNumber: form.phoneNumber.trim(),
-      instagramHandle: form.instagramHandle.trim(),
-      tiktokHandle: form.tiktokHandle.trim(),
-      xTwitterHandle: form.xTwitterHandle.trim(),
-      linkedInUrl: form.linkedInUrl.trim(),
-      website: form.website.trim(),
-      otherSocialNotes: form.otherSocialNotes.trim(),
+      socialHandle: form.socialHandle.trim(),
       contactRoleTitle: form.contactRoleTitle.trim(),
       companyBrandContactPerson: form.companyBrandContactPerson.trim(),
       preferredContactMethod: form.preferredContactMethod.trim(),
@@ -278,12 +258,7 @@ export default function Clients() {
       primaryContactName: client.primaryContactName ?? '',
       email: client.email ?? '',
       phoneNumber: client.phoneNumber ?? '',
-      instagramHandle: client.instagramHandle ?? '',
-      tiktokHandle: client.tiktokHandle ?? '',
-      xTwitterHandle: client.xTwitterHandle ?? '',
-      linkedInUrl: client.linkedInUrl ?? '',
-      website: client.website ?? '',
-      otherSocialNotes: client.otherSocialNotes ?? '',
+      socialHandle: client.socialHandle ?? '',
       contactRoleTitle: client.contactRoleTitle ?? '',
       companyBrandContactPerson: client.companyBrandContactPerson ?? '',
       preferredContactMethod: client.preferredContactMethod ?? '',
@@ -315,12 +290,7 @@ export default function Clients() {
       primaryContactName: form.primaryContactName.trim(),
       email: form.email.trim(),
       phoneNumber: form.phoneNumber.trim(),
-      instagramHandle: form.instagramHandle.trim(),
-      tiktokHandle: form.tiktokHandle.trim(),
-      xTwitterHandle: form.xTwitterHandle.trim(),
-      linkedInUrl: form.linkedInUrl.trim(),
-      website: form.website.trim(),
-      otherSocialNotes: form.otherSocialNotes.trim(),
+      socialHandle: form.socialHandle.trim(),
       contactRoleTitle: form.contactRoleTitle.trim(),
       companyBrandContactPerson: form.companyBrandContactPerson.trim(),
       preferredContactMethod: form.preferredContactMethod.trim(),
@@ -432,7 +402,7 @@ export default function Clients() {
       </PageTransition>
 
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="w-[95vw] max-w-[650px] max-h-[90vh] overflow-hidden p-0">
+        <DialogContent className="w-[95vw] max-w-[820px] max-h-[85vh] overflow-hidden p-0">
           <DialogHeader className="shrink-0 border-b border-border bg-background px-6 py-4">
             <DialogTitle>Add client</DialogTitle>
             <DialogDescription>Create a new client in your local directory.</DialogDescription>
@@ -488,7 +458,7 @@ export default function Clients() {
             <Field label="LTV">
               <Input value={form.ltv} onChange={(e) => setForm((prev) => ({ ...prev, ltv: e.target.value }))} />
             </Field>
-            <Field label="Contacts (comma-separated)" className="sm:col-span-2">
+            <Field label="Contacts (comma-separated)" className="md:col-span-2">
               <Input value={form.contacts} onChange={(e) => setForm((prev) => ({ ...prev, contacts: e.target.value }))} />
             </Field>
             <div className="md:col-span-2 mt-1 rounded-lg border border-border bg-muted/20 p-3">
@@ -512,23 +482,8 @@ export default function Clients() {
                 <Field label="Phone number">
                   <Input value={form.phoneNumber} onChange={(e) => setForm((prev) => ({ ...prev, phoneNumber: e.target.value }))} />
                 </Field>
-                <Field label="Instagram handle">
-                  <Input value={form.instagramHandle} onChange={(e) => setForm((prev) => ({ ...prev, instagramHandle: e.target.value }))} />
-                </Field>
-                <Field label="TikTok handle">
-                  <Input value={form.tiktokHandle} onChange={(e) => setForm((prev) => ({ ...prev, tiktokHandle: e.target.value }))} />
-                </Field>
-                <Field label="X/Twitter handle">
-                  <Input value={form.xTwitterHandle} onChange={(e) => setForm((prev) => ({ ...prev, xTwitterHandle: e.target.value }))} />
-                </Field>
-                <Field label="LinkedIn URL">
-                  <Input value={form.linkedInUrl} onChange={(e) => setForm((prev) => ({ ...prev, linkedInUrl: e.target.value }))} />
-                </Field>
-                <Field label="Website">
-                  <Input value={form.website} onChange={(e) => setForm((prev) => ({ ...prev, website: e.target.value }))} />
-                </Field>
-                <Field label="Other social / notes">
-                  <Input value={form.otherSocialNotes} onChange={(e) => setForm((prev) => ({ ...prev, otherSocialNotes: e.target.value }))} />
+                <Field label="Social handle">
+                  <Input value={form.socialHandle} onChange={(e) => setForm((prev) => ({ ...prev, socialHandle: e.target.value }))} />
                 </Field>
                 <Field label="Last contacted date">
                   <Input type="date" value={form.lastContactedDate} onChange={(e) => setForm((prev) => ({ ...prev, lastContactedDate: e.target.value }))} />
@@ -536,7 +491,7 @@ export default function Clients() {
                 <Field label="Next follow-up date">
                   <Input type="date" value={form.nextFollowUpDate} onChange={(e) => setForm((prev) => ({ ...prev, nextFollowUpDate: e.target.value }))} />
                 </Field>
-                <Field label="General notes" className="md:col-span-2">
+                <Field label="Notes" className="md:col-span-2">
                   <Input value={form.generalNotes} onChange={(e) => setForm((prev) => ({ ...prev, generalNotes: e.target.value }))} />
                 </Field>
               </div>
@@ -584,15 +539,10 @@ export default function Clients() {
                   <Detail label="Preferred contact method" value={selectedClient.preferredContactMethod || 'Not added'} />
                   <Detail label="Email" value={selectedClient.email || 'Not added'} />
                   <Detail label="Phone number" value={selectedClient.phoneNumber || 'Not added'} />
-                  <Detail label="Instagram handle" value={selectedClient.instagramHandle || 'Not added'} />
-                  <Detail label="TikTok handle" value={selectedClient.tiktokHandle || 'Not added'} />
-                  <Detail label="X/Twitter handle" value={selectedClient.xTwitterHandle || 'Not added'} />
-                  <Detail label="LinkedIn URL" value={selectedClient.linkedInUrl || 'Not added'} />
-                  <Detail label="Website" value={selectedClient.website || 'Not added'} />
+                  <Detail label="Social handle" value={selectedClient.socialHandle || 'Not added'} />
                   <Detail label="Last contacted date" value={selectedClient.lastContactedDate || 'Not added'} />
                   <Detail label="Next follow-up date" value={selectedClient.nextFollowUpDate || 'Not added'} />
-                  <Detail label="Other social / notes" value={selectedClient.otherSocialNotes || 'Not added'} className="col-span-2" />
-                  <Detail label="General notes" value={selectedClient.generalNotes || 'Not added'} className="col-span-2" />
+                  <Detail label="Notes" value={selectedClient.generalNotes || 'Not added'} className="col-span-2" />
                 </div>
               </div>
             </div>
@@ -615,12 +565,13 @@ export default function Clients() {
       </Dialog>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-xl">
+        <DialogContent className="w-[95vw] max-w-[820px] max-h-[85vh] overflow-hidden p-0">
           <DialogHeader>
             <DialogTitle>Edit client</DialogTitle>
             <DialogDescription>Update client details and contact information.</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="grid gap-2.5 md:grid-cols-2">
             <Field label="Client name">
               <Input value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} />
             </Field>
@@ -643,29 +594,25 @@ export default function Clients() {
             <Field label="Campaigns"><Input type="number" min={0} value={form.campaigns} onChange={(e) => setForm((prev) => ({ ...prev, campaigns: e.target.value }))} /></Field>
             <Field label="Active campaigns"><Input type="number" min={0} value={form.activeCampaigns} onChange={(e) => setForm((prev) => ({ ...prev, activeCampaigns: e.target.value }))} /></Field>
             <Field label="LTV"><Input value={form.ltv} onChange={(e) => setForm((prev) => ({ ...prev, ltv: e.target.value }))} /></Field>
-            <Field label="Contacts (comma-separated)" className="sm:col-span-2"><Input value={form.contacts} onChange={(e) => setForm((prev) => ({ ...prev, contacts: e.target.value }))} /></Field>
-            <div className="sm:col-span-2 mt-1 rounded-lg border border-border bg-muted/20 p-3">
+            <Field label="Contacts (comma-separated)" className="md:col-span-2"><Input value={form.contacts} onChange={(e) => setForm((prev) => ({ ...prev, contacts: e.target.value }))} /></Field>
+            <div className="md:col-span-2 mt-1 rounded-lg border border-border bg-muted/20 p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Contact Information</p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <div className="mt-2.5 grid gap-2.5 md:grid-cols-2">
                 <Field label="Primary contact name"><Input value={form.primaryContactName} onChange={(e) => setForm((prev) => ({ ...prev, primaryContactName: e.target.value }))} /></Field>
                 <Field label="Contact role/title"><Input value={form.contactRoleTitle} onChange={(e) => setForm((prev) => ({ ...prev, contactRoleTitle: e.target.value }))} /></Field>
                 <Field label="Company/brand contact person"><Input value={form.companyBrandContactPerson} onChange={(e) => setForm((prev) => ({ ...prev, companyBrandContactPerson: e.target.value }))} /></Field>
                 <Field label="Preferred contact method"><Input value={form.preferredContactMethod} onChange={(e) => setForm((prev) => ({ ...prev, preferredContactMethod: e.target.value }))} /></Field>
                 <Field label="Email"><Input type="email" value={form.email} onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))} /></Field>
                 <Field label="Phone number"><Input value={form.phoneNumber} onChange={(e) => setForm((prev) => ({ ...prev, phoneNumber: e.target.value }))} /></Field>
-                <Field label="Instagram handle"><Input value={form.instagramHandle} onChange={(e) => setForm((prev) => ({ ...prev, instagramHandle: e.target.value }))} /></Field>
-                <Field label="TikTok handle"><Input value={form.tiktokHandle} onChange={(e) => setForm((prev) => ({ ...prev, tiktokHandle: e.target.value }))} /></Field>
-                <Field label="X/Twitter handle"><Input value={form.xTwitterHandle} onChange={(e) => setForm((prev) => ({ ...prev, xTwitterHandle: e.target.value }))} /></Field>
-                <Field label="LinkedIn URL"><Input value={form.linkedInUrl} onChange={(e) => setForm((prev) => ({ ...prev, linkedInUrl: e.target.value }))} /></Field>
-                <Field label="Website"><Input value={form.website} onChange={(e) => setForm((prev) => ({ ...prev, website: e.target.value }))} /></Field>
-                <Field label="Other social / notes"><Input value={form.otherSocialNotes} onChange={(e) => setForm((prev) => ({ ...prev, otherSocialNotes: e.target.value }))} /></Field>
+                <Field label="Social handle"><Input value={form.socialHandle} onChange={(e) => setForm((prev) => ({ ...prev, socialHandle: e.target.value }))} /></Field>
                 <Field label="Last contacted date"><Input type="date" value={form.lastContactedDate} onChange={(e) => setForm((prev) => ({ ...prev, lastContactedDate: e.target.value }))} /></Field>
                 <Field label="Next follow-up date"><Input type="date" value={form.nextFollowUpDate} onChange={(e) => setForm((prev) => ({ ...prev, nextFollowUpDate: e.target.value }))} /></Field>
-                <Field label="General notes" className="sm:col-span-2"><Input value={form.generalNotes} onChange={(e) => setForm((prev) => ({ ...prev, generalNotes: e.target.value }))} /></Field>
+                <Field label="Notes" className="md:col-span-2"><Input value={form.generalNotes} onChange={(e) => setForm((prev) => ({ ...prev, generalNotes: e.target.value }))} /></Field>
               </div>
             </div>
           </div>
-          <DialogFooter>
+          </div>
+          <DialogFooter className="shrink-0 border-t border-border bg-background px-6 py-4">
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button>
             <Button onClick={saveEditedClient} disabled={!form.name.trim()}>Save changes</Button>
           </DialogFooter>
