@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { getDashboardRoute, setStoredRole } from '@/lib/auth-flow';
 import { isAuthEnabled, signInWithGoogle, signInWithPassword, signUpWithPassword } from '@/lib/auth-service';
 import { toast } from 'sonner';
@@ -69,12 +68,11 @@ export default function AuthPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-surface p-4 md:p-8">
+    <div className="min-h-screen bg-muted/20 p-4 md:p-8">
       <div className="mx-auto max-w-5xl rounded-[2rem] border border-border bg-background shadow-xl">
-        <div className="grid lg:grid-cols-[1.1fr_1fr]">
-          <div className="relative overflow-hidden border-b lg:border-b-0 lg:border-r border-border p-8 md:p-10">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,hsl(var(--accent)/0.18),transparent_40%)]" />
-            <div className="relative space-y-6">
+        <div className="grid lg:min-h-[640px] lg:grid-cols-[1.1fr_1fr]">
+          <div className="border-b border-border p-8 md:p-10 lg:border-b-0 lg:border-r">
+            <div className="flex h-full flex-col justify-center space-y-6">
               <Link
                 to="/#hero"
                 aria-label="Athlon home"
@@ -85,9 +83,6 @@ export default function AuthPortal() {
               <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-4 w-4" /> Back to Athlon
               </Link>
-              <Badge className="rounded-full border-accent/30 bg-accent/15 text-foreground">
-                {safeMode === 'signup' ? 'Agency onboarding' : 'Agency sign-in'}
-              </Badge>
               <h1 className="text-4xl md:text-5xl leading-[0.95]">
                 {safeMode === 'signup' ? 'Build your' : 'Enter your'} agency workspace.
               </h1>
@@ -104,6 +99,7 @@ export default function AuthPortal() {
           </div>
 
           <div className="p-8 md:p-10">
+            <div className="flex h-full flex-col justify-center">
             {!isAuthEnabled() && (
               <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
                 Supabase env vars are missing, so this page is running in demo auth mode with dashboard routing.
@@ -143,10 +139,6 @@ export default function AuthPortal() {
                 {safeMode === 'signup' ? 'Sign in instead' : 'Create account'}
               </button>
             </div>
-
-            <div className="mt-8 rounded-xl border border-border bg-surface p-4 text-sm">
-              <p className="font-medium">Portal selected</p>
-              <p className="text-muted-foreground mt-1">Agent / Agency • {safeMode}</p>
             </div>
           </div>
         </div>
