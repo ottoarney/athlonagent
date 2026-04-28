@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ export default function AuthPortal() {
   const [loading, setLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const submitInFlightRef = useRef(false);
 
   const safeMode = location.pathname.startsWith('/login') ? 'login' : 'signup';
 
@@ -64,6 +65,11 @@ export default function AuthPortal() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
+    if (loading || submitInFlightRef.current) {
+      return;
+    }
+
     setAuthError(null);
 
     if (safeMode === 'signup') {
@@ -93,6 +99,7 @@ export default function AuthPortal() {
       }
     }
 
+    submitInFlightRef.current = true;
     setLoading(true);
 
     try {
@@ -125,11 +132,25 @@ export default function AuthPortal() {
           return;
         }
 
-        const signinFallback = await signInWithPassword(email, password);
-        console.log('[auth.signup] signin fallback result', signinFallback ?? null);
+        if (data?.user) {
+          try {
+            await signInWithPassword(email, password);
+            toast.success('Account created successfully.');
+            redirectAfterAuth();
+          } catch (signinError) {
+            const signinMessage = signinError instanceof Error ? signinError.message : 'Sign in failed';
+            if (signinMessage.toLowerCase().includes('rate limit')) {
+              setAuthError('Too many attempts. Please wait a minute and try again.');
+              return;
+            }
 
-        toast.success('Account created successfully.');
-        redirectAfterAuth();
+            toast.success('Account created. Please sign in.');
+            navigate('/login');
+          }
+          return;
+        }
+
+        setAuthError('Unable to complete sign up. Please try again.');
       } else {
         await signInWithPassword(email, password);
         toast.success('Signed in successfully.');
@@ -137,8 +158,13 @@ export default function AuthPortal() {
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Authentication failed';
-      setAuthError(message);
+      if (message.toLowerCase().includes('rate limit')) {
+        setAuthError('Too many attempts. Please wait a minute and try again.');
+      } else {
+        setAuthError(message);
+      }
     } finally {
+      submitInFlightRef.current = false;
       setLoading(false);
     }
   };

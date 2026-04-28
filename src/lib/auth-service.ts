@@ -97,8 +97,6 @@ export async function signUpWithPassword(email: string, password: string) {
   }
 
   setStoredRole('agent');
-  const emailRedirectTo = getAuthCallbackUrl();
-
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -106,7 +104,6 @@ export async function signUpWithPassword(email: string, password: string) {
       data: {
         role: 'agent',
       },
-      emailRedirectTo,
     },
   });
 
@@ -126,7 +123,6 @@ export async function signUpWithPasswordAndProfile(email: string, password: stri
   }
 
   setStoredRole('agent');
-  const emailRedirectTo = getAuthCallbackUrl();
   const fullName = `${profile.firstName} ${profile.lastName}`.trim();
 
   const metadata = {
@@ -143,7 +139,6 @@ export async function signUpWithPasswordAndProfile(email: string, password: stri
     password,
     options: {
       data: metadata,
-      emailRedirectTo,
     },
   });
 
