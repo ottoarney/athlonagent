@@ -306,6 +306,21 @@ export default function Clients() {
     setForm(defaultForm);
   };
 
+  const clientContactRows = selectedClient
+    ? [
+        { label: 'Primary contact name', value: selectedClient.primaryContactName },
+        { label: 'Contact role/title', value: selectedClient.contactRoleTitle },
+        { label: 'Company/brand contact person', value: selectedClient.companyBrandContactPerson },
+        { label: 'Email', value: selectedClient.email },
+        { label: 'Phone number', value: selectedClient.phoneNumber },
+        { label: 'Social handle', value: selectedClient.socialHandle },
+        { label: 'Preferred contact method', value: selectedClient.preferredContactMethod },
+        { label: 'Last contacted date', value: selectedClient.lastContactedDate },
+        { label: 'Next follow-up date', value: selectedClient.nextFollowUpDate },
+        { label: 'Notes', value: selectedClient.generalNotes },
+      ].filter((item) => Boolean(item.value?.trim()))
+    : [];
+
   return (
     <AppLayout>
       <PageTransition className="max-w-7xl gap-6">
@@ -510,13 +525,24 @@ export default function Clients() {
       </Dialog>
 
       <Dialog open={Boolean(selectedClient)} onOpenChange={(open) => !open && setSelectedClient(null)}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>{selectedClient?.name}</DialogTitle>
+        <DialogContent className="w-[90vw] max-w-[860px] max-h-[85vh] overflow-hidden p-0">
+          <DialogHeader className="shrink-0 border-b border-border bg-background px-6 py-4">
+            <div className="flex items-start justify-between gap-3">
+              <DialogTitle>{selectedClient?.name}</DialogTitle>
+              <Button
+                size="sm"
+                onClick={() => {
+                  if (!selectedClient) return;
+                  openEditClient(selectedClient);
+                }}
+              >
+                Edit client
+              </Button>
+            </div>
             <DialogDescription>Client profile details.</DialogDescription>
           </DialogHeader>
           {selectedClient && (
-            <div className="space-y-4 text-sm">
+            <div className="flex-1 space-y-4 overflow-y-auto px-6 py-4 text-sm">
               <div className="grid grid-cols-2 gap-3">
                 <Detail label="Category" value={selectedClient.category} />
                 <Detail label="Location" value={selectedClient.location} />
@@ -532,31 +558,22 @@ export default function Clients() {
               </div>
               <div className="rounded-lg border border-border bg-muted/20 p-3">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Contact Information</p>
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  <Detail label="Primary contact name" value={selectedClient.primaryContactName || 'Not added'} />
-                  <Detail label="Contact role/title" value={selectedClient.contactRoleTitle || 'Not added'} />
-                  <Detail label="Company/brand contact person" value={selectedClient.companyBrandContactPerson || 'Not added'} />
-                  <Detail label="Preferred contact method" value={selectedClient.preferredContactMethod || 'Not added'} />
-                  <Detail label="Email" value={selectedClient.email || 'Not added'} />
-                  <Detail label="Phone number" value={selectedClient.phoneNumber || 'Not added'} />
-                  <Detail label="Social handle" value={selectedClient.socialHandle || 'Not added'} />
-                  <Detail label="Last contacted date" value={selectedClient.lastContactedDate || 'Not added'} />
-                  <Detail label="Next follow-up date" value={selectedClient.nextFollowUpDate || 'Not added'} />
-                  <Detail label="Notes" value={selectedClient.generalNotes || 'Not added'} className="col-span-2" />
-                </div>
+                {clientContactRows.length > 0 ? (
+                  <dl className="mt-2 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+                    {clientContactRows.map((row) => (
+                      <div key={row.label} className={cn('border-b border-border/70 pb-1.5', row.label === 'Notes' && 'sm:col-span-2')}>
+                        <dt className="text-xs text-muted-foreground">{row.label}</dt>
+                        <dd className="text-foreground">{row.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : (
+                  <p className="mt-2 text-xs text-muted-foreground">No contact information added yet.</p>
+                )}
               </div>
             </div>
           )}
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (!selectedClient) return;
-                openEditClient(selectedClient);
-              }}
-            >
-              Edit client
-            </Button>
+          <DialogFooter className="shrink-0 border-t border-border bg-background px-6 py-4">
             <Button variant="outline" onClick={() => setSelectedClient(null)}>
               Close
             </Button>
