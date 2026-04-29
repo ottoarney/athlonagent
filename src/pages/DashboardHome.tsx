@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 
@@ -93,7 +93,7 @@ export default function DashboardHome() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`block rounded-md px-3 py-2 text-sm ${item.path === '/dashboard' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
+                className={`block rounded-md px-3 py-2 text-sm ${item.path === '/dashboard' ? 'bg-primary text-primary-foreground ring-1 ring-[#0c5dff]/30' : 'hover:bg-muted'}`}
               >
                 {item.label}
               </Link>
@@ -132,6 +132,7 @@ export default function DashboardHome() {
             <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
               {metricCards.map((metric) => (
                 <div key={metric.label} className="rounded-xl border border-border bg-card p-4">
+                  <div className="mb-2 h-1 w-10 rounded-full bg-[#0c5dff]/70" aria-hidden="true" />
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">{metric.label}</p>
                   <p className="mt-1 text-2xl font-semibold">{metric.value}</p>
                 </div>
@@ -141,7 +142,7 @@ export default function DashboardHome() {
             <section className="grid grid-cols-1 xl:grid-cols-12 gap-4">
               <div className="xl:col-span-8 space-y-4">
                 <article className="rounded-xl border border-border bg-card p-4">
-                  <h2 className="font-semibold">My Tasks</h2>
+                  <h2 className="font-semibold">My Tasks <Sparkles className="ml-1 inline h-3.5 w-3.5 text-[#fbe101]" /></h2>
                   <div className="mt-3 space-y-2">
                     {(tasks ?? []).map((task) => (
                       <div key={task?.id ?? task?.title} className="rounded-lg border border-border px-3 py-2 text-sm">
@@ -149,7 +150,7 @@ export default function DashboardHome() {
                         <p className="text-xs text-muted-foreground">{task?.dueLabel ?? 'No due date'}</p>
                       </div>
                     ))}
-                    {(tasks?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No tasks assigned.</p>}
+                    {(tasks?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No tasks assigned yet — new activity will appear here.</p>}
                   </div>
                 </article>
 
@@ -171,7 +172,7 @@ export default function DashboardHome() {
                     {(rosterBySport ?? []).map((entry) => (
                       <div key={entry?.sport} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
                         <span>{entry?.sport ?? 'Unknown sport'}</span>
-                        <Badge variant="secondary">{entry?.count ?? 0}</Badge>
+                        <Badge variant="secondary" className="bg-[#0c5dff]/10 text-[#0c5dff] hover:bg-[#0c5dff]/20">{entry?.count ?? 0}</Badge>
                       </div>
                     ))}
                     {(rosterBySport?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No roster data.</p>}
@@ -204,7 +205,7 @@ export default function DashboardHome() {
                         <p className="text-xs text-muted-foreground">{campaign?.stage ?? 'No stage'}</p>
                       </div>
                     ))}
-                    {(filteredCampaigns?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No campaigns to display.</p>}
+                    {(filteredCampaigns?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No campaigns to display. Create one to get pipeline momentum.</p>}
                   </div>
                 </article>
               </div>
