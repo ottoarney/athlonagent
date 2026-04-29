@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { getStoredRole } from '@/lib/auth-flow';
-import { getSession, isAuthEnabled } from '@/lib/auth-service';
+import { getSession, isAuthEnabled, onAuthStateChange } from '@/lib/auth-service';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -31,10 +31,20 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       }
     };
 
+    const { data: authListener } = onAuthStateChange((_event, session) => {
+      if (!isMounted) {
+        return;
+      }
+
+      setIsAuthenticated(Boolean(session?.user));
+      setIsChecking(false);
+    });
+
     void checkAuth();
 
     return () => {
       isMounted = false;
+      authListener.subscription.unsubscribe();
     };
   }, []);
 
@@ -52,4 +62,3 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   return <>{children}</>;
 }
-
