@@ -81,14 +81,6 @@ export default function AuthPortal() {
         setAuthError('Last name is required.');
         return;
       }
-      if (!agencyCompanyName.trim()) {
-        setAuthError('Agency / Company name is required.');
-        return;
-      }
-      if (!signupRole.trim()) {
-        setAuthError('Role is required.');
-        return;
-      }
       if (password.length < 8) {
         setAuthError('Password must be at least 8 characters.');
         return;
@@ -162,16 +154,18 @@ export default function AuthPortal() {
         <div className="grid lg:min-h-[640px] lg:grid-cols-[1.1fr_1fr]">
           <div className="border-b border-border p-8 md:p-10 lg:border-b-0 lg:border-r">
             <div className="flex h-full flex-col justify-center space-y-6">
-              <Link
-                to="/#hero"
-                aria-label="Athlon home"
-                className="inline-flex w-fit items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85"
-              >
-                <Logo size="md" priority />
-              </Link>
-              <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-4 w-4" /> Back to Athlon
-              </Link>
+              <div className="flex items-center justify-between gap-4">
+                <Link
+                  to="/#hero"
+                  aria-label="Athlon home"
+                  className="inline-flex w-fit items-center rounded-lg px-1 py-1 -ml-1 transition duration-300 hover:opacity-85"
+                >
+                  <Logo size="md" priority />
+                </Link>
+                <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                  <ArrowLeft className="h-4 w-4" /> Back to Athlon
+                </Link>
+              </div>
               <h1 className="text-4xl md:text-5xl leading-[0.95]">
                 {safeMode === 'signup' ? 'Build your' : 'Enter your'} agency workspace.
               </h1>
@@ -179,7 +173,7 @@ export default function AuthPortal() {
               <div className="space-y-3 text-sm">
                 {['Google OAuth + email fallback', 'Agency-first dashboard routing', 'Expandable permissions + profile model'].map((item) => (
                   <div key={item} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-accent" />
+                    <CheckCircle2 className="h-4 w-4 text-[#0c5dff]" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -207,7 +201,7 @@ export default function AuthPortal() {
 
             <div className="space-y-3">
               {isGoogleOAuthEnabled() ? (
-                <Button disabled={loading} onClick={handleGoogle} className="w-full h-11">
+                <Button disabled={loading} onClick={handleGoogle} className="h-11 w-full bg-[#fbe101] text-black hover:bg-[#fbe101]/90">
                   Continue with Google
                 </Button>
               ) : (
@@ -234,11 +228,11 @@ export default function AuthPortal() {
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="companyName">Agency / Company name</Label>
-                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} required placeholder="Athlon Sports" />
+                      <Label htmlFor="companyName">Agency / Company name (optional)</Label>
+                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} placeholder="Athlon Sports" />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="role">Role</Label>
+                      <Label htmlFor="role">Role (optional)</Label>
                       <Select value={signupRole} onValueChange={setSignupRole}>
                         <SelectTrigger id="role">
                           <SelectValue placeholder="Select your role" />
