@@ -15,10 +15,9 @@ interface PricingTierSectionProps {
 
 export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) {
   return (
-    <section id="pricing" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
-      <div className="mx-auto max-w-5xl">
-        <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 lg:p-10">
-          <div className="grid gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
+    <section id="pricing" className="scroll-mt-24 container px-4 md:px-6 py-20">
+      <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 lg:p-10">
+        <div className="grid gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
             <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-4 shadow-inner">
               <div className="mb-3 inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
                 Product preview
@@ -80,9 +79,8 @@ export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) 
                 </p>
               </div>
             </div>
-          </div>
-        </article>
-      </div>
+        </div>
+      </article>
     </section>
   );
 }

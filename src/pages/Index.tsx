@@ -68,7 +68,7 @@ export default function Index() {
         <OperationsFeatureSection dashboardRoute={signupRoute} />
         <PricingTierSection dashboardRoute={signupRoute} />
 
-        <section id="faq" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
+        <section id="faq" className="scroll-mt-24 container px-4 md:px-6 py-20">
           <h2 className="text-3xl md:text-5xl">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="mt-8 border rounded-2xl px-5 bg-card">
             {faqs.map(([q, a]) => (
