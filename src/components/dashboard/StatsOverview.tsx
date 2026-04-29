@@ -1,5 +1,6 @@
 import { Users, DollarSign, CheckSquare, TrendingUp } from 'lucide-react';
-import { athletes, deals, tasks, formatCurrency } from '@/lib/data';
+import { formatCurrency } from '@/lib/data';
+import { useDashboardData } from '@/context/dashboard-context';
 import { cn } from '@/lib/utils';
 
 interface StatCardProps {
@@ -51,19 +52,17 @@ function StatCard({ label, value, subtext, icon: Icon, accent }: StatCardProps) 
 }
 
 export function StatsOverview() {
-  const activeAthletes = athletes.filter(a => a.status === 'active').length;
-  const totalDealValue = deals.reduce((sum, d) => sum + d.value, 0);
-  const pendingTasks = tasks.filter(t => t.status !== 'done').length;
-  const activeDeals = deals.filter(d => d.stage !== 'paid').length;
+  const { filteredAthletes, filteredTasks, filteredCampaigns } = useDashboardData();
+
+  const activeAthletes = filteredAthletes.filter((athlete) => athlete.status === 'active').length;
+  const totalDealValue = filteredCampaigns
+    .filter((campaign) => !campaign.archived)
+    .reduce((sum, campaign) => sum + campaign.value, 0);
+  const pendingTasks = filteredTasks.filter((task) => task.status !== 'done').length;
+  const activeDeals = filteredCampaigns.filter((campaign) => !campaign.archived && campaign.stage !== 'complete').length;
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard
-        label="Active Athletes"
-        value={activeAthletes.toString()}
-        subtext="2 prospects pending"
-        icon={Users}
-      />
       <StatCard
         label="Pipeline Value"
         value={formatCurrency(totalDealValue)}
@@ -72,16 +71,22 @@ export function StatsOverview() {
         accent
       />
       <StatCard
-        label="Open Tasks"
-        value={pendingTasks.toString()}
-        subtext="3 due this week"
-        icon={CheckSquare}
+        label="Active Athletes"
+        value={activeAthletes.toString()}
+        subtext="2 prospects pending"
+        icon={Users}
       />
       <StatCard
         label="Active Deals"
         value={activeDeals.toString()}
         subtext="1 closing soon"
         icon={TrendingUp}
+      />
+      <StatCard
+        label="Open Tasks"
+        value={pendingTasks.toString()}
+        subtext="3 due this week"
+        icon={CheckSquare}
       />
     </div>
   );
