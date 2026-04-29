@@ -142,7 +142,7 @@ export default function DashboardHome() {
             <section className="grid grid-cols-1 xl:grid-cols-12 gap-4">
               <div className="xl:col-span-8 space-y-4">
                 <article className="rounded-xl border border-border bg-card p-4">
-                  <h2 className="font-semibold">My Tasks <Sparkles className="ml-1 inline h-3.5 w-3.5 text-[#fbe101]" /></h2>
+                  <h2 className="font-semibold">My Tasks <Sparkles className="ml-1 inline h-3.5 w-3.5 text-warning" /></h2>
                   <div className="mt-3 space-y-2">
                     {(tasks ?? []).map((task) => (
                       <div key={task?.id ?? task?.title} className="rounded-lg border border-border px-3 py-2 text-sm">
@@ -172,7 +172,7 @@ export default function DashboardHome() {
                     {(rosterBySport ?? []).map((entry) => (
                       <div key={entry?.sport} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
                         <span>{entry?.sport ?? 'Unknown sport'}</span>
-                        <Badge variant="secondary" className="bg-[#0c5dff]/10 text-[#0c5dff] hover:bg-[#0c5dff]/20">{entry?.count ?? 0}</Badge>
+                        <Badge variant="secondary" className="bg-info/10 text-info hover:bg-info/20">{entry?.count ?? 0}</Badge>
                       </div>
                     ))}
                     {(rosterBySport?.length ?? 0) === 0 && <p className="text-sm text-muted-foreground">No roster data.</p>}

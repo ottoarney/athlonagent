@@ -5,10 +5,10 @@ import { cn } from '@/lib/utils';
 
 const eventTypeColors: Record<string, string> = {
   training: 'bg-info/10 text-info border-info/20',
-  game: 'bg-accent/10 text-accent-foreground border-accent/20',
+  game: 'bg-info/10 text-info border-info/25',
   travel: 'bg-warning/10 text-warning border-warning/20',
-  content: 'bg-purple-100 text-purple-700 border-purple-200',
-  deal: 'bg-accent/10 text-accent-foreground border-accent/20',
+  content: 'bg-info/10 text-info border-info/25',
+  deal: 'bg-info/10 text-info border-info/25',
   admin: 'bg-muted text-muted-foreground border-border',
 };
 
@@ -19,7 +19,7 @@ export function TodayAgenda() {
     <Card className="card-elevated">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+          <span className="h-2 w-2 rounded-full bg-info animate-pulse" />
           Today's Schedule
         </CardTitle>
       </CardHeader>

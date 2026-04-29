@@ -6,10 +6,10 @@ import { cn } from '@/lib/utils';
 
 const statusColors: Record<ContentStatus, string> = {
   idea: 'bg-muted text-muted-foreground',
-  script: 'bg-purple-100 text-purple-700',
+  script: 'bg-warning/15 text-foreground border border-warning/35',
   shoot: 'bg-warning/10 text-warning',
-  edit: 'bg-info/10 text-info',
-  schedule: 'bg-accent/10 text-accent-foreground',
+  edit: 'bg-info/12 text-info border border-info/30',
+  schedule: 'bg-info/10 text-info border border-info/30',
   posted: 'bg-success/10 text-success',
 };
 

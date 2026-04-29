@@ -48,12 +48,12 @@ export function DeadlinesCard() {
             >
               <div className={cn(
                 "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0",
-                isOverdue ? "bg-destructive/10" : "bg-accent/10"
+                isOverdue ? "bg-destructive/10" : "bg-info/10"
               )}>
                 {isOverdue ? (
                   <AlertCircle className="h-4 w-4 text-destructive" />
                 ) : (
-                  <Clock className="h-4 w-4 text-accent-foreground" />
+                  <Clock className="h-4 w-4 text-info" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
