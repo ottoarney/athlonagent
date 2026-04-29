@@ -15,9 +15,9 @@ interface PricingTierSectionProps {
 
 export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) {
   return (
-    <section id="pricing" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
-      <div className="mx-auto max-w-2xl">
-        <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8">
+    <section id="pricing" className="scroll-mt-24 py-20 md:py-24">
+      <div className="container px-4 md:px-6">
+        <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 lg:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0c5dff]">Free Beta</p>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">Ready to get started?</h2>
           <p className="mt-1 text-sm text-muted-foreground">No commitment. No payment required.</p>
