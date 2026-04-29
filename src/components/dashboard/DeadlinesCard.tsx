@@ -20,7 +20,7 @@ export function DeadlinesCard() {
   const overdueCount = tasks.filter(t => t.status !== 'done' && isPastDue(t.dueDate)).length;
 
   return (
-    <Card className="card-elevated">
+    <Card className="card-elevated h-full">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold">Upcoming Deadlines</CardTitle>
