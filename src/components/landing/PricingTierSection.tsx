@@ -26,36 +26,69 @@ export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) 
       </div>
 
       <div className="mx-auto mt-10 max-w-5xl">
-        <article className="rounded-2xl border border-border bg-card p-7 shadow-sm md:p-10">
-          <div className="flex items-center gap-2 text-sm font-medium text-[#111827]">
-            <Sparkles className="h-4 w-4 text-[#fbe101]" />
-            Early access program
-          </div>
+        <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 lg:p-10">
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
+            <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-4 shadow-inner">
+              <div className="mb-3 inline-flex rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                Product preview
+              </div>
+              <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+                <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+                </div>
+                <div className="aspect-[4/3] bg-gradient-to-b from-white to-slate-100 p-4">
+                  <div className="grid h-full grid-cols-3 gap-3">
+                    <div className="col-span-2 space-y-3 rounded-md border border-slate-200 bg-white p-3">
+                      <div className="h-3 w-24 rounded bg-slate-200" />
+                      <div className="h-16 rounded bg-slate-100" />
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="h-8 rounded bg-slate-100" />
+                        <div className="h-8 rounded bg-slate-100" />
+                      </div>
+                    </div>
+                    <div className="space-y-3 rounded-md border border-slate-200 bg-white p-3">
+                      <div className="h-3 w-full rounded bg-slate-200" />
+                      <div className="h-3 w-2/3 rounded bg-slate-200" />
+                      <div className="h-14 rounded bg-slate-100" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <h3 className="mt-4 text-2xl font-semibold md:text-3xl">Free access while we build with early users</h3>
-          <p className="mt-3 max-w-4xl text-muted-foreground md:text-base">
-            Athlon Agent is in beta, giving agents, agencies, and athlete representation teams early access to a CRM built around deals,
-            deadlines, rosters, content, and client operations.
-          </p>
-          <p className="mt-3 max-w-4xl text-muted-foreground md:text-base">
-            We&apos;re also exploring partnerships with Oregon-focused accelerator and NIL groups to test functionality and learn from one of the most
-            active NIL ecosystems in college athletics.
-          </p>
+            <div className="flex flex-col justify-center">
+              <div className="flex items-center gap-2 text-sm font-medium text-[#111827]">
+                <Sparkles className="h-4 w-4 text-[#fbe101]" />
+                FREE BETA
+              </div>
 
-          <ul className="mt-6 grid gap-3 md:grid-cols-2">
-            {betaHighlights.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm md:text-base">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0c5dff]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+              <h3 className="mt-4 text-2xl font-semibold md:text-3xl">Ready to get started?</h3>
+              <p className="mt-2 text-muted-foreground">No commitment. No payment required.</p>
 
-          <div className="mt-8">
-            <Button asChild className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]">
-              <Link to={dashboardRoute}>Start Free Beta</Link>
-            </Button>
-            <p className="mt-3 text-sm text-muted-foreground">No payment required during beta.</p>
+              <div className="mt-4 inline-flex w-fit items-center rounded-lg border border-[#cce1ff] bg-[#f4f8ff] px-3 py-1.5 text-sm font-medium text-[#0c5dff]">
+                Free during beta
+              </div>
+
+              <ul className="mt-6 grid gap-3 sm:grid-cols-1">
+                {betaHighlights.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm md:text-base">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0c5dff]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8">
+                <Button asChild className="rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64]">
+                  <Link to={dashboardRoute}>Start Free Beta</Link>
+                </Button>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Oregon NIL-focused testing is part of our beta roadmap as we learn from one of college athletics&apos; most active ecosystems.
+                </p>
+              </div>
+            </div>
           </div>
         </article>
       </div>
