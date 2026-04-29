@@ -22,7 +22,7 @@ export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) 
           <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">Ready to get started?</h2>
           <p className="mt-1 text-sm text-muted-foreground">No commitment. No payment required.</p>
 
-          <div className="mt-5 rounded-xl border border-border bg-surface px-4 py-3">
+          <div className="mt-5 inline-block max-w-[42rem] rounded-xl border border-border bg-surface px-4 py-3 align-top">
             <p className="text-sm font-medium text-foreground">Free during beta</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Get early access while Athlon Agent tests core CRM workflows with agents, athlete reps, and NIL-focused teams.

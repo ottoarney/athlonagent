@@ -35,8 +35,8 @@ export default function Index() {
 
           <nav className="hidden lg:flex items-center gap-6 text-sm text-[#6b7280]">
             <a href="#platform" className="transition-colors hover:text-[#111827]">Platform</a>
-            <a href="#social-proof" className="transition-colors hover:text-[#111827]">Social Proof</a>
-            <a href="#pricing" className="transition-colors hover:text-[#111827]">Pricing</a>
+            <a href="#social-proof" className="transition-colors hover:text-[#111827]">Reviews</a>
+            <a href="#pricing" className="transition-colors hover:text-[#111827]">Beta</a>
             <a href="#faq" className="transition-colors hover:text-[#111827]">FAQ</a>
           </nav>
 
@@ -53,8 +53,8 @@ export default function Index() {
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
             <a href="#platform" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Platform</a>
-            <a href="#social-proof" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Social Proof</a>
-            <a href="#pricing" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Pricing</a>
+            <a href="#social-proof" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Reviews</a>
+            <a href="#pricing" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Beta</a>
             <a href="#faq" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>FAQ</a>
             <Button asChild variant="outline"><Link to={loginRoute}>Sign In</Link></Button>
             <Button asChild variant="outline"><Link to={signupRoute}>Get Started</Link></Button>
