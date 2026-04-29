@@ -82,7 +82,7 @@ export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) 
             <ul className="mt-5 flex-1 space-y-2 text-sm">
               {tier.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0c5dff]" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-info" />
                   <span>{feature}</span>
                 </li>
               ))}

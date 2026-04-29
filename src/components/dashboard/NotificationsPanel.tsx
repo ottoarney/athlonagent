@@ -56,7 +56,7 @@ const iconMap = {
 const colorMap = {
   deadline: 'bg-warning/10 text-warning',
   event: 'bg-info/10 text-info',
-  deal: 'bg-accent/10 text-accent-foreground',
+  deal: 'bg-info/10 text-info',
   alert: 'bg-destructive/10 text-destructive',
 };
 
@@ -72,7 +72,7 @@ export function NotificationsPanel() {
             Notifications
           </CardTitle>
           {unreadCount > 0 && (
-            <span className="text-xs text-accent font-medium">
+            <span className="text-xs text-info font-medium">
               {unreadCount} new
             </span>
           )}
@@ -88,7 +88,7 @@ export function NotificationsPanel() {
               className={cn(
                 "flex items-start gap-3 p-3 rounded-lg transition-colors cursor-pointer",
                 notification.unread 
-                  ? "bg-accent/5 hover:bg-accent/10" 
+                  ? "bg-info/5 hover:bg-info/10" 
                   : "hover:bg-surface-elevated"
               )}
             >
@@ -107,7 +107,7 @@ export function NotificationsPanel() {
                     {notification.title}
                   </h4>
                   {notification.unread && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-info flex-shrink-0" />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5 truncate">
