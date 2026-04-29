@@ -126,19 +126,18 @@ export default function AuthPortal() {
           throw error;
         }
 
-        if (data?.session) {
-          toast.success('Account created successfully.');
-          redirectAfterAuth();
-          return;
+        if (!data?.user) {
+          throw new Error('Unable to create account. Please try again.');
         }
 
-        if (data?.user) {
-          toast.success('Account created. Please log in.');
-          navigate('/login');
-          return;
+        const loginResult = await signInWithPassword(email, password);
+        if (!loginResult?.session?.user) {
+          throw new Error('Account was created, but automatic sign-in failed. Please try signing in.');
         }
 
-        setAuthError('Unable to complete sign up. Please try again.');
+        toast.success('Account created successfully.');
+        redirectAfterAuth();
+        return;
       } else {
         await signInWithPassword(email, password);
         toast.success('Signed in successfully.');
