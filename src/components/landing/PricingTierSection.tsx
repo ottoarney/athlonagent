@@ -2,49 +2,11 @@ import { CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-const pricingTiers = [
-  {
-    name: 'Agent',
-    description: 'For individual agents managing their own roster.',
-    limits: ['Up to 10 athletes'],
-    features: [
-      'Manage up to 10 athletes',
-      'Task and calendar system',
-      'Deal and contract tracking',
-      'Content planning tools',
-      'Basic performance analytics',
-    ],
-    cta: 'Start as Agent',
-    highlighted: false,
-  },
-  {
-    name: 'Agency',
-    description: 'For agents working within a shared agency.',
-    limits: ['Up to 10 agents per agency', 'Each agent can manage up to 10 athletes'],
-    features: [
-      'Up to 10 agents per agency',
-      'Each agent manages up to 10 athletes',
-      'Shared agency dashboard',
-      'Role-based permissions',
-      'Advanced analytics across roster',
-    ],
-    cta: 'Join an Agency',
-    highlighted: true,
-  },
-  {
-    name: 'Enterprise',
-    description: 'For large agencies or organizations.',
-    limits: ['Unlimited agents and athletes', 'Demo call required before access'],
-    features: [
-      'Unlimited agents and athletes',
-      'Custom workflows and integrations',
-      'Dedicated support and onboarding',
-      'NIL valuation and advanced insights',
-      'API and data export access',
-    ],
-    cta: 'Request Demo',
-    highlighted: false,
-  },
+const betaHighlights = [
+  'Athlete and client tracking',
+  'Deal pipeline management',
+  'Tasks, deadlines, and schedules',
+  'Built with early NIL and sports representation feedback',
 ];
 
 interface PricingTierSectionProps {
@@ -54,49 +16,37 @@ interface PricingTierSectionProps {
 export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) {
   return (
     <section id="pricing" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">Pricing</p>
-        <h2 className="mt-3 text-3xl md:text-5xl">Pick the plan that fits your roster</h2>
-        <p className="mt-4 text-muted-foreground md:text-lg">Simple plans for agents, agencies, and large organizations.</p>
-      </div>
+      <div className="mx-auto max-w-2xl">
+        <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0c5dff]">Free Beta</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">Ready to get started?</h2>
+          <p className="mt-1 text-sm text-muted-foreground">No commitment. No payment required.</p>
 
-      <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
-        {pricingTiers.map((tier) => (
-          <article
-            key={tier.name}
-            className={`flex h-full flex-col rounded-2xl border p-6 shadow-sm ${
-              tier.highlighted ? 'border-primary bg-surface/80 ring-1 ring-primary/20' : 'border-border bg-card'
-            }`}
-          >
-            <h3 className="text-xl font-semibold">{tier.name}</h3>
-            <p className="mt-3 min-h-12 text-sm text-muted-foreground">{tier.description}</p>
+          <div className="mt-5 rounded-xl border border-border bg-surface px-4 py-3">
+            <p className="text-sm font-medium text-foreground">Free during beta</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Get early access while Athlon Agent tests core CRM workflows with agents, athlete reps, and NIL-focused teams.
+            </p>
+          </div>
 
-            <div className="mt-3 min-h-14 space-y-1">
-              {tier.limits.map((limit) => (
-                <p key={limit} className="text-sm font-medium text-foreground/90">
-                  {limit}
-                </p>
-              ))}
-            </div>
+          <ul className="mt-5 space-y-2.5">
+            {betaHighlights.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0c5dff]" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
 
-            <ul className="mt-5 flex-1 space-y-2 text-sm">
-              {tier.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-info" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Button
-              asChild
-              variant={tier.highlighted ? 'default' : 'outline'}
-              className="mt-6 w-full rounded-full"
-            >
-              <Link to={dashboardRoute}>{tier.cta}</Link>
+          <div className="mt-6">
+            <Button asChild className="w-full rounded-full bg-[#01FB64] text-black hover:bg-[#01FB64] active:bg-[#01FB64] focus-visible:bg-[#01FB64] focus-visible:ring-[#01FB64] sm:w-auto">
+              <Link to={dashboardRoute}>Start Free Beta</Link>
             </Button>
-          </article>
-        ))}
+            <p className="mt-3 text-xs text-muted-foreground">
+              Currently testing workflows with early Oregon NIL-focused users and sports representation teams.
+            </p>
+          </div>
+        </article>
       </div>
     </section>
   );
