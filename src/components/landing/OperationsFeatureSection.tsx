@@ -37,8 +37,8 @@ export function OperationsFeatureSection({ dashboardRoute }: OperationsFeatureSe
         <div className="rounded-3xl border border-border/70 bg-gradient-to-b from-white to-surface p-6 md:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-10">
             <div>
-              <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium tracking-[0.12em] text-[#0f0f0f]">
-                Built for elite sports representation teams
+              <span className="text-sm font-medium uppercase tracking-[0.12em] text-[#0c5dff]">
+                BUILT FOR ELITE SPORTS REPRESENTATION TEAMS
               </span>
               <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
                 Run athlete operations with <span className="text-warning">precision</span>
