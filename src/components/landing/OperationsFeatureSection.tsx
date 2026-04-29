@@ -41,7 +41,7 @@ export function OperationsFeatureSection({ dashboardRoute }: OperationsFeatureSe
                 Built for elite sports representation teams
               </span>
               <h2 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
-                Run athlete operations with <span className="text-[#01FB64]">precision</span>
+                Run athlete operations with <span className="text-[#fbe101]">precision</span>
               </h2>
               <p className="mt-4 max-w-[52ch] text-base text-muted-foreground md:text-lg">
                 Athlon Agent unifies athlete obligations, deal flow, calendar execution, and content ops for modern
@@ -51,7 +51,7 @@ export function OperationsFeatureSection({ dashboardRoute }: OperationsFeatureSe
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {featurePills.map(({ title, detail, icon: Icon }) => (
                   <article key={title} className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-accent/30 bg-accent/10 text-[#0f0f0f]">
+                    <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#0c5dff]/30 bg-[#0c5dff]/10 text-[#0c5dff]">
                       <Icon className="h-4 w-4" />
                     </div>
                     <h3 className="mt-3 text-sm font-semibold md:text-base">{title}</h3>
