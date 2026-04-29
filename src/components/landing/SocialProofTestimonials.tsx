@@ -91,7 +91,7 @@ function TestimonialCard({ item }: { item: Testimonial }) {
               'flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border text-[10px] font-semibold leading-none whitespace-nowrap',
               item.accent === 'accent'
                 ? 'border-accent/40 bg-accent/15 text-accent'
-                : 'border-warning/40 bg-warning/15 text-[#111111]',
+                : 'border-warning/40 bg-warning/45 text-white',
             )}
           >
             {getAvatarText(item.name)}
