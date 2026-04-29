@@ -136,8 +136,8 @@ export function SocialProofTestimonials() {
       <div className="container relative px-4 md:px-6">
         <div className="rounded-3xl border border-border/70 bg-gradient-to-b from-surface to-background p-6 md:p-10">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center rounded-full border border-black/30 bg-accent/10 px-3 py-1 text-xs font-medium tracking-[0.12em] text-[#000000]">
-              Trusted by the people moving sports forward
+            <span className="text-sm font-medium uppercase tracking-[0.12em] text-[#0c5dff]">
+              TRUSTED BY THE PEOPLE MOVING SPORTS FORWARD
             </span>
             <h2 className="mt-4 text-3xl font-semibold md:text-5xl">Trusted by elite representation teams</h2>
             <p className="mt-4 text-base text-muted-foreground md:text-lg">
