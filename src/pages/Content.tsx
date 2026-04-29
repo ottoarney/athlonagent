@@ -25,10 +25,10 @@ const stages: { key: ContentStatus; label: string }[] = [
 
 const statusColors: Record<ContentStatus, { bg: string; text: string }> = {
   idea: { bg: 'bg-muted', text: 'text-muted-foreground' },
-  script: { bg: 'bg-purple-50', text: 'text-purple-700' },
-  shoot: { bg: 'bg-warning/10', text: 'text-warning' },
+  script: { bg: 'bg-warning/15', text: 'text-[#111111]' },
+  shoot: { bg: 'bg-warning/20', text: 'text-[#111111]' },
   edit: { bg: 'bg-info/10', text: 'text-info' },
-  schedule: { bg: 'bg-accent/10', text: 'text-accent-foreground' },
+  schedule: { bg: 'bg-info/10', text: 'text-info' },
   posted: { bg: 'bg-success/10', text: 'text-success' },
 };
 

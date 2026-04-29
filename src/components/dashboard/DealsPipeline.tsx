@@ -13,11 +13,11 @@ const stages: { key: DealStage; label: string }[] = [
 ];
 
 const stageColors: Record<DealStage, string> = {
-  lead: 'bg-muted text-muted-foreground',
-  negotiation: 'bg-warning/10 text-warning',
-  contracted: 'bg-info/10 text-info',
-  deliverables: 'bg-accent/10 text-accent-foreground',
-  paid: 'bg-success/10 text-success',
+  lead: 'bg-warning/15 text-foreground border border-warning/35',
+  negotiation: 'bg-info/10 text-info border border-info/30',
+  contracted: 'bg-info/15 text-info border border-info/35',
+  deliverables: 'bg-info/8 text-info border border-info/25',
+  paid: 'bg-success/20 text-emerald-900 border border-success/45',
 };
 
 export function DealsPipeline() {
@@ -88,7 +88,7 @@ export function DealsPipeline() {
                   <p className="text-xs text-muted-foreground">
                     {athlete?.name}
                     {pendingDeliverables > 0 && (
-                      <span className="ml-2 text-warning">
+                      <span className="ml-2 text-info">
                         • {pendingDeliverables} deliverable
                         {pendingDeliverables > 1 ? 's' : ''} pending
                       </span>

@@ -72,9 +72,9 @@
     /* Status colors */
     --success: 145 100% 56%;
     --success-foreground: 0 0% 8%;
-    --warning: 38 92% 50%;
+    --warning: 53 98% 49%;
     --warning-foreground: 0 0% 8%;
-    --info: 210 100% 50%;
+    --info: 218 100% 52%;
     --info-foreground: 0 0% 100%;
 
     /* Shadows */

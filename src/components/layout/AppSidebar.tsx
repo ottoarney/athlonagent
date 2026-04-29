@@ -168,7 +168,7 @@ export function AppSidebar() {
                   toggleStar(campaign.id);
                 }}
                 aria-label={`Toggle ${campaign.name} starred`}
-                className="rounded p-1 text-amber-400 hover:bg-sidebar-accent"
+                className="rounded p-1 text-[#fbe101] hover:bg-sidebar-accent hover:text-[#e0ca00]"
               >
                 <Star className="h-3.5 w-3.5 fill-current" />
               </button>
@@ -205,7 +205,7 @@ export function AppSidebar() {
                     toggleStar(campaign.id);
                   }}
                   aria-label={`Toggle ${campaign.name} starred`}
-                  className={cn('rounded p-1 hover:bg-sidebar-accent', campaign.starred ? 'text-amber-400' : 'text-muted-foreground')}
+                  className={cn('rounded p-1 hover:bg-sidebar-accent', campaign.starred ? 'text-[#fbe101]' : 'text-muted-foreground')}
                 >
                   <Star className={cn('h-3.5 w-3.5', campaign.starred && 'fill-current')} />
                 </button>

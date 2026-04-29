@@ -18,7 +18,7 @@ const fadeIn = {
 const eventTypeColors: Record<EventType, string> = {
   training: 'bg-info/20 border-info/30 text-info',
   game: 'bg-accent/20 border-accent/30 text-accent-foreground',
-  travel: 'bg-warning/20 border-warning/30 text-warning',
+  travel: 'bg-warning/20 border-warning/35 text-[#111111]',
   content: 'bg-purple-100 border-purple-200 text-purple-700',
   deal: 'bg-accent/20 border-accent/30 text-accent-foreground',
   admin: 'bg-muted border-border text-muted-foreground',

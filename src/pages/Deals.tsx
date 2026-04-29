@@ -23,19 +23,19 @@ const stages: { key: DealStage; label: string }[] = [
 ];
 
 const stageColors: Record<DealStage, string> = {
-  lead: 'bg-muted border-border',
-  negotiation: 'bg-warning/10 border-warning/20',
+  lead: 'bg-warning/15 border-warning/35',
+  negotiation: 'bg-warning/15 border-warning/35',
   contracted: 'bg-info/10 border-info/20',
-  deliverables: 'bg-accent/10 border-accent/20',
-  paid: 'bg-success/10 border-success/20',
+  deliverables: 'bg-info/10 border-info/25',
+  paid: 'bg-success/20 border-success/40',
 };
 
 const stageTextColors: Record<DealStage, string> = {
-  lead: 'text-muted-foreground',
-  negotiation: 'text-warning',
+  lead: 'text-[#111111]',
+  negotiation: 'text-[#111111]',
   contracted: 'text-info',
-  deliverables: 'text-accent-foreground',
-  paid: 'text-success',
+  deliverables: 'text-info',
+  paid: 'text-emerald-900',
 };
 
 export default function Deals() {
@@ -170,7 +170,7 @@ export default function Deals() {
                                 deal.paymentStatus === 'complete' 
                                   ? 'bg-success/10 text-success'
                                   : deal.paymentStatus === 'partial'
-                                  ? 'bg-warning/10 text-warning'
+                                  ? 'bg-warning/20 text-[#111111] border-warning/30'
                                   : 'bg-muted text-muted-foreground'
                               )}
                             >

@@ -10,7 +10,7 @@ import { PageTransition } from '@/components/layout/PageTransition';
 
 const statusColors = {
   active: 'bg-accent/10 text-accent-foreground border-accent/20',
-  prospect: 'bg-warning/10 text-warning border-warning/20',
+  prospect: 'bg-warning/20 text-[#111111] border-warning/35',
   inactive: 'bg-muted text-muted-foreground border-border',
 };
 
