@@ -61,8 +61,8 @@ const initialTasks: Task[] = [
 const statusCycle: Task["status"][] = ["completed", "in-progress", "pending", "need-help", "failed"];
 
 const statusClassName: Record<Task["status"], string> = {
-  completed: "bg-accent/15 text-foreground border border-accent/30",
-  "in-progress": "bg-accent/10 text-foreground border border-accent/25",
+  completed: "bg-[#0c5dff]/10 text-foreground border border-[#0c5dff]/25",
+  "in-progress": "bg-[#0c5dff]/8 text-foreground border border-[#0c5dff]/20",
   pending: "bg-muted text-muted-foreground border border-border",
   "need-help": "bg-warning/10 text-foreground border border-warning/25",
   failed: "bg-destructive/10 text-foreground border border-destructive/25",
@@ -196,7 +196,7 @@ export default function Plan() {
   return (
     <div className="h-full min-h-[520px] overflow-auto rounded-2xl border border-border/70 bg-card p-2 text-foreground shadow-sm">
       <motion.div
-        className="overflow-hidden rounded-xl border border-accent/20 bg-background"
+        className="overflow-hidden rounded-xl border border-[#0c5dff]/20 bg-background"
         initial={{ opacity: 0, y: 10 }}
         animate={{
           opacity: 1,
@@ -219,7 +219,7 @@ export default function Plan() {
                     <motion.div
                       className="group flex items-center rounded-md px-3 py-1.5"
                       whileHover={{
-                        backgroundColor: "rgba(1, 251, 100, 0.08)",
+                        backgroundColor: "rgba(12, 93, 255, 0.08)",
                         transition: { duration: 0.2 },
                       }}
                     >
@@ -241,9 +241,9 @@ export default function Plan() {
                             transition={{ duration: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }}
                           >
                             {task.status === "completed" ? (
-                              <CheckCircle2 className="h-4 w-4 text-accent" />
+                              <CheckCircle2 className="h-4 w-4 text-[#0c5dff]" />
                             ) : task.status === "in-progress" ? (
-                              <CircleDotDashed className="h-4 w-4 text-accent" />
+                              <CircleDotDashed className="h-4 w-4 text-[#0c5dff]" />
                             ) : task.status === "need-help" ? (
                               <CircleAlert className="h-4 w-4 text-warning" />
                             ) : task.status === "failed" ? (
@@ -277,7 +277,7 @@ export default function Plan() {
                     <AnimatePresence mode="wait">
                       {isExpanded && task.subtasks.length > 0 && (
                         <motion.div className="relative overflow-hidden" variants={subtaskListVariants} initial="hidden" animate="visible" exit="hidden" layout>
-                          <div className="absolute bottom-0 left-[20px] top-0 border-l-2 border-dashed border-accent/30" />
+                          <div className="absolute bottom-0 left-[20px] top-0 border-l-2 border-dashed border-[#0c5dff]/35" />
                           <ul className="border-muted mb-1.5 ml-3 mr-2 mt-1 space-y-0.5">
                             {task.subtasks.map((subtask) => {
                               return (
@@ -293,7 +293,7 @@ export default function Plan() {
                                   <motion.div
                                     className="flex flex-1 items-center rounded-md p-1"
                                     whileHover={{
-                                      backgroundColor: "rgba(1, 251, 100, 0.08)",
+                                      backgroundColor: "rgba(12, 93, 255, 0.08)",
                                       transition: { duration: 0.2 },
                                     }}
                                     layout
@@ -317,9 +317,9 @@ export default function Plan() {
                                           transition={{ duration: 0.2, ease: [0.2, 0.65, 0.3, 0.9] }}
                                         >
                                           {subtask.status === "completed" ? (
-                                            <CheckCircle2 className="h-3.5 w-3.5 text-accent" />
+                                            <CheckCircle2 className="h-3.5 w-3.5 text-[#0c5dff]" />
                                           ) : subtask.status === "in-progress" ? (
-                                            <CircleDotDashed className="h-3.5 w-3.5 text-accent" />
+                                            <CircleDotDashed className="h-3.5 w-3.5 text-[#0c5dff]" />
                                           ) : subtask.status === "need-help" ? (
                                             <CircleAlert className="h-3.5 w-3.5 text-warning" />
                                           ) : subtask.status === "failed" ? (
