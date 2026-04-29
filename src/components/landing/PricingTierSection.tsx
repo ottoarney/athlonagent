@@ -1,13 +1,12 @@
-import { CheckCircle2, Sparkles } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const betaHighlights = [
-  'Free beta access',
-  'Manage athletes, clients, deals, and deadlines',
-  'Test CRM workflows with real representation use cases',
-  'Help shape future agency and NIL tools',
-  'Built for sports agents, agencies, and athlete ops teams',
+  'Athlete and client tracking',
+  'Deal pipeline management',
+  'Tasks, deadlines, and schedules',
+  'Built with early NIL and sports representation feedback',
 ];
 
 interface PricingTierSectionProps {
@@ -17,15 +16,7 @@ interface PricingTierSectionProps {
 export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) {
   return (
     <section id="pricing" className="scroll-mt-24 container px-4 md:px-6 pb-16 md:pb-24">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-medium uppercase tracking-[0.12em] text-[#0c5dff]">Free Beta</p>
-        <h2 className="mt-3 text-3xl md:text-5xl">Start building your athlete operations system for free</h2>
-        <p className="mt-4 text-muted-foreground md:text-lg">
-          Athlon Agent is currently in beta as we test core CRM functionality with real sports representation workflows.
-        </p>
-      </div>
-
-      <div className="mx-auto mt-10 max-w-5xl">
+      <div className="mx-auto max-w-5xl">
         <article className="rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8 lg:p-10">
           <div className="grid gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
             <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-4 shadow-inner">
@@ -59,16 +50,16 @@ export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) 
             </div>
 
             <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#111827]">
-                <Sparkles className="h-4 w-4 text-[#fbe101]" />
-                FREE BETA
-              </div>
+              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#0c5dff]">FREE BETA</p>
 
               <h3 className="mt-4 text-2xl font-semibold md:text-3xl">Ready to get started?</h3>
               <p className="mt-2 text-muted-foreground">No commitment. No payment required.</p>
 
-              <div className="mt-4 inline-flex w-fit items-center rounded-lg border border-[#cce1ff] bg-[#f4f8ff] px-3 py-1.5 text-sm font-medium text-[#0c5dff]">
-                Free during beta
+              <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <p className="text-lg font-semibold text-foreground">Free during beta</p>
+                <p className="mt-1 text-muted-foreground">
+                  Get early access while Athlon Agent tests core CRM workflows with agents, athlete reps, and NIL-focused teams.
+                </p>
               </div>
 
               <ul className="mt-6 grid gap-3 sm:grid-cols-1">
@@ -85,7 +76,7 @@ export function PricingTierSection({ dashboardRoute }: PricingTierSectionProps) 
                   <Link to={dashboardRoute}>Start Free Beta</Link>
                 </Button>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  Oregon NIL-focused testing is part of our beta roadmap as we learn from one of college athletics&apos; most active ecosystems.
+                  Currently testing workflows with early Oregon NIL-focused users and sports representation teams.
                 </p>
               </div>
             </div>
