@@ -220,16 +220,16 @@ export default function AuthPortal() {
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <Label htmlFor="firstName">First name</Label>
-                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required placeholder="Jordan" />
+                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                       </div>
                       <div className="space-y-1.5">
                         <Label htmlFor="lastName">Last name</Label>
-                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required placeholder="Lee" />
+                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                       </div>
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="companyName">Agency / Company name (optional)</Label>
-                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} placeholder="Athlon Sports" />
+                      <Input id="companyName" value={agencyCompanyName} onChange={(e) => setAgencyCompanyName(e.target.value)} />
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="role">Role (optional)</Label>
