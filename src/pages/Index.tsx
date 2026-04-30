@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,8 +18,41 @@ const faqs = [
 
 export default function Index() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('reviews');
   const signupRoute = '/signup';
   const loginRoute = '/login';
+  const navItems = [
+    { id: 'reviews', label: 'Reviews' },
+    { id: 'platform', label: 'Platform' },
+    { id: 'beta', label: 'Beta' },
+    { id: 'faq', label: 'FAQ' },
+  ];
+
+  useEffect(() => {
+    const sections = navItems
+      .map((item) => document.getElementById(item.id))
+      .filter((section): section is HTMLElement => section !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visibleEntries.length > 0) {
+          setActiveSection(visibleEntries[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-100px 0px -55% 0px',
+        threshold: [0.2, 0.4, 0.6],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -34,10 +67,15 @@ export default function Index() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 text-sm text-[#6b7280]">
-            <a href="#platform" className="transition-colors hover:text-[#111827]">Platform</a>
-            <a href="#social-proof" className="transition-colors hover:text-[#111827]">Social Proof</a>
-            <a href="#pricing" className="transition-colors hover:text-[#111827]">Pricing</a>
-            <a href="#faq" className="transition-colors hover:text-[#111827]">FAQ</a>
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`transition-colors ${activeSection === item.id ? 'text-[#111827] font-medium' : 'text-[#6b7280] hover:text-[#111827]'}`}
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           <div className="hidden lg:flex items-center gap-2">
@@ -52,10 +90,16 @@ export default function Index() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-border px-4 py-4 grid gap-2 bg-background">
-            <a href="#platform" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Platform</a>
-            <a href="#social-proof" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Social Proof</a>
-            <a href="#pricing" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>Pricing</a>
-            <a href="#faq" className="rounded-md px-2 py-1.5 text-sm text-[#6b7280] transition-colors hover:text-[#111827]" onClick={() => setMobileOpen(false)}>FAQ</a>
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`rounded-md px-2 py-1.5 text-sm transition-colors ${activeSection === item.id ? 'text-[#111827] font-medium' : 'text-[#6b7280] hover:text-[#111827]'}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {item.label}
+              </a>
+            ))}
             <Button asChild variant="outline"><Link to={loginRoute}>Sign In</Link></Button>
             <Button asChild variant="outline"><Link to={signupRoute}>Get Started</Link></Button>
           </div>
@@ -68,7 +112,7 @@ export default function Index() {
         <OperationsFeatureSection dashboardRoute={signupRoute} />
         <PricingTierSection dashboardRoute={signupRoute} />
 
-        <section id="faq" className="scroll-mt-24 container px-4 md:px-6 py-20">
+        <section id="faq" className="scroll-mt-[100px] container px-4 md:px-6 py-20">
           <h2 className="text-3xl md:text-5xl">Frequently asked questions</h2>
           <Accordion type="single" collapsible className="mt-8 border rounded-2xl px-5 bg-card">
             {faqs.map(([q, a]) => (
