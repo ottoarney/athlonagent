@@ -184,6 +184,28 @@ export default function CampaignDetail() {
     }
   };
 
+  const toggleTaskInViewMode = (taskId: string, completed: boolean) => {
+    const nextTasks = draft.tasks.map((task) => (task.id === taskId ? { ...task, completed } : task));
+    const nextState = { ...draft, tasks: nextTasks };
+    setDraft(nextState);
+    setSavedState(nextState);
+    persistStoredWorkspace(campaign.id, nextState);
+    void (async () => {
+      if (!isSupabaseConfigured || !supabase) return;
+      const { error: supabaseError } = await (supabase as any).from('campaign_details').upsert(
+        {
+          campaign_id: campaign.id,
+          payload: nextState,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'campaign_id' },
+      );
+      if (supabaseError) {
+        setError(supabaseError.message || 'Unable to sync task updates.');
+      }
+    })();
+  };
+
   return (
     <AppLayout>
       <PageTransition className="flex h-full flex-col">
@@ -337,7 +359,18 @@ export default function CampaignDetail() {
               <ul className="mt-3 space-y-2 text-sm">
                 {draft.tasks.map((task) => (
                   <li key={task.id} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-                    <input type="checkbox" checked={task.completed} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, completed: e.target.checked } : t)) }))} disabled={!isEditing} className="h-4 w-4 rounded border-border disabled:cursor-default" />
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={(e) => {
+                        if (isEditing) {
+                          setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, completed: e.target.checked } : t)) }));
+                          return;
+                        }
+                        toggleTaskInViewMode(task.id, e.target.checked);
+                      }}
+                      className="h-4 w-4 rounded border-border"
+                    />
                     {isEditing ? <input value={task.name} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, name: e.target.value } : t)) }))} className={`flex-1 rounded border border-border px-2 py-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`} /> : <span className={`flex-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`}>{task.name}</span>}
                     {isEditing && <button onClick={() => setDraft((c) => ({ ...c, tasks: c.tasks.filter((t) => t.id !== task.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete task"><Trash2 className="h-4 w-4" /></button>}
                   </li>
@@ -373,6 +406,7 @@ function ReadValue({ value }: { value: string }) {
 
 
 function getDetailBadgeClasses(value: string) {
+  if (value === 'Active') return 'bg-[#01fb64]/20 text-[#111111]';
   if (value === 'Pending' || value === 'Partial') return 'bg-[#fbe101]/20 text-black';
   if (value === 'In Progress') return 'bg-[#0c5dff]/20 text-[#0c5dff]';
   if (value === 'Submitted' || value === 'Approved' || value === 'Completed' || value === 'Posted' || value === 'Paid' || value === 'Signed') return 'bg-[#01fb64]/20 text-[#14532d]';
