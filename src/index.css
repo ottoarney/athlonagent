@@ -174,6 +174,18 @@
     @apply bg-warning/10 text-warning border-warning/20;
   }
 
+
+  .bg-yellow-soft { @apply bg-warning/15; }
+  .text-yellow-strong { color: #111111; }
+  .border-yellow-soft { @apply border-warning/35; }
+  .bg-blue-soft { @apply bg-info/12; }
+  .text-blue-strong { @apply text-info; }
+  .border-blue-soft { @apply border-info/30; }
+  .bg-green-soft { @apply bg-success/12; }
+  .text-green-strong { @apply text-success; }
+  .border-green-soft { @apply border-success/30; }
+  .icon-chip { @apply bg-blue-soft text-blue-strong; }
+
   /* Accent highlight */
   .accent-glow {
     box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.3);

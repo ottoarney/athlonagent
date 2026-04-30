@@ -54,7 +54,7 @@ const iconMap = {
 };
 
 const colorMap = {
-  deadline: 'bg-warning/10 text-warning',
+  deadline: 'bg-yellow-soft text-yellow-strong',
   event: 'bg-info/10 text-info',
   deal: 'bg-info/10 text-info',
   alert: 'bg-destructive/10 text-destructive',

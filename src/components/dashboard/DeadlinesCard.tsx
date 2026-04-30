@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 const priorityColors: Record<string, string> = {
   urgent: 'bg-destructive/10 text-destructive border-destructive/20',
-  high: 'bg-warning/10 text-warning border-warning/20',
+  high: 'bg-yellow-soft text-yellow-strong border-yellow-soft',
   medium: 'bg-info/10 text-info border-info/20',
   low: 'bg-muted text-muted-foreground border-border',
 };

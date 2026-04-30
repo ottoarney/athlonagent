@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 const eventTypeColors: Record<string, string> = {
   training: 'bg-info/10 text-info border-info/20',
   game: 'bg-info/10 text-info border-info/25',
-  travel: 'bg-warning/10 text-warning border-warning/20',
+  travel: 'bg-yellow-soft text-yellow-strong border-yellow-soft',
   content: 'bg-info/10 text-info border-info/25',
   deal: 'bg-info/10 text-info border-info/25',
   admin: 'bg-muted text-muted-foreground border-border',
