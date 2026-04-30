@@ -6,6 +6,8 @@ import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/button';
 import { type SidebarCampaign, useSidebarCampaigns } from '@/hooks/useSidebarCampaigns';
+import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured } from '@/lib/supabase-env';
 import { formatCurrency } from '@/lib/data';
 
 type DeliverableStatus = 'Pending' | 'In Progress' | 'Submitted' | 'Approved' | 'Posted' | 'Completed';
@@ -30,6 +32,8 @@ interface CampaignWorkspaceState {
   timeline: TimelineItem[];
   tasks: TaskItem[];
 }
+
+const CAMPAIGN_DETAIL_STORAGE_KEY = 'athlon.campaign.detail.v1';
 
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'X / Twitter', 'LinkedIn', 'Snapchat', 'Facebook', 'Twitch', 'Podcast', 'Website / Blog', 'In-person appearance', 'Other'] as const;
 
@@ -67,6 +71,30 @@ const seedWorkspace = (campaign: SidebarCampaign): CampaignWorkspaceState => ({
   ],
 });
 
+const readStoredCampaignDetails = (): Record<string, CampaignWorkspaceState> => {
+  if (typeof window === 'undefined') return {};
+  const raw = window.localStorage.getItem(CAMPAIGN_DETAIL_STORAGE_KEY);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+};
+
+const getStoredWorkspace = (campaign: SidebarCampaign): CampaignWorkspaceState => {
+  const stored = readStoredCampaignDetails()[campaign.id];
+  return stored ?? seedWorkspace(campaign);
+};
+
+const persistStoredWorkspace = (campaignId: string, value: CampaignWorkspaceState) => {
+  if (typeof window === 'undefined') return;
+  const current = readStoredCampaignDetails();
+  current[campaignId] = value;
+  window.localStorage.setItem(CAMPAIGN_DETAIL_STORAGE_KEY, JSON.stringify(current));
+};
+
 export default function CampaignDetail() {
   const { campaignId = '' } = useParams();
   const navigate = useNavigate();
@@ -90,15 +118,15 @@ export default function CampaignDetail() {
     );
   }
 
-  const [savedState, setSavedState] = useState<CampaignWorkspaceState>(() => seedWorkspace(campaign));
-  const [draft, setDraft] = useState<CampaignWorkspaceState>(() => seedWorkspace(campaign));
+  const [savedState, setSavedState] = useState<CampaignWorkspaceState>(() => getStoredWorkspace(campaign));
+  const [draft, setDraft] = useState<CampaignWorkspaceState>(() => getStoredWorkspace(campaign));
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
   const [error, setError] = useState('');
   const hasChanges = JSON.stringify(savedState) !== JSON.stringify(draft);
   useEffect(() => {
-    const nextState = seedWorkspace(campaign);
+    const nextState = getStoredWorkspace(campaign);
     setSavedState(nextState);
     setDraft(nextState);
     setIsEditing(false);
@@ -118,12 +146,27 @@ export default function CampaignDetail() {
   const daysRemaining = nearestDueDate ? Math.ceil((nearestDueDate.getTime() - Date.now()) / 86400000) : 0;
   const dealValueNumber = Number(draft.dealValue.replace(/[^\d.-]/g, '')) || 0;
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (saving || !hasChanges) return;
+    const nextSaved = { ...draft, deliverables: [...draft.deliverables], timeline: [...draft.timeline], tasks: [...draft.tasks] };
     try {
       setSaving(true);
       setError('');
-      setSavedState(draft);
+      if (isSupabaseConfigured && supabase) {
+        const { error: supabaseError } = await (supabase as any).from('campaign_details').upsert({
+          campaign_id: campaign.id,
+          payload: nextSaved,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'campaign_id' });
+
+        if (supabaseError) {
+          throw new Error(supabaseError.message || 'Supabase save failed');
+        }
+      }
+
+      persistStoredWorkspace(campaign.id, nextSaved);
+      setSavedState(nextSaved);
+      setDraft(nextSaved);
       setCampaigns((current) =>
         current.map((item) =>
           item.id === campaign.id
@@ -134,8 +177,8 @@ export default function CampaignDetail() {
       setSavedFlash(true);
       setIsEditing(false);
       window.setTimeout(() => setSavedFlash(false), 1600);
-    } catch {
-      setError('Unable to save campaign changes. Please try again.');
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to save campaign changes. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -150,7 +193,7 @@ export default function CampaignDetail() {
           actions={
             <div className="flex items-center gap-2">
               {isEditing && (
-                <Button className="bg-red-600 text-white hover:bg-red-600/90" onClick={() => { setDraft(savedState); setIsEditing(false); }} disabled={saving}>
+                <Button className="border border-border bg-surface text-foreground hover:bg-surface/80" onClick={() => { setDraft(savedState); setIsEditing(false); setError(''); }} disabled={saving}>
                   Cancel
                 </Button>
               )}
@@ -164,7 +207,7 @@ export default function CampaignDetail() {
                     setIsEditing(false);
                     return;
                   }
-                  saveChanges();
+                  void saveChanges();
                 }}
                 disabled={saving}
                 className={isEditing ? 'bg-[#fbe101] text-black hover:bg-[#fbe101]/90' : 'bg-[#01fb64] text-black hover:bg-[#01fb64]/90'}
