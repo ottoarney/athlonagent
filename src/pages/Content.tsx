@@ -25,11 +25,11 @@ const stages: { key: ContentStatus; label: string }[] = [
 
 const statusColors: Record<ContentStatus, { bg: string; text: string }> = {
   idea: { bg: 'bg-muted', text: 'text-muted-foreground' },
-  script: { bg: 'bg-purple-50', text: 'text-purple-700' },
-  shoot: { bg: 'bg-warning/10', text: 'text-warning' },
-  edit: { bg: 'bg-info/10', text: 'text-info' },
-  schedule: { bg: 'bg-accent/10', text: 'text-accent-foreground' },
-  posted: { bg: 'bg-success/10', text: 'text-success' },
+  script: { bg: 'bg-[#0C5DFF]/10', text: 'text-[#0C5DFF]' },
+  shoot: { bg: 'bg-[#FBE101]/20', text: 'text-[#111111]' },
+  edit: { bg: 'bg-[#0C5DFF]/10', text: 'text-[#0C5DFF]' },
+  schedule: { bg: 'bg-[#0C5DFF]/10', text: 'text-[#0C5DFF]' },
+  posted: { bg: 'bg-[#01FB64]/20', text: 'text-[#01FB64]' },
 };
 
 const platformIcons: Record<string, React.ElementType> = {
@@ -142,7 +142,7 @@ export default function Content() {
                           {/* Athlete */}
                           {athlete && (
                             <div className="flex items-center gap-2 mb-3">
-                              <div className="h-6 w-6 rounded-full bg-accent/10 flex items-center justify-center">
+                              <div className="h-6 w-6 rounded-full bg-[#0C5DFF]/10 flex items-center justify-center">
                                 <span className="text-[10px] font-medium">{athlete.initials}</span>
                               </div>
                               <span className="text-xs text-muted-foreground">{athlete.name}</span>

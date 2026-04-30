@@ -4,11 +4,11 @@ import { events, getAthlete, formatTime, isToday } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
 const eventTypeColors: Record<string, string> = {
-  training: 'bg-info/10 text-info border-info/20',
-  game: 'bg-info/10 text-info border-info/25',
-  travel: 'bg-warning/10 text-warning border-warning/20',
-  content: 'bg-info/10 text-info border-info/25',
-  deal: 'bg-info/10 text-info border-info/25',
+  training: 'bg-[#0C5DFF]/10 text-[#0C5DFF] border-[#0C5DFF]/25',
+  game: 'bg-[#0C5DFF]/10 text-[#0C5DFF] border-[#0C5DFF]/25',
+  travel: 'bg-[#FBE101]/20 text-[#111111] border-[#FBE101]/30',
+  content: 'bg-[#0C5DFF]/10 text-[#0C5DFF] border-[#0C5DFF]/25',
+  deal: 'bg-[#0C5DFF]/10 text-[#0C5DFF] border-[#0C5DFF]/25',
   admin: 'bg-muted text-muted-foreground border-border',
 };
 
@@ -19,7 +19,7 @@ export function TodayAgenda() {
     <Card className="card-elevated">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-info animate-pulse" />
+          <span className="h-2 w-2 rounded-full bg-[#0C5DFF] animate-pulse" />
           Today's Schedule
         </CardTitle>
       </CardHeader>
