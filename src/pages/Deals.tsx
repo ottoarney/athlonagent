@@ -32,7 +32,7 @@ const stageColors: Record<DealStage, string> = {
 
 const stageTextColors: Record<DealStage, string> = {
   lead: 'text-muted-foreground',
-  negotiation: 'text-yellow-strong',
+  negotiation: 'text-warning',
   contracted: 'text-info',
   deliverables: 'text-accent-foreground',
   paid: 'text-success',
@@ -67,7 +67,7 @@ export default function Deals() {
             <p className="text-xs text-muted-foreground uppercase tracking-wide">Total Pipeline</p>
             <p className="text-2xl font-bold mt-1">{formatCurrency(totalPipelineValue)}</p>
           </div>
-          <div className="p-4 rounded-xl border border-border bg-primary text-blue-strong-foreground">
+          <div className="p-4 rounded-xl border border-border bg-primary text-primary-foreground">
             <p className="text-xs uppercase tracking-wide opacity-70">Active Value</p>
             <p className="text-2xl font-bold mt-1">{formatCurrency(activeDealsValue)}</p>
           </div>
@@ -148,8 +148,8 @@ export default function Deals() {
                         >
                           {/* Brand header */}
                           <div className="flex items-center gap-3 mb-3">
-                            <div className="h-10 w-10 rounded-lg icon-chip flex items-center justify-center flex-shrink-0">
-                              <span className="text-xs font-bold text-blue-strong">
+                            <div className="h-10 w-10 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
+                              <span className="text-xs font-bold text-primary">
                                 {deal.brand.slice(0, 2).toUpperCase()}
                               </span>
                             </div>
@@ -170,7 +170,7 @@ export default function Deals() {
                                 deal.paymentStatus === 'complete' 
                                   ? 'bg-success/10 text-success'
                                   : deal.paymentStatus === 'partial'
-                                  ? 'bg-yellow-soft text-yellow-strong border-yellow-soft'
+                                  ? 'bg-warning/10 text-warning'
                                   : 'bg-muted text-muted-foreground'
                               )}
                             >
