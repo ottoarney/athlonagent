@@ -32,7 +32,7 @@ const featurePills = [
 
 export function OperationsFeatureSection({ dashboardRoute }: OperationsFeatureSectionProps) {
   return (
-    <section id="platform" className="scroll-mt-24 py-20">
+    <section id="platform" className="scroll-mt-[100px] py-20">
       <div className="container px-4 md:px-6">
         <div className="rounded-3xl border border-border/70 bg-gradient-to-b from-white to-surface p-6 md:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-10">
