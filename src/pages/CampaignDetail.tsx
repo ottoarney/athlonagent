@@ -93,6 +93,7 @@ export default function CampaignDetail() {
   const [savedState, setSavedState] = useState<CampaignWorkspaceState>(() => seedWorkspace(campaign));
   const [draft, setDraft] = useState<CampaignWorkspaceState>(() => seedWorkspace(campaign));
   const [saving, setSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
   const [error, setError] = useState('');
   const hasChanges = JSON.stringify(savedState) !== JSON.stringify(draft);
@@ -122,6 +123,7 @@ export default function CampaignDetail() {
         ),
       );
       setSavedFlash(true);
+      setIsEditing(false);
       window.setTimeout(() => setSavedFlash(false), 1600);
     } catch {
       setError('Unable to save campaign changes. Please try again.');
@@ -136,6 +138,32 @@ export default function CampaignDetail() {
         <DashboardPageHeader
           title={draft.name}
           subtitle="Track deliverables, deadlines, tasks, and deal progress for this campaign."
+          actions={
+            <div className="flex items-center gap-2">
+              {isEditing && (
+                <Button variant="outline" onClick={() => { setDraft(savedState); setIsEditing(false); }} disabled={saving}>
+                  Cancel
+                </Button>
+              )}
+              <Button
+                onClick={() => {
+                  if (!isEditing) {
+                    setIsEditing(true);
+                    return;
+                  }
+                  if (!hasChanges) {
+                    setIsEditing(false);
+                    return;
+                  }
+                  saveChanges();
+                }}
+                disabled={saving}
+                className={isEditing ? 'bg-[#0c5dff] text-white hover:bg-[#0c5dff]/90' : 'bg-[#fbe101] text-black hover:bg-[#fbe101]/90'}
+              >
+                {isEditing ? (saving ? 'Saving…' : 'Save Changes') : 'Edit Campaign'}
+              </Button>
+            </div>
+          }
         />
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -150,19 +178,21 @@ export default function CampaignDetail() {
             <div className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-base font-semibold">Deliverables Tracker</h2>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setDraft((current) => ({
-                      ...current,
-                      deliverables: [...current.deliverables, { id: `d${Date.now()}`, name: 'New deliverable', dueDate: '', platform: 'Instagram', status: 'Pending' }],
-                    }))
-                  }
-                >
-                  <Plus className="mr-1 h-4 w-4" />
-                  Add deliverable
-                </Button>
+                {isEditing && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setDraft((current) => ({
+                        ...current,
+                        deliverables: [...current.deliverables, { id: `d${Date.now()}`, name: 'New deliverable', dueDate: '', platform: 'Instagram', status: 'Pending' }],
+                      }))
+                    }
+                  >
+                    <Plus className="mr-1 h-4 w-4" />
+                    Add deliverable
+                  </Button>
+                )}
               </div>
               <div className="mt-3 overflow-hidden rounded-lg border border-border">
                 <table className="w-full text-sm">
@@ -177,21 +207,29 @@ export default function CampaignDetail() {
                   <tbody>
                     {draft.deliverables.map((item) => (
                       <tr key={item.id} className="border-t border-border">
-                        <td className="px-3 py-2 font-medium"><input value={item.name} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, name: e.target.value } : d)) }))} className="w-full rounded border border-border px-2 py-1" /></td>
-                        <td className="px-3 py-2 text-muted-foreground"><input type="date" value={toDateInput(item.dueDate)} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, dueDate: e.target.value } : d)) }))} className="rounded border border-border px-2 py-1" /></td>
+                        <td className="px-3 py-2 font-medium">{isEditing ? <input value={item.name} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, name: e.target.value } : d)) }))} className="w-full rounded border border-border px-2 py-1" /> : item.name}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{isEditing ? <input type="date" value={toDateInput(item.dueDate)} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, dueDate: e.target.value } : d)) }))} className="rounded border border-border px-2 py-1" /> : item.dueDate}</td>
                         <td className="px-3 py-2">
-                          <select value={item.platform} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, platform: e.target.value } : d)) }))} className="rounded border border-border px-2 py-1">
-                            {PLATFORMS.map((platform) => <option key={platform} value={platform}>{platform}</option>)}
-                          </select>
-                          {item.platform === 'Other' && <input value={item.customPlatform ?? ''} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, customPlatform: e.target.value } : d)) }))} placeholder="Custom platform" className="ml-2 rounded border border-border px-2 py-1" />}
+                          {isEditing ? (
+                            <>
+                              <select value={item.platform} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, platform: e.target.value } : d)) }))} className="rounded border border-border px-2 py-1">
+                                {PLATFORMS.map((platform) => <option key={platform} value={platform}>{platform}</option>)}
+                              </select>
+                              {item.platform === 'Other' && <input value={item.customPlatform ?? ''} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, customPlatform: e.target.value } : d)) }))} placeholder="Custom platform" className="ml-2 rounded border border-border px-2 py-1" />}
+                            </>
+                          ) : (item.platform === 'Other' ? item.customPlatform || 'Other' : item.platform)}
                         </td>
                         <td className="px-3 py-2">
-                          <div className="flex items-center gap-2">
-                            <select value={item.status} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, status: e.target.value as DeliverableStatus } : d)) }))} className="rounded border border-border px-2 py-1 text-xs">
-                              {['Pending', 'In Progress', 'Submitted', 'Approved', 'Posted', 'Completed'].map((status) => <option key={status} value={status}>{status}</option>)}
-                            </select>
-                            <button onClick={() => setDraft((c) => ({ ...c, deliverables: c.deliverables.filter((d) => d.id !== item.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete deliverable"><Trash2 className="h-4 w-4" /></button>
-                          </div>
+                          {isEditing ? (
+                            <div className="flex items-center gap-2">
+                              <select value={item.status} onChange={(e) => setDraft((c) => ({ ...c, deliverables: c.deliverables.map((d) => (d.id === item.id ? { ...d, status: e.target.value as DeliverableStatus } : d)) }))} className="rounded border border-border px-2 py-1 text-xs">
+                                {['Pending', 'In Progress', 'Submitted', 'Approved', 'Posted', 'Completed'].map((status) => <option key={status} value={status}>{status}</option>)}
+                              </select>
+                              <button onClick={() => setDraft((c) => ({ ...c, deliverables: c.deliverables.filter((d) => d.id !== item.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete deliverable"><Trash2 className="h-4 w-4" /></button>
+                            </div>
+                          ) : (
+                            <span className={`inline-flex rounded-full px-2 py-1 text-xs ${item.status === 'Pending' ? 'bg-[#fbe101] text-black' : item.status === 'In Progress' ? 'bg-[#0c5dff] text-white' : 'bg-green-100 text-green-800'}`}>{item.status}</span>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -203,17 +241,19 @@ export default function CampaignDetail() {
             <div className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-base font-semibold">Timeline</h2>
-                <Button variant="outline" size="sm" onClick={() => setDraft((c) => ({ ...c, timeline: [...c.timeline, { id: `t${Date.now()}`, title: 'New item', date: '' }] }))}>
+                {isEditing && <Button variant="outline" size="sm" onClick={() => setDraft((c) => ({ ...c, timeline: [...c.timeline, { id: `t${Date.now()}`, title: 'New item', date: '' }] }))}>
                   <Plus className="mr-1 h-4 w-4" />
                   Add timeline item
-                </Button>
+                </Button>}
               </div>
               <ul className="mt-3 space-y-2 text-sm">
                 {draft.timeline.map((item) => (
                   <li key={item.id} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-                    <input value={item.title} onChange={(e) => setDraft((c) => ({ ...c, timeline: c.timeline.map((t) => (t.id === item.id ? { ...t, title: e.target.value } : t)) }))} className="flex-1 rounded border border-border px-2 py-1 font-medium" />
-                    <input type="date" value={toDateInput(item.date)} onChange={(e) => setDraft((c) => ({ ...c, timeline: c.timeline.map((t) => (t.id === item.id ? { ...t, date: e.target.value } : t)) }))} className="rounded border border-border px-2 py-1 text-muted-foreground" />
-                    <button onClick={() => setDraft((c) => ({ ...c, timeline: c.timeline.filter((t) => t.id !== item.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete timeline item"><Trash2 className="h-4 w-4" /></button>
+                    {isEditing ? <>
+                      <input value={item.title} onChange={(e) => setDraft((c) => ({ ...c, timeline: c.timeline.map((t) => (t.id === item.id ? { ...t, title: e.target.value } : t)) }))} className="flex-1 rounded border border-border px-2 py-1 font-medium" />
+                      <input type="date" value={toDateInput(item.date)} onChange={(e) => setDraft((c) => ({ ...c, timeline: c.timeline.map((t) => (t.id === item.id ? { ...t, date: e.target.value } : t)) }))} className="rounded border border-border px-2 py-1 text-muted-foreground" />
+                      <button onClick={() => setDraft((c) => ({ ...c, timeline: c.timeline.filter((t) => t.id !== item.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete timeline item"><Trash2 className="h-4 w-4" /></button>
+                    </> : <><span className="flex-1 font-medium">{item.title}</span><span className="text-muted-foreground">{item.date}</span></>}
                   </li>
                 ))}
               </ul>
@@ -224,30 +264,30 @@ export default function CampaignDetail() {
             <div className="rounded-xl border border-border bg-card p-4">
               <h2 className="text-base font-semibold">Campaign Details</h2>
               <div className="mt-3 space-y-2 text-sm">
-                <Field label="Campaign name"><input value={draft.name} onChange={(e) => setDraft((c) => ({ ...c, name: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /></Field>
-                <Field label="Brand"><input value={draft.brand} onChange={(e) => setDraft((c) => ({ ...c, brand: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /></Field>
-                <Field label="Athlete"><input value={draft.athlete} onChange={(e) => setDraft((c) => ({ ...c, athlete: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /></Field>
-                <Field label="Deal value"><input value={draft.dealValue} onChange={(e) => setDraft((c) => ({ ...c, dealValue: e.target.value.replace(/[^\d.]/g, '') }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /></Field>
-                <Field label="Campaign status"><select value={draft.campaignStatus} onChange={(e) => setDraft((c) => ({ ...c, campaignStatus: e.target.value as CampaignStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Active</option><option>Paused</option><option>Completed</option><option>Archived</option></select></Field>
-                <Field label="Payment status"><select value={draft.paymentStatus} onChange={(e) => setDraft((c) => ({ ...c, paymentStatus: e.target.value as PaymentStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Pending</option><option>Partial</option><option>Paid</option></select></Field>
-                <Field label="Contract status"><select value={draft.contractStatus} onChange={(e) => setDraft((c) => ({ ...c, contractStatus: e.target.value as ContractStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Draft</option><option>Sent</option><option>Signed</option></select></Field>
+                <Field label="Campaign name">{isEditing ? <input value={draft.name} onChange={(e) => setDraft((c) => ({ ...c, name: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={draft.name} />}</Field>
+                <Field label="Brand">{isEditing ? <input value={draft.brand} onChange={(e) => setDraft((c) => ({ ...c, brand: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={draft.brand} />}</Field>
+                <Field label="Athlete">{isEditing ? <input value={draft.athlete} onChange={(e) => setDraft((c) => ({ ...c, athlete: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={draft.athlete} />}</Field>
+                <Field label="Deal value">{isEditing ? <input value={draft.dealValue} onChange={(e) => setDraft((c) => ({ ...c, dealValue: e.target.value.replace(/[^\d.]/g, '') }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={formatCurrency(dealValueNumber)} />}</Field>
+                <Field label="Campaign status">{isEditing ? <select value={draft.campaignStatus} onChange={(e) => setDraft((c) => ({ ...c, campaignStatus: e.target.value as CampaignStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Active</option><option>Paused</option><option>Completed</option><option>Archived</option></select> : <ReadValue value={draft.campaignStatus} />}</Field>
+                <Field label="Payment status">{isEditing ? <select value={draft.paymentStatus} onChange={(e) => setDraft((c) => ({ ...c, paymentStatus: e.target.value as PaymentStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Pending</option><option>Partial</option><option>Paid</option></select> : <ReadValue value={draft.paymentStatus} />}</Field>
+                <Field label="Contract status">{isEditing ? <select value={draft.contractStatus} onChange={(e) => setDraft((c) => ({ ...c, contractStatus: e.target.value as ContractStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Draft</option><option>Sent</option><option>Signed</option></select> : <ReadValue value={draft.contractStatus} />}</Field>
               </div>
             </div>
 
             <div className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-base font-semibold">Tasks</h2>
-                <Button variant="outline" size="sm" onClick={() => setDraft((c) => ({ ...c, tasks: [...c.tasks, { id: `k${Date.now()}`, name: 'New task', completed: false }] }))}>
+                {isEditing && <Button variant="outline" size="sm" onClick={() => setDraft((c) => ({ ...c, tasks: [...c.tasks, { id: `k${Date.now()}`, name: 'New task', completed: false }] }))}>
                   <Plus className="mr-1 h-4 w-4" />
                   Add task
-                </Button>
+                </Button>}
               </div>
               <ul className="mt-3 space-y-2 text-sm">
                 {draft.tasks.map((task) => (
                   <li key={task.id} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
                     <input type="checkbox" checked={task.completed} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, completed: e.target.checked } : t)) }))} className="h-4 w-4 rounded border-border" />
-                    <input value={task.name} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, name: e.target.value } : t)) }))} className={`flex-1 rounded border border-border px-2 py-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`} />
-                    <button onClick={() => setDraft((c) => ({ ...c, tasks: c.tasks.filter((t) => t.id !== task.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete task"><Trash2 className="h-4 w-4" /></button>
+                    {isEditing ? <input value={task.name} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, name: e.target.value } : t)) }))} className={`flex-1 rounded border border-border px-2 py-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`} /> : <span className={`flex-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`}>{task.name}</span>}
+                    {isEditing && <button onClick={() => setDraft((c) => ({ ...c, tasks: c.tasks.filter((t) => t.id !== task.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete task"><Trash2 className="h-4 w-4" /></button>}
                   </li>
                 ))}
               </ul>
@@ -255,16 +295,14 @@ export default function CampaignDetail() {
 
             <div className="rounded-xl border border-border bg-card p-4">
               <h2 className="text-base font-semibold">Notes</h2>
-              <textarea value={draft.notes} onChange={(e) => setDraft((c) => ({ ...c, notes: e.target.value }))} onBlur={saveChanges} className="mt-3 min-h-28 w-full rounded-lg border border-border bg-surface p-3 text-sm" />
+              {isEditing ? (
+                <textarea value={draft.notes} onChange={(e) => setDraft((c) => ({ ...c, notes: e.target.value }))} className="mt-3 min-h-28 w-full rounded-lg border border-border bg-surface p-3 text-sm" />
+              ) : (
+                <div className="mt-3 min-h-28 rounded-lg border border-border bg-surface p-3 text-sm text-muted-foreground">{draft.notes}</div>
+              )}
             </div>
           </div>
         </section>
-        {hasChanges && (
-          <div className="sticky bottom-4 mt-4 flex items-center justify-end gap-2 rounded-xl border border-border bg-card/95 p-3 shadow-sm backdrop-blur">
-            <Button variant="outline" onClick={() => setDraft(savedState)} disabled={saving}>Cancel</Button>
-            <Button onClick={saveChanges} disabled={saving}>{saving ? 'Saving…' : 'Save changes'}</Button>
-          </div>
-        )}
         {savedFlash && (
           <div className="mt-2 inline-flex items-center gap-1 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs text-foreground">
             <Check className="h-3.5 w-3.5" />
@@ -275,6 +313,10 @@ export default function CampaignDetail() {
       </PageTransition>
     </AppLayout>
   );
+}
+
+function ReadValue({ value }: { value: string }) {
+  return <p className="text-right font-medium">{value || '—'}</p>;
 }
 
 function MetricCard({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
