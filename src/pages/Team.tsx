@@ -81,9 +81,9 @@ function getCapacityStatus(freePercent: number): CapacityStatus {
 }
 
 function statusClass(status: CapacityStatus) {
-  if (status === 'Wide open') return 'bg-green-soft text-green-strong border-green-soft';
+  if (status === 'Wide open') return 'bg-emerald-50 text-emerald-700 border-emerald-200';
   if (status === 'Balanced') return 'bg-slate-50 text-slate-700 border-slate-200';
-  return 'bg-yellow-soft text-yellow-strong border-yellow-soft';
+  return 'bg-amber-50 text-amber-700 border-amber-200';
 }
 
 export default function Team() {
@@ -178,8 +178,8 @@ export default function Team() {
                 className={cn(
                   'rounded-xl border bg-white p-4 text-left transition-colors',
                   selectedDepartment === department
-                    ? 'border-[#01FB64] ring-1 ring-[#01FB64]/30'
-                    : 'border-border hover:border-[#01FB64]/60',
+                    ? 'border-emerald-500 ring-1 ring-emerald-500/30'
+                    : 'border-border hover:border-emerald-300',
                 )}
               >
                 <p className="text-sm font-medium text-foreground">{department}</p>
@@ -233,7 +233,7 @@ export default function Team() {
                     <p className="text-xs text-muted-foreground">{teammate.department}</p>
                   </div>
                   {index === 0 ? (
-                    <span className="rounded-full border border-green-soft bg-green-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-green-strong">
+                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
                       Top Match
                     </span>
                   ) : null}
@@ -244,7 +244,7 @@ export default function Team() {
                     <span>{teammate.freePercent}% free</span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100">
-                    <div className="h-2 rounded-full bg-[#01FB64]" style={{ width: `${teammate.freePercent}%` }} />
+                    <div className="h-2 rounded-full bg-emerald-500" style={{ width: `${teammate.freePercent}%` }} />
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-muted-foreground">{teammate.openTasks} open tasks</p>

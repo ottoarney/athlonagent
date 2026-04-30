@@ -9,8 +9,8 @@ import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
 import { PageTransition } from '@/components/layout/PageTransition';
 
 const statusColors = {
-  active: 'bg-green-soft text-green-strong border-green-soft',
-  prospect: 'bg-yellow-soft text-yellow-strong border-yellow-soft border-warning/20',
+  active: 'bg-accent/10 text-accent-foreground border-accent/20',
+  prospect: 'bg-warning/10 text-warning border-warning/20',
   inactive: 'bg-muted text-muted-foreground border-border',
 };
 
