@@ -1,4 +1,8 @@
+import type React from 'react';
 import { useEffect, useState } from 'react';
+
+let campaignStore: SidebarCampaign[] | null = null;
+const listeners = new Set<(campaigns: SidebarCampaign[]) => void>();
 
 export interface SidebarCampaign {
   id: string;
@@ -57,12 +61,30 @@ export const createCampaignId = (name: string) => {
   return `${slug || 'campaign'}-${Date.now()}`;
 };
 
+const getCampaignStore = () => {
+  if (!campaignStore) campaignStore = readStoredCampaigns();
+  return campaignStore;
+};
+
+const updateCampaignStore = (nextCampaigns: SidebarCampaign[]) => {
+  campaignStore = nextCampaigns;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextCampaigns));
+  listeners.forEach((listener) => listener(nextCampaigns));
+};
+
 export function useSidebarCampaigns() {
-  const [campaigns, setCampaigns] = useState<SidebarCampaign[]>(readStoredCampaigns);
+  const [campaigns, setCampaignsState] = useState<SidebarCampaign[]>(getCampaignStore);
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(campaigns));
-  }, [campaigns]);
+    const sync = (nextCampaigns: SidebarCampaign[]) => setCampaignsState(nextCampaigns);
+    listeners.add(sync);
+    return () => listeners.delete(sync);
+  }, []);
+
+  const setCampaigns: React.Dispatch<React.SetStateAction<SidebarCampaign[]>> = (value) => {
+    const nextCampaigns = typeof value === 'function' ? value(getCampaignStore()) : value;
+    updateCampaignStore(nextCampaigns);
+  };
 
   return { campaigns, setCampaigns };
 }
