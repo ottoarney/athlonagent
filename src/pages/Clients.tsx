@@ -192,8 +192,8 @@ const defaultForm: ClientFormState = {
 };
 
 const statusBadgeClass: Record<ClientStatus, string> = {
-  active: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  pitching: 'bg-amber-50 text-amber-700 border-amber-200',
+  active: 'bg-green-soft text-green-strong border-green-soft',
+  pitching: 'bg-yellow-soft text-yellow-strong border-yellow-soft',
   dormant: 'bg-slate-100 text-slate-600 border-slate-200',
 };
 
@@ -359,7 +359,7 @@ export default function Clients() {
                   className={cn(
                     'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                     selectedTier === tier
-                      ? 'border-primary bg-primary text-primary-foreground'
+                      ? 'border-primary bg-primary text-blue-strong-foreground'
                       : 'border-border bg-background text-foreground hover:bg-muted',
                   )}
                 >
@@ -380,7 +380,7 @@ export default function Clients() {
                   className={cn(
                     'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                     selectedStatus === status
-                      ? 'border-primary bg-primary text-primary-foreground'
+                      ? 'border-primary bg-primary text-blue-strong-foreground'
                       : 'border-border bg-background text-foreground hover:bg-muted',
                   )}
                 >

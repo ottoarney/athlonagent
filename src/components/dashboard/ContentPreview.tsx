@@ -6,10 +6,10 @@ import { cn } from '@/lib/utils';
 
 const statusColors: Record<ContentStatus, string> = {
   idea: 'bg-muted text-muted-foreground',
-  script: 'bg-warning/15 text-foreground border border-warning/35',
-  shoot: 'bg-warning/10 text-warning',
+  script: 'bg-yellow-soft text-yellow-strong border border-yellow-soft',
+  shoot: 'bg-yellow-soft text-yellow-strong border-yellow-soft',
   edit: 'bg-info/12 text-info border border-info/30',
-  schedule: 'bg-info/10 text-info border border-info/30',
+  schedule: 'bg-blue-soft text-blue-strong border border-blue-soft',
   posted: 'bg-success/10 text-success',
 };
 
@@ -47,8 +47,8 @@ export function ContentPreview() {
               className="flex items-center gap-3 p-3 rounded-lg bg-surface hover:bg-surface-elevated transition-colors cursor-pointer group"
             >
               {/* Platform icon */}
-              <div className="h-9 w-9 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
-                <PlatformIcon className="h-4 w-4 text-primary" />
+              <div className="h-9 w-9 rounded-lg icon-chip flex items-center justify-center flex-shrink-0">
+                <PlatformIcon className="h-4 w-4 text-blue-strong" />
               </div>
               
               <div className="flex-1 min-w-0">

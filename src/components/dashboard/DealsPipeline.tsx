@@ -13,11 +13,11 @@ const stages: { key: DealStage; label: string }[] = [
 ];
 
 const stageColors: Record<DealStage, string> = {
-  lead: 'bg-warning/15 text-foreground border border-warning/35',
-  negotiation: 'bg-info/10 text-info border border-info/30',
-  contracted: 'bg-info/15 text-info border border-info/35',
-  deliverables: 'bg-info/8 text-info border border-info/25',
-  paid: 'bg-success/20 text-emerald-900 border border-success/45',
+  lead: 'bg-yellow-soft text-yellow-strong border border-yellow-soft',
+  negotiation: 'bg-blue-soft text-blue-strong border border-blue-soft',
+  contracted: 'bg-blue-soft text-blue-strong border border-blue-soft',
+  deliverables: 'bg-blue-soft text-blue-strong border border-blue-soft',
+  paid: 'bg-green-soft text-green-strong border border-green-soft',
 };
 
 export function DealsPipeline() {
@@ -68,8 +68,8 @@ export function DealsPipeline() {
                 className="flex items-center gap-4 p-4 rounded-lg bg-surface hover:bg-surface-elevated transition-colors cursor-pointer group"
               >
                 {/* Brand logo placeholder */}
-                <div className="h-10 w-10 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-bold text-primary">
+                <div className="h-10 w-10 rounded-lg icon-chip flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-blue-strong">
                     {deal.brand.slice(0, 2).toUpperCase()}
                   </span>
                 </div>

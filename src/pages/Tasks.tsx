@@ -18,13 +18,13 @@ const fadeIn = {
 const columns: { key: TaskStatus; label: string; color: string }[] = [
   { key: 'todo', label: 'To Do', color: 'bg-muted' },
   { key: 'in-progress', label: 'In Progress', color: 'bg-info/10' },
-  { key: 'review', label: 'Review', color: 'bg-warning/10' },
+  { key: 'review', label: 'Review', color: 'bg-yellow-soft' },
   { key: 'done', label: 'Done', color: 'bg-success/10' },
 ];
 
 const priorityColors: Record<string, string> = {
   urgent: 'bg-destructive/10 text-destructive border-destructive/20',
-  high: 'bg-warning/10 text-warning border-warning/20',
+  high: 'bg-yellow-soft text-yellow-strong border-yellow-soft',
   medium: 'bg-info/10 text-info border-info/20',
   low: 'bg-muted text-muted-foreground border-border',
 };

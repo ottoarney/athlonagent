@@ -25,8 +25,8 @@ const stages: { key: ContentStatus; label: string }[] = [
 
 const statusColors: Record<ContentStatus, { bg: string; text: string }> = {
   idea: { bg: 'bg-muted', text: 'text-muted-foreground' },
-  script: { bg: 'bg-purple-50', text: 'text-purple-700' },
-  shoot: { bg: 'bg-warning/10', text: 'text-warning' },
+  script: { bg: 'bg-blue-soft', text: 'text-blue-strong' },
+  shoot: { bg: 'bg-yellow-soft', text: 'text-yellow-strong' },
   edit: { bg: 'bg-info/10', text: 'text-info' },
   schedule: { bg: 'bg-accent/10', text: 'text-accent-foreground' },
   posted: { bg: 'bg-success/10', text: 'text-success' },
@@ -128,8 +128,8 @@ export default function Content() {
                         >
                           {/* Platform & Hook */}
                           <div className="flex items-start gap-3 mb-3">
-                            <div className="h-9 w-9 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
-                              <PlatformIcon className="h-4 w-4 text-primary" />
+                            <div className="h-9 w-9 rounded-lg icon-chip flex items-center justify-center flex-shrink-0">
+                              <PlatformIcon className="h-4 w-4 text-blue-strong" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="font-medium text-sm">{item.hook}</h4>

@@ -130,7 +130,7 @@ export function AppSidebar() {
                 className={cn(
                   'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors',
                   isActive
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-primary text-blue-strong-foreground'
                     : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                 )}
               >
@@ -140,7 +140,7 @@ export function AppSidebar() {
                   <span
                     className={cn(
                       'ml-auto rounded-full px-2 py-0.5 text-[11px] font-semibold',
-                      isActive ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-primary/15 text-primary',
+                      isActive ? 'bg-primary-foreground/20 text-blue-strong-foreground' : 'bg-primary/15 text-blue-strong',
                     )}
                   >
                     {item.count}
@@ -168,7 +168,7 @@ export function AppSidebar() {
                   toggleStar(campaign.id);
                 }}
                 aria-label={`Toggle ${campaign.name} starred`}
-                className="rounded p-1 text-[#fbe101] hover:bg-sidebar-accent"
+                className="rounded p-1 text-warning hover:bg-sidebar-accent"
               >
                 <Star className="h-3.5 w-3.5 fill-current" />
               </button>
@@ -190,7 +190,7 @@ export function AppSidebar() {
                   event.stopPropagation();
                   openCreateModal();
                 }}
-                className="rounded p-1 text-primary hover:bg-sidebar-accent"
+                className="rounded p-1 text-blue-strong hover:bg-sidebar-accent"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -205,7 +205,7 @@ export function AppSidebar() {
                     toggleStar(campaign.id);
                   }}
                   aria-label={`Toggle ${campaign.name} starred`}
-                  className={cn('rounded p-1 hover:bg-sidebar-accent', campaign.starred ? 'text-[#fbe101]' : 'text-muted-foreground')}
+                  className={cn('rounded p-1 hover:bg-sidebar-accent', campaign.starred ? 'text-yellow-strong' : 'text-muted-foreground')}
                 >
                   <Star className={cn('h-3.5 w-3.5', campaign.starred && 'fill-current')} />
                 </button>
@@ -347,7 +347,7 @@ function CampaignSection({
       >
         {isOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
         <span>{title}</span>
-        <span className="ml-auto rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] text-primary">{count}</span>
+        <span className="ml-auto rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] text-blue-strong">{count}</span>
         {headerAction}
       </button>
 
