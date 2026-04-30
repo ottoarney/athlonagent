@@ -268,9 +268,9 @@ export default function CampaignDetail() {
                 <Field label="Brand">{isEditing ? <input value={draft.brand} onChange={(e) => setDraft((c) => ({ ...c, brand: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={draft.brand} />}</Field>
                 <Field label="Athlete">{isEditing ? <input value={draft.athlete} onChange={(e) => setDraft((c) => ({ ...c, athlete: e.target.value }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={draft.athlete} />}</Field>
                 <Field label="Deal value">{isEditing ? <input value={draft.dealValue} onChange={(e) => setDraft((c) => ({ ...c, dealValue: e.target.value.replace(/[^\d.]/g, '') }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium" /> : <ReadValue value={formatCurrency(dealValueNumber)} />}</Field>
-                <Field label="Campaign status">{isEditing ? <select value={draft.campaignStatus} onChange={(e) => setDraft((c) => ({ ...c, campaignStatus: e.target.value as CampaignStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Active</option><option>Paused</option><option>Completed</option><option>Archived</option></select> : <ReadValue value={draft.campaignStatus} />}</Field>
-                <Field label="Payment status">{isEditing ? <select value={draft.paymentStatus} onChange={(e) => setDraft((c) => ({ ...c, paymentStatus: e.target.value as PaymentStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Pending</option><option>Partial</option><option>Paid</option></select> : <ReadValue value={draft.paymentStatus} />}</Field>
-                <Field label="Contract status">{isEditing ? <select value={draft.contractStatus} onChange={(e) => setDraft((c) => ({ ...c, contractStatus: e.target.value as ContractStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Draft</option><option>Sent</option><option>Signed</option></select> : <ReadValue value={draft.contractStatus} />}</Field>
+                <Field label="Campaign status">{isEditing ? <select value={draft.campaignStatus} onChange={(e) => setDraft((c) => ({ ...c, campaignStatus: e.target.value as CampaignStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Active</option><option>Paused</option><option>Completed</option><option>Archived</option></select> : <StatusBadge value={draft.campaignStatus} />}</Field>
+                <Field label="Payment status">{isEditing ? <select value={draft.paymentStatus} onChange={(e) => setDraft((c) => ({ ...c, paymentStatus: e.target.value as PaymentStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Pending</option><option>Partial</option><option>Paid</option></select> : <StatusBadge value={draft.paymentStatus} />}</Field>
+                <Field label="Contract status">{isEditing ? <select value={draft.contractStatus} onChange={(e) => setDraft((c) => ({ ...c, contractStatus: e.target.value as ContractStatus }))} className="w-full rounded border border-border px-2 py-1 text-right font-medium"><option>Draft</option><option>Sent</option><option>Signed</option></select> : <StatusBadge value={draft.contractStatus} />}</Field>
               </div>
             </div>
 
@@ -285,7 +285,7 @@ export default function CampaignDetail() {
               <ul className="mt-3 space-y-2 text-sm">
                 {draft.tasks.map((task) => (
                   <li key={task.id} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-                    <input type="checkbox" checked={task.completed} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, completed: e.target.checked } : t)) }))} className="h-4 w-4 rounded border-border" />
+                    <input type="checkbox" checked={task.completed} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, completed: e.target.checked } : t)) }))} disabled={!isEditing} className="h-4 w-4 rounded border-border disabled:cursor-default" />
                     {isEditing ? <input value={task.name} onChange={(e) => setDraft((c) => ({ ...c, tasks: c.tasks.map((t) => (t.id === task.id ? { ...t, name: e.target.value } : t)) }))} className={`flex-1 rounded border border-border px-2 py-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`} /> : <span className={`flex-1 ${task.completed ? 'line-through text-muted-foreground' : ''}`}>{task.name}</span>}
                     {isEditing && <button onClick={() => setDraft((c) => ({ ...c, tasks: c.tasks.filter((t) => t.id !== task.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete task"><Trash2 className="h-4 w-4" /></button>}
                   </li>
@@ -317,6 +317,20 @@ export default function CampaignDetail() {
 
 function ReadValue({ value }: { value: string }) {
   return <p className="text-right font-medium">{value || '—'}</p>;
+}
+
+
+function StatusBadge({ value }: { value: string }) {
+  const classes =
+    value === 'Pending' || value === 'Partial'
+      ? 'bg-[#fbe101] text-black'
+      : value === 'In Progress'
+        ? 'bg-[#0c5dff] text-white'
+        : value === 'Completed' || value === 'Paid' || value === 'Signed'
+          ? 'bg-green-100 text-green-800'
+          : 'bg-surface text-foreground';
+
+  return <span className={`ml-auto inline-flex rounded-full px-2 py-1 text-xs font-medium ${classes}`}>{value || '—'}</span>;
 }
 
 function MetricCard({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
