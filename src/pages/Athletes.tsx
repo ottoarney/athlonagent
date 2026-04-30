@@ -343,6 +343,8 @@ export default function Athletes() {
                   <div><p className="text-xs text-muted-foreground">Active Deals</p><p className="font-semibold text-sm">{athlete.activeDeals}</p></div>
                   <div><p className="text-xs text-muted-foreground">Open Tasks</p><p className="font-semibold text-sm">{athlete.openTasks}</p></div>
                 </div>
+              ))}
+            </div>
 
                 <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{athlete.agentNotes || 'No notes yet.'}</p>
 
