@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Filter, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -303,8 +303,14 @@ export default function Athletes() {
             </Select>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground"><Filter className="h-4 w-4 text-[#0C5DFF]" /> {filteredItems.length} athletes</div>
         </div>
+
+        <section className="grid grid-cols-2 gap-3 rounded-2xl border bg-card p-4 md:grid-cols-4 md:gap-4 md:p-5">
+          <div className="space-y-1 text-center md:text-left"><p className="text-xs text-muted-foreground">Total Athletes</p><p className="text-lg font-semibold">{items.length}</p></div>
+          <div className="space-y-1 text-center md:text-left"><p className="text-xs text-muted-foreground">High Priority</p><p className="text-lg font-semibold">{items.filter((a) => a.status === 'prospect').length}</p></div>
+          <div className="space-y-1 text-center md:text-left"><p className="text-xs text-muted-foreground">Total Open Tasks</p><p className="text-lg font-semibold">{items.reduce((s, a) => s + a.openTasks, 0)}</p></div>
+          <div className="space-y-1 text-center md:text-left"><p className="text-xs text-muted-foreground">Roster Deal Value</p><p className="text-lg font-semibold">{formatCurrency(items.reduce((s, a) => s + a.dealValue, 0))}</p></div>
+        </section>
 
         {filteredItems.length === 0 ? (
           <div className="rounded-xl border border-dashed p-12 text-center">
@@ -313,51 +319,41 @@ export default function Athletes() {
             <Button className="mt-6 bg-[#01FB64] text-black hover:bg-[#01FB64]/90" onClick={onOpenAdd}>Add Athlete</Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_300px]">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {filteredItems.map((athlete) => (
-                <div key={athlete.id} className="rounded-2xl border bg-card p-5 shadow-sm transition hover:shadow-md">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex gap-3">
-                      {athlete.avatar ? (
-                        <img src={athlete.avatar} alt={athlete.name} className="h-14 w-14 rounded-full object-cover border" />
-                      ) : (
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0C5DFF]/15 text-[#0C5DFF] font-semibold">{athlete.initials}</div>
-                      )}
-                      <div>
-                        <h3 className="font-semibold">{athlete.name}</h3>
-                        <p className="text-sm text-muted-foreground">{athlete.sport} • {athlete.position}</p>
-                        <p className="text-xs text-muted-foreground">{athlete.team} • {athlete.classYear}</p>
-                      </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {filteredItems.map((athlete) => (
+              <div key={athlete.id} className="rounded-2xl border bg-card p-5 shadow-sm transition hover:shadow-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex gap-3">
+                    {athlete.avatar ? (
+                      <img src={athlete.avatar} alt={athlete.name} className="h-14 w-14 rounded-full object-cover border" />
+                    ) : (
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0C5DFF]/15 text-[#0C5DFF] font-semibold">{athlete.initials}</div>
+                    )}
+                    <div>
+                      <h3 className="font-semibold">{athlete.name}</h3>
+                      <p className="text-sm text-muted-foreground">{athlete.sport} • {athlete.position}</p>
+                      <p className="text-xs text-muted-foreground">{athlete.team} • {athlete.classYear}</p>
                     </div>
-                    <Badge variant="outline" className={cn('capitalize', statusColors[athlete.status])}>{athlete.status}</Badge>
                   </div>
+                  <Badge variant="outline" className={cn('capitalize', statusColors[athlete.status])}>{athlete.status}</Badge>
+                </div>
 
-                  <div className="mt-4 grid grid-cols-3 gap-3 rounded-xl bg-muted/30 p-3">
-                    <div><p className="text-xs text-muted-foreground">Deal Value</p><p className="font-semibold text-sm">{formatCurrency(athlete.dealValue)}</p></div>
-                    <div><p className="text-xs text-muted-foreground">Active Deals</p><p className="font-semibold text-sm">{athlete.activeDeals}</p></div>
-                    <div><p className="text-xs text-muted-foreground">Open Tasks</p><p className="font-semibold text-sm">{athlete.openTasks}</p></div>
-                  </div>
-
-                  <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{athlete.agentNotes || 'No notes yet.'}</p>
-
-                  <div className="mt-4 flex items-center justify-between">
-                    <Button size="sm" variant="outline" className="gap-2" onClick={() => onEdit(athlete)}><Pencil className="h-3.5 w-3.5" />View / Edit</Button>
-                    <Button size="icon" variant="ghost" onClick={() => onDelete(athlete.id)} aria-label="Delete athlete"><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                  </div>
+                <div className="mt-4 grid grid-cols-3 gap-3 rounded-xl bg-muted/30 p-3">
+                  <div><p className="text-xs text-muted-foreground">Deal Value</p><p className="font-semibold text-sm">{formatCurrency(athlete.dealValue)}</p></div>
+                  <div><p className="text-xs text-muted-foreground">Active Deals</p><p className="font-semibold text-sm">{athlete.activeDeals}</p></div>
+                  <div><p className="text-xs text-muted-foreground">Open Tasks</p><p className="font-semibold text-sm">{athlete.openTasks}</p></div>
                 </div>
               ))}
             </div>
 
-            <aside className="hidden xl:block rounded-2xl border bg-card p-5 h-fit">
-              <h4 className="font-semibold">Roster Summary</h4>
-              <div className="mt-4 space-y-3 text-sm">
-                <p className="flex justify-between"><span>Total Athletes</span><span className="font-semibold">{items.length}</span></p>
-                <p className="flex justify-between"><span>High Priority</span><span className="font-semibold">{items.filter((a) => a.status === 'prospect').length}</span></p>
-                <p className="flex justify-between"><span>Total Open Tasks</span><span className="font-semibold">{items.reduce((s, a) => s + a.openTasks, 0)}</span></p>
-                <p className="flex justify-between"><span>Roster Deal Value</span><span className="font-semibold">{formatCurrency(items.reduce((s, a) => s + a.dealValue, 0))}</span></p>
+                <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{athlete.agentNotes || 'No notes yet.'}</p>
+
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button size="icon" variant="ghost" onClick={() => onEdit(athlete)} aria-label="Edit athlete"><Pencil className="h-4 w-4 text-black" /></Button>
+                  <Button size="icon" variant="ghost" onClick={() => onDelete(athlete.id)} aria-label="Delete athlete"><Trash2 className="h-4 w-4 text-black" /></Button>
+                </div>
               </div>
-            </aside>
+            ))}
           </div>
         )}
       </PageTransition>
