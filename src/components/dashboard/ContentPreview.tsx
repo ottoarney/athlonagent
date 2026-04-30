@@ -6,11 +6,11 @@ import { cn } from '@/lib/utils';
 
 const statusColors: Record<ContentStatus, string> = {
   idea: 'bg-muted text-muted-foreground',
-  script: 'bg-warning/15 text-foreground border border-warning/35',
-  shoot: 'bg-warning/10 text-warning',
-  edit: 'bg-info/12 text-info border border-info/30',
-  schedule: 'bg-info/10 text-info border border-info/30',
-  posted: 'bg-success/10 text-success',
+  script: 'bg-[#FBE101]/20 text-[#111111] border border-[#FBE101]/40',
+  shoot: 'bg-[#FBE101]/20 text-[#111111]',
+  edit: 'bg-[#0C5DFF]/12 text-[#0C5DFF] border border-[#0C5DFF]/30',
+  schedule: 'bg-[#0C5DFF]/10 text-[#0C5DFF] border border-[#0C5DFF]/30',
+  posted: 'bg-[#01FB64]/20 text-[#01FB64]',
 };
 
 const platformIcons: Record<string, React.ElementType> = {

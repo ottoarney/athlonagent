@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils';
 
 const priorityColors: Record<string, string> = {
   urgent: 'bg-destructive/10 text-destructive border-destructive/20',
-  high: 'bg-warning/10 text-warning border-warning/20',
-  medium: 'bg-info/10 text-info border-info/20',
+  high: 'bg-[#FBE101]/20 text-[#111111] border-[#FBE101]/30',
+  medium: 'bg-[#0C5DFF]/10 text-[#0C5DFF] border-[#0C5DFF]/25',
   low: 'bg-muted text-muted-foreground border-border',
 };
 
@@ -48,12 +48,12 @@ export function DeadlinesCard() {
             >
               <div className={cn(
                 "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0",
-                isOverdue ? "bg-destructive/10" : "bg-info/10"
+                isOverdue ? "bg-destructive/10" : "bg-[#0C5DFF]/10"
               )}>
                 {isOverdue ? (
                   <AlertCircle className="h-4 w-4 text-destructive" />
                 ) : (
-                  <Clock className="h-4 w-4 text-info" />
+                  <Clock className="h-4 w-4 text-[#0C5DFF]" />
                 )}
               </div>
               <div className="flex-1 min-w-0">

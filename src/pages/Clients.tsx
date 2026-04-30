@@ -192,8 +192,8 @@ const defaultForm: ClientFormState = {
 };
 
 const statusBadgeClass: Record<ClientStatus, string> = {
-  active: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  pitching: 'bg-amber-50 text-amber-700 border-amber-200',
+  active: 'bg-[#01FB64]/20 text-[#111111] border-[#01FB64]/40',
+  pitching: 'bg-[#FBE101]/20 text-[#111111] border-[#FBE101]/40',
   dormant: 'bg-slate-100 text-slate-600 border-slate-200',
 };
 
