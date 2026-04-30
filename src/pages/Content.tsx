@@ -29,7 +29,7 @@ const statusColors: Record<ContentStatus, { bg: string; text: string }> = {
   shoot: { bg: 'bg-[#FBE101]/20', text: 'text-[#111111]' },
   edit: { bg: 'bg-[#0C5DFF]/10', text: 'text-[#0C5DFF]' },
   schedule: { bg: 'bg-[#0C5DFF]/10', text: 'text-[#0C5DFF]' },
-  posted: { bg: 'bg-[#01FB64]/20', text: 'text-[#01FB64]' },
+  posted: { bg: 'bg-[#01FB64]/20', text: 'text-[#111111]' },
 };
 
 const platformIcons: Record<string, React.ElementType> = {
