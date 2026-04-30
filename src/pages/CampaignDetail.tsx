@@ -1,5 +1,5 @@
 import { Check, Plus, Trash2 } from 'lucide-react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { DashboardPageHeader } from '@/components/layout/DashboardPageHeader';
@@ -97,6 +97,15 @@ export default function CampaignDetail() {
   const [savedFlash, setSavedFlash] = useState(false);
   const [error, setError] = useState('');
   const hasChanges = JSON.stringify(savedState) !== JSON.stringify(draft);
+  useEffect(() => {
+    const nextState = seedWorkspace(campaign);
+    setSavedState(nextState);
+    setDraft(nextState);
+    setIsEditing(false);
+    setError('');
+    setSavedFlash(false);
+  }, [campaign]);
+
 
   const nearestDueDate = useMemo(() => {
     const now = new Date();
@@ -141,7 +150,7 @@ export default function CampaignDetail() {
           actions={
             <div className="flex items-center gap-2">
               {isEditing && (
-                <Button variant="outline" onClick={() => { setDraft(savedState); setIsEditing(false); }} disabled={saving}>
+                <Button className="bg-red-600 text-white hover:bg-red-600/90" onClick={() => { setDraft(savedState); setIsEditing(false); }} disabled={saving}>
                   Cancel
                 </Button>
               )}
@@ -158,7 +167,7 @@ export default function CampaignDetail() {
                   saveChanges();
                 }}
                 disabled={saving}
-                className={isEditing ? 'bg-[#0c5dff] text-white hover:bg-[#0c5dff]/90' : 'bg-[#fbe101] text-black hover:bg-[#fbe101]/90'}
+                className={isEditing ? 'bg-[#fbe101] text-black hover:bg-[#fbe101]/90' : 'bg-[#01fb64] text-black hover:bg-[#01fb64]/90'}
               >
                 {isEditing ? (saving ? 'Saving…' : 'Save Changes') : 'Edit Campaign'}
               </Button>
@@ -228,7 +237,7 @@ export default function CampaignDetail() {
                               <button onClick={() => setDraft((c) => ({ ...c, deliverables: c.deliverables.filter((d) => d.id !== item.id) }))} className="rounded p-1 text-muted-foreground hover:text-destructive" aria-label="Delete deliverable"><Trash2 className="h-4 w-4" /></button>
                             </div>
                           ) : (
-                            <span className={`inline-flex rounded-full px-2 py-1 text-xs ${item.status === 'Pending' ? 'bg-[#fbe101] text-black' : item.status === 'In Progress' ? 'bg-[#0c5dff] text-white' : 'bg-green-100 text-green-800'}`}>{item.status}</span>
+                            <span className={`inline-flex rounded-full px-2 py-1 text-xs ${getDetailBadgeClasses(item.status)}`}>{item.status}</span>
                           )}
                         </td>
                       </tr>
@@ -320,17 +329,15 @@ function ReadValue({ value }: { value: string }) {
 }
 
 
-function StatusBadge({ value }: { value: string }) {
-  const classes =
-    value === 'Pending' || value === 'Partial'
-      ? 'bg-[#fbe101] text-black'
-      : value === 'In Progress'
-        ? 'bg-[#0c5dff] text-white'
-        : value === 'Completed' || value === 'Paid' || value === 'Signed'
-          ? 'bg-green-100 text-green-800'
-          : 'bg-surface text-foreground';
+function getDetailBadgeClasses(value: string) {
+  if (value === 'Pending' || value === 'Partial') return 'bg-[#fbe101]/20 text-black';
+  if (value === 'In Progress') return 'bg-[#0c5dff]/20 text-[#0c5dff]';
+  if (value === 'Submitted' || value === 'Approved' || value === 'Completed' || value === 'Posted' || value === 'Paid' || value === 'Signed') return 'bg-[#01fb64]/20 text-[#14532d]';
+  return 'bg-surface text-foreground';
+}
 
-  return <span className={`ml-auto inline-flex rounded-full px-2 py-1 text-xs font-medium ${classes}`}>{value || '—'}</span>;
+function StatusBadge({ value }: { value: string }) {
+  return <span className={`ml-auto inline-flex rounded-full px-2 py-1 text-xs font-medium ${getDetailBadgeClasses(value)}`}>{value || '—'}</span>;
 }
 
 function MetricCard({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
