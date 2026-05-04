@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
-  window.__TWEAK_DEFAULTS = { "home": "dashboard", "density": "dense", "dark": true };
+  window.__TWEAK_DEFAULTS = { "home": "dashboard", "density": "dense", "dark": false };
   document.documentElement.setAttribute('data-theme', 'light');
   document.documentElement.setAttribute('data-density', window.__TWEAK_DEFAULTS.density);
 </script>
@@ -11990,7 +11990,7 @@ function App() {
   const defaults = window.__TWEAK_DEFAULTS || { home: 'dashboard', density: 'comfortable', dark: false };
   const [home, setHome] = useState(defaults.home);
   const [density, setDensity] = useState(defaults.density);
-  const [dark, setDark] = useState(defaults.dark);
+  const [dark, setDark] = useState(false);
   const [tweaksOpen, setTweaksOpen] = useState(false);
 
   // Route: { kind: 'view'|'campaign'|'team'|'mytasks'|'inbox', id?: string }
@@ -12021,7 +12021,7 @@ function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    root.setAttribute('data-theme', 'light');
     root.setAttribute('data-density', density);
   }, [dark, density]);
 
