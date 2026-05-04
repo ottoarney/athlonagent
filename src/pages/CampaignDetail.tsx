@@ -152,6 +152,18 @@ export default function CampaignDetail() {
     try {
       setSaving(true);
       setError('');
+
+      persistStoredWorkspace(campaign.id, nextSaved);
+      setSavedState(nextSaved);
+      setDraft(nextSaved);
+      setCampaigns((current) =>
+        current.map((item) =>
+          item.id === campaign.id
+            ? { ...item, name: nextSaved.name, brand: nextSaved.brand, athlete: nextSaved.athlete, dealValue: Number(nextSaved.dealValue.replace(/[^\d.-]/g, '')) || 0, archived: nextSaved.campaignStatus === 'Archived' }
+            : item,
+        ),
+      );
+
       if (isSupabaseConfigured && supabase) {
         const { error: supabaseError } = await (supabase as any).from('campaign_details').upsert({
           campaign_id: campaign.id,
@@ -160,20 +172,10 @@ export default function CampaignDetail() {
         }, { onConflict: 'campaign_id' });
 
         if (supabaseError) {
-          throw new Error(supabaseError.message || 'Supabase save failed');
+          setError('Saved locally. Supabase sync failed.');
         }
       }
 
-      persistStoredWorkspace(campaign.id, nextSaved);
-      setSavedState(nextSaved);
-      setDraft(nextSaved);
-      setCampaigns((current) =>
-        current.map((item) =>
-          item.id === campaign.id
-            ? { ...item, name: draft.name, brand: draft.brand, athlete: draft.athlete, dealValue: dealValueNumber, archived: draft.campaignStatus === 'Archived' }
-            : item,
-        ),
-      );
       setSavedFlash(true);
       setIsEditing(false);
       window.setTimeout(() => setSavedFlash(false), 1600);
