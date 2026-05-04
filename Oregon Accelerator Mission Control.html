@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-density="dense">
+<html lang="en" data-theme="light" data-density="dense">
 <head>
 <meta charset="UTF-8"/>
 <title>Oregon Accelerator — Mission Control</title>
@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
   window.__TWEAK_DEFAULTS = { "home": "dashboard", "density": "dense", "dark": true };
-  document.documentElement.setAttribute('data-theme', window.__TWEAK_DEFAULTS.dark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', 'light');
   document.documentElement.setAttribute('data-density', window.__TWEAK_DEFAULTS.density);
 </script>
 <style>
@@ -1681,7 +1681,7 @@ html[data-theme="dark"] .oa-dept-tab-mark {
 /* Variables for the Asana feel */
 :root {
   --asa-sb-w: 260px;
-  --asa-task-w: 520px;
+  --asa-task-w: 50vw;
   --asa-ink:   var(--ink);
   --asa-ink-2: var(--ink-2);
   --asa-ink-3: var(--ink-3);
@@ -1810,8 +1810,8 @@ html[data-theme="dark"] .oa-sb-create { background: var(--panel); color: var(--i
 /* ───── Content variants ───── */
 .oa-content.no-pad { padding: 0; display: flex; flex-direction: column; min-height: 0; }
 .oa-project-wrap {
-  display: grid; grid-template-columns: 1fr auto; min-height: 0; height: 100%;
-  background: var(--panel);
+  display: block; min-height: 0; height: 100%;
+  background: var(--panel); position: relative;
 }
 
 /* ───── Campaign List View ───── */
@@ -2005,12 +2005,15 @@ html[data-theme="dark"] .oa-clv-pill {
 
 /* ───── Task Detail Drawer (inline right) ───── */
 .oa-tdetail {
-  width: var(--asa-task-w); max-width: 45vw;
+  position: fixed;
+  right: 0; top: 62px; bottom: 0;
+  width: 50vw; min-width: 420px; max-width: 780px;
   border-left: 1px solid var(--asa-line);
   background: var(--panel);
   display: flex; flex-direction: column;
-  min-height: 0;
-  animation: oa-tdetail-in 180ms ease-out;
+  z-index: 80;
+  box-shadow: -4px 0 32px oklch(0 0 0 / 0.20);
+  animation: oa-tdetail-in 200ms ease-out;
 }
 @keyframes oa-tdetail-in { from { transform: translateX(16px); opacity: 0; } to { transform:none; opacity:1; } }
 
@@ -2127,6 +2130,79 @@ html[data-theme="dark"] .oa-clv-pill {
   color: var(--asa-ink-3); font-size: 12px; padding: 4px 8px; border-radius: 4px;
 }
 .oa-tdetail-leave:hover { background: var(--asa-hover); color: oklch(0.55 0.2 25); }
+
+/* ── Task detail: metadata pill row ── */
+.oa-tdetail-meta-row {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  padding: 4px 0 10px; border-bottom: 1px solid var(--asa-line);
+}
+.oa-meta-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 999px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  background: var(--panel-2); color: var(--asa-ink-2);
+  border: 1px solid var(--asa-line); transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.oa-meta-pill:hover { background: var(--panel-3); color: var(--asa-ink); }
+.oa-meta-pill.overdue { background: oklch(0.65 0.20 25 / 0.12); color: oklch(0.55 0.20 25); border-color: oklch(0.65 0.20 25 / 0.25); }
+.oa-meta-pill.soon    { background: oklch(0.72 0.22 55 / 0.12);  color: oklch(0.52 0.20 55);  border-color: oklch(0.72 0.22 55 / 0.25); }
+[data-theme=dark] .oa-meta-pill.overdue { background: oklch(0.65 0.20 25 / 0.18); color: oklch(0.78 0.18 25); }
+[data-theme=dark] .oa-meta-pill.soon    { background: oklch(0.72 0.22 55 / 0.18);  color: oklch(0.82 0.20 55); }
+.oa-meta-pill.type-btn.has-type { background: oklch(0.88 0.06 240 / 0.5); color: oklch(0.38 0.10 240); border-color: oklch(0.72 0.08 240 / 0.4); }
+[data-theme=dark] .oa-meta-pill.type-btn.has-type { background: oklch(0.32 0.08 240 / 0.45); color: oklch(0.78 0.10 240); }
+
+/* ── Task detail: structured form ── */
+.oa-tdetail-form {
+  display: flex; flex-direction: column; gap: 16px;
+  background: var(--panel-2); border: 1px solid var(--asa-line);
+  border-radius: 12px; padding: 18px 20px;
+}
+.oa-tdetail-form-intro {
+  font-size: 13px; line-height: 1.6; color: var(--asa-ink-2);
+  font-style: italic; margin: 0 0 2px;
+}
+.oa-tdetail-form-block { display: flex; flex-direction: column; gap: 7px; }
+.oa-tdetail-form-label {
+  font-size: 12.5px; font-weight: 700; color: var(--asa-ink);
+  letter-spacing: -0.01em;
+}
+.oa-tdetail-form-input {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  border: 1px solid var(--asa-line); background: var(--panel);
+  color: var(--asa-ink); font: inherit; font-size: 13px;
+  outline: none; transition: border-color 0.12s;
+  box-sizing: border-box;
+}
+.oa-tdetail-form-input:focus { border-color: var(--accent-ink); }
+.oa-tdetail-form-textarea {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  border: 1px solid var(--asa-line); background: var(--panel);
+  color: var(--asa-ink); font: inherit; font-size: 13px;
+  outline: none; resize: vertical; min-height: 80px;
+  transition: border-color 0.12s; box-sizing: border-box; line-height: 1.55;
+}
+.oa-tdetail-form-textarea:focus { border-color: var(--accent-ink); }
+.oa-tdetail-platforms { display: flex; flex-direction: column; gap: 6px; }
+.oa-tdetail-platform-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 8px; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--asa-line);
+  font-size: 13px; font-weight: 500; color: var(--asa-ink);
+  transition: background 0.1s, border-color 0.1s; user-select: none;
+}
+.oa-tdetail-platform-row:hover { background: var(--panel-3); }
+.oa-tdetail-platform-row.checked { border-color: oklch(0.56 0.18 145 / 0.5); background: oklch(0.56 0.18 145 / 0.06); }
+[data-theme=dark] .oa-tdetail-platform-row.checked { background: oklch(0.56 0.18 145 / 0.10); }
+.oa-tdetail-checkbox {
+  width: 17px; height: 17px; border-radius: 4px; flex-shrink: 0;
+  border: 2px solid var(--asa-line); background: var(--panel);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, border-color 0.12s;
+}
+.oa-tdetail-checkbox.checked {
+  background: oklch(0.56 0.18 145); border-color: oklch(0.56 0.18 145); color: #fff;
+}
 
 /* ───── Inbox / My tasks ───── */
 .oa-inbox { display: flex; flex-direction: column; gap: 2px; padding: 4px 0 20px; }
@@ -7484,7 +7560,7 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
         </div>
       )}
 
-      {tab === 'board'    && <CampBoardView    c={c} state={state} setState={setState} />}
+      {tab === 'board'    && <CampBoardView    c={c} state={state} setState={setState} onOpenTask={onOpenTask} openTaskId={openTaskId} />}
       {tab === 'timeline' && <CampTimelineView c={c} state={state} />}
       {tab === 'calendar' && <CampCalendarView c={c} state={state} setState={setState} />}
       {tab === 'workflow' && <CampWorkflowView c={c} state={state} setState={setState} />}
@@ -7692,7 +7768,7 @@ function PlaybookBrowser({ state, c, updateC, onClose }) {
 }
 
 // ── Board view ──────────────────────────────────────────
-function CampBoardView({ c, state, setState }) {
+function CampBoardView({ c, state, setState, onOpenTask, openTaskId }) {
   const { TEAM, ATHLETES } = state;
   const people = [...TEAM, ...c.athleteIds.map(id => ATHLETES.find(a => a.id === id)).filter(Boolean)];
 
@@ -7799,8 +7875,8 @@ function CampBoardView({ c, state, setState }) {
                     draggable={!isOpen}
                     onDragStart={e => { setDragId(d.id); e.dataTransfer.effectAllowed = 'move'; }}
                     onDragEnd={() => { setDragId(null); setDragOver(null); }}
-                    className={`oa-board-card${dragId === d.id ? ' dragging' : ''}${isOpen ? ' expanded' : ''}`}
-                    onClick={() => setOpenId(isOpen ? null : d.id)}>
+                    className={`oa-board-card${dragId === d.id ? ' dragging' : ''}${openTaskId === d.id ? ' expanded' : ''}`}
+                    onClick={() => onOpenTask && onOpenTask(d.id)}>
 
                     {/* Title row */}
                     <div style={{display:'flex', alignItems:'flex-start', gap:8, marginBottom: isOpen || person || d.due ? 8 : 0}}>
@@ -9300,7 +9376,7 @@ function CampFilesView({ c, state, setState }) {
   );
 }
 
-// Right-side task detail drawer, Asana-like
+// Right-side task detail drawer — structured form style
 function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
   const c = state.CAMPAIGNS.find(x => x.id === campaignId);
   const task = c?.deliverables.find(d => d.id === taskId);
@@ -9308,10 +9384,8 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
   const { TEAM, ATHLETES, BRANDS, PLAYBOOKS } = state;
   const brand = BRANDS.find(b => b.id === c.brandId);
   const peopleOpts = [...TEAM, ...c.athleteIds.map(id => ATHLETES.find(a => a.id === id)).filter(Boolean)];
-  const assignee = peopleOpts.find(p => p.id === task.assignee);
   const me = TEAM.find(t => t.id === 'u4');
 
-  // Stages available for this campaign
   const pb = PLAYBOOKS.find(p => p.id === c.playbookId);
   const stages = c.customStages || pb?.stages || [];
 
@@ -9320,48 +9394,34 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
   const [comments, setComments] = useState(task.comments || []);
   const [commentTab, setCommentTab] = useState('comments');
   const [collabOpen, setCollabOpen] = useState(false);
+  const [typeOpen, setTypeOpen] = useState(false);
   const descRef = useRef(null);
+
   useEffect(() => {
     setDesc(task.description || '');
     setComments(task.comments || []);
   }, [taskId]);
 
-  // Collaborators — stored in task.collaborators, defaulting to [me.id, assignee.id]
   const collabs = task.collaborators || (task.assignee && task.assignee !== 'u4' ? ['u4', task.assignee] : ['u4']);
   const updateCollabs = (next) => update({ collaborators: next });
 
-  // Insert markdown formatting at cursor in description textarea
   const insertMd = (before, after = '', placeholder = '') => {
     const el = descRef.current;
     if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
+    const start = el.selectionStart, end = el.selectionEnd;
     const sel = el.value.slice(start, end) || placeholder;
     const newVal = el.value.slice(0, start) + before + sel + after + el.value.slice(end);
-    setDesc(newVal);
-    update({ description: newVal });
-    setTimeout(() => {
-      el.focus();
-      const newPos = start + before.length + sel.length;
-      el.setSelectionRange(newPos, newPos);
-    }, 0);
+    setDesc(newVal); update({ description: newVal });
+    setTimeout(() => { el.focus(); const p = start + before.length + sel.length; el.setSelectionRange(p, p); }, 0);
   };
 
-  // Build activity log from task data
   const activityLog = useMemo(() => {
-    const entries = [];
-    const allPeople = [...TEAM, ...ATHLETES];
+    const entries = [], allPeople = [...TEAM, ...ATHLETES];
     entries.push({ id: 'created', at: c.start || '2026-01-01', text: 'Task created', icon: '✨' });
-    if (task.assignee) {
-      const p = allPeople.find(x => x.id === task.assignee);
-      entries.push({ id: 'assigned', at: c.start || '2026-01-01', text: `Assigned to ${p?.name || 'unknown'}`, icon: '👤' });
-    }
+    if (task.assignee) { const p = allPeople.find(x => x.id === task.assignee); entries.push({ id: 'assigned', at: c.start || '2026-01-01', text: `Assigned to ${p?.name || 'unknown'}`, icon: '👤' }); }
     if (task.due) entries.push({ id: 'due', at: task.due, text: `Due date set to ${fmt.date(task.due)}`, icon: '📅' });
     if (task.done) entries.push({ id: 'done', at: task.due || c.end || '2026-01-01', text: 'Marked complete', icon: '✅' });
-    comments.forEach(cm => {
-      const u = allPeople.find(x => x.id === cm.userId);
-      entries.push({ id: cm.id, at: cm.at, text: `${u?.name || 'Someone'} added a comment`, icon: '💬' });
-    });
+    comments.forEach(cm => { const u = allPeople.find(x => x.id === cm.userId); entries.push({ id: cm.id, at: cm.at, text: `${u?.name || 'Someone'} added a comment`, icon: '💬' }); });
     return entries.sort((a, b) => new Date(b.at) - new Date(a.at));
   }, [task, comments, TEAM, ATHLETES, c]);
 
@@ -9370,41 +9430,68 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
     setState(s => {
       const camp = s.CAMPAIGNS.find(x => x.id === c.id);
       const extraTeam = patch.assignee && teamMemberIds.has(patch.assignee)
-        ? [...new Set([...(camp?.teamIds || []), patch.assignee])]
-        : camp?.teamIds;
-      return {
-        ...s, CAMPAIGNS: s.CAMPAIGNS.map(x => x.id === c.id ? {
-          ...x,
-          deliverables: x.deliverables.map(d => d.id === taskId ? {...d, ...patch} : d),
-          ...(extraTeam !== camp?.teamIds ? { teamIds: extraTeam } : {}),
-        } : x),
-      };
+        ? [...new Set([...(camp?.teamIds || []), patch.assignee])] : camp?.teamIds;
+      return { ...s, CAMPAIGNS: s.CAMPAIGNS.map(x => x.id === c.id ? {
+        ...x,
+        deliverables: x.deliverables.map(d => d.id === taskId ? {...d, ...patch} : d),
+        ...(extraTeam !== camp?.teamIds ? { teamIds: extraTeam } : {}),
+      } : x) };
     });
   };
 
   const addComment = () => {
     if (!comment.trim()) return;
     const next = [...comments, { id: 'tc'+Date.now(), userId: 'u4', at: new Date().toISOString(), text: comment }];
-    setComments(next); setComment('');
-    update({ comments: next });
+    setComments(next); setComment(''); update({ comments: next });
   };
 
   const daysLeft = fmt.daysUntil(task.due);
   const isOverdue = daysLeft != null && daysLeft < 0 && !task.done;
   const isDueSoon = daysLeft != null && daysLeft >= 0 && daysLeft <= 2 && !task.done;
 
-  const fieldInput = (field, placeholder='—') => (
-    <input
-      value={task[field] || ''}
-      onChange={e => update({[field]: e.target.value})}
-      placeholder={placeholder}
-      style={{background:'transparent', border:'none', outline:'none', fontSize:13, color: task[field] ? 'var(--asa-ink)' : 'var(--asa-ink-3)', width:'100%', fontFamily:'inherit'}}
-    />
-  );
+  // Task types
+  const TASK_TYPES = [
+    { id: 'social',     label: 'Social Post',       icon: '📱' },
+    { id: 'video',      label: 'Video Content',      icon: '🎬' },
+    { id: 'email',      label: 'Email / Newsletter', icon: '📧' },
+    { id: 'appearance', label: 'Athlete Appearance', icon: '🏟️' },
+    { id: 'deal',       label: 'Brand Deal',         icon: '🤝' },
+    { id: 'general',    label: 'General Task',       icon: '✅' },
+  ];
+  const taskType = task.taskType || null;
+  const typeInfo = TASK_TYPES.find(t => t.id === taskType);
+
+  // Approval
+  const approvalStatus = task.approvalStatus || null;
+  const APPROVAL = {
+    null:     { label: 'Approve',   bg: 'oklch(0.38 0.06 240)', hov: 'oklch(0.44 0.10 240)' },
+    pending:  { label: 'In Review', bg: 'oklch(0.68 0.18 55)',  hov: 'oklch(0.73 0.18 55)'  },
+    approved: { label: 'Approved',  bg: 'oklch(0.56 0.18 145)', hov: 'oklch(0.62 0.18 145)' },
+    rejected: { label: 'Rejected',  bg: 'oklch(0.50 0.20 15)',  hov: 'oklch(0.56 0.20 15)'  },
+  };
+  const aprvCfg = APPROVAL[approvalStatus] || APPROVAL[null];
+  const cycleApproval = () => {
+    const order = [null, 'pending', 'approved', 'rejected'];
+    update({ approvalStatus: order[(order.indexOf(approvalStatus) + 1) % order.length] });
+  };
+
+  // Platforms
+  const PLATFORMS = ['TikTok', 'Instagram', 'Facebook', 'X', 'LinkedIn'];
+  const togglePlatform = (p) => {
+    const cur = task.platforms || [];
+    update({ platforms: cur.includes(p) ? cur.filter(x => x !== p) : [...cur, p] });
+  };
+
+  // Form field helper
+  const FormInput = ({ field, placeholder, multiline, rows = 4 }) => multiline
+    ? <textarea className="oa-tdetail-form-textarea" rows={rows} value={task[field] || ''}
+        onChange={e => update({ [field]: e.target.value })} placeholder={placeholder} />
+    : <input className="oa-tdetail-form-input" value={task[field] || ''}
+        onChange={e => update({ [field]: e.target.value })} placeholder={placeholder} />;
 
   return (
     <div className="oa-tdetail">
-      {/* Header bar */}
+      {/* Header */}
       <div className="oa-tdetail-head">
         <button className="oa-clv-toolbtn"
           style={{background: task.done ? 'oklch(0.72 0.24 145 / 0.15)' : 'transparent', color: task.done ? 'oklch(0.55 0.18 145)' : 'var(--asa-ink-2)'}}
@@ -9412,108 +9499,212 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
           <Icons.Check size={12}/> {task.done ? 'Completed' : 'Mark complete'}
         </button>
         <div style={{flex:1}}/>
+        <button onClick={cycleApproval}
+          style={{display:'flex', alignItems:'center', gap:6, padding:'6px 14px', borderRadius:7,
+            fontSize:12.5, fontWeight:700, cursor:'pointer', border:'none', color:'#fff',
+            background: aprvCfg.bg, boxShadow: approvalStatus === 'approved' ? '0 0 12px oklch(0.56 0.18 145 / 0.40)' : 'none', transition:'background 0.15s'}}
+          onMouseEnter={e => e.currentTarget.style.background = aprvCfg.hov}
+          onMouseLeave={e => e.currentTarget.style.background = aprvCfg.bg}>
+          {approvalStatus === 'approved' && <Icons.Check size={11}/>}
+          {aprvCfg.label}
+        </button>
         <button className="oa-iconbtn sm" onClick={onClose}><Icons.X size={13}/></button>
       </div>
 
       <div className="oa-tdetail-body">
         {/* Title */}
         <input className="oa-tdetail-title" value={task.title}
-          onChange={e => update({title: e.target.value})}
-          placeholder="Task name" />
+          onChange={e => update({title: e.target.value})} placeholder="Task name" />
 
-        {/* Fields grid */}
-        <div className="oa-tdetail-fields">
+        {/* Metadata pill row */}
+        <div className="oa-tdetail-meta-row">
+          {/* Assignee */}
+          <SelectPill value={task.assignee || ''} onChange={v => update({assignee: v || null})}
+            options={toPeopleOpts(peopleOpts)} searchable
+            render={o => {
+              if (!o.value) return <span className="oa-meta-pill"><Icons.UserPlus size={11}/> Assign</span>;
+              const p = peopleOpts.find(x => x.id === o.value);
+              return <span className="oa-meta-pill"><Avatar person={p} size={16}/>{p?.name}</span>;
+            }} placeholder="Assign" />
 
-          <Field label="Assignee">
-            <SelectPill value={task.assignee || ''}
-              onChange={v => update({assignee: v || null})}
-              options={toPeopleOpts(peopleOpts)}
-              searchable
-              render={o => {
-                if (!o.value) return <span style={{color:'var(--asa-ink-3)', fontSize:13}}>No assignee</span>;
-                const p = peopleOpts.find(x => x.id === o.value);
-                return <span className="oa-owner-cell"><Avatar person={p} size={20}/>{p?.name}</span>;
-              }}
-              placeholder="No assignee" />
-          </Field>
+          {/* Due date */}
+          <div style={{position:'relative', display:'inline-flex'}}>
+            <span className={`oa-meta-pill ${isOverdue ? 'overdue' : isDueSoon ? 'soon' : ''}`}>
+              <Icons.Calendar size={11}/>
+              {task.due ? fmt.dateLong(task.due) : 'Add due date'}
+            </span>
+            <input type="date" value={task.due || ''} onChange={e => update({due: e.target.value || null})}
+              style={{position:'absolute', inset:0, opacity:0, cursor:'pointer', width:'100%', height:'100%'}}/>
+          </div>
 
-          <Field label="Due date">
-            <div style={{display:'flex', alignItems:'center', gap:8}}>
-              <div style={{position:'relative', display:'inline-block'}}>
-                <span className={`oa-tdetail-due ${isOverdue ? 'overdue' : isDueSoon ? 'today' : task.due ? 'has-date' : ''}`}>
-                  <Icons.Calendar size={11}/>
-                  {task.due ? fmt.dateLong(task.due) : 'No due date'}
-                </span>
-                <input type="date" value={task.due || ''}
-                  onChange={e => update({due: e.target.value || null})}
-                  style={{position:'absolute', inset:0, opacity:0, cursor:'pointer', width:'100%', height:'100%'}}/>
-              </div>
-              {task.due && (
-                <button onClick={() => update({due: null})}
-                  style={{background:'none', border:'none', cursor:'pointer', color:'var(--asa-ink-4)', fontSize:11, padding:0, lineHeight:1}}>
-                  ✕
-                </button>
-              )}
-            </div>
-          </Field>
-
+          {/* Stage */}
           {stages.length > 0 && (
-            <Field label="Stage">
-              <SelectPill value={task.stageId || ''}
-                onChange={v => update({stageId: v || null})}
-                options={[{value:'', label:'No stage'}, ...stages.map(s => ({value: s.id, label: s.label}))]}
-                render={o => {
-                  if (!o.value) return <span style={{color:'var(--asa-ink-3)', fontSize:13}}>No stage</span>;
-                  const idx = stages.findIndex(s => s.id === o.value);
-                  return (
-                    <span style={{display:'flex', alignItems:'center', gap:6, fontSize:13}}>
-                      <span style={{fontSize:10, fontFamily:'var(--mono)', color:'var(--asa-ink-3)', fontWeight:600}}>{idx+1}</span>
-                      {o.label}
-                    </span>
-                  );
-                }}
-              />
-            </Field>
+            <SelectPill value={task.stageId || ''} onChange={v => update({stageId: v || null})}
+              options={[{value:'', label:'No stage'}, ...stages.map(s => ({value: s.id, label: s.label}))]}
+              render={o => <span className="oa-meta-pill"><Icons.Hash size={11}/>{o.value ? o.label : 'Stage'}</span>} />
           )}
 
-          <Field label="Project">
-            <div className="oa-tdetail-proj">
-              <span className="oa-tdetail-proj-mark"/>
-              <span style={{fontSize:13}}>{c.title}</span>
-            </div>
-          </Field>
-
-          <Field label="Fields" stacked>
-            <div className="oa-tdetail-fieldrow">
-              <Icons.Hash size={11}/>
-              <span>Estimated hours</span>
-              {fieldInput('estimatedHours', '—')}
-            </div>
-            <div className="oa-tdetail-fieldrow">
-              <Icons.Hash size={11}/>
-              <span>X-Function</span>
-              {fieldInput('xFunction', '—')}
-            </div>
-            <div className="oa-tdetail-fieldrow">
-              <Icons.Hash size={11}/>
-              <span>Brand</span>
-              <span style={{fontSize:13, color:'var(--asa-ink)'}}>{brand?.name || '—'}</span>
-            </div>
-            <div className="oa-tdetail-fieldrow">
-              <Icons.Hash size={11}/>
-              <span>Cost</span>
-              {fieldInput('cost', '—')}
-            </div>
-          </Field>
+          {/* Task type picker */}
+          <div style={{position:'relative'}}>
+            <button className={`oa-meta-pill type-btn ${taskType ? 'has-type' : ''}`} onClick={() => setTypeOpen(o => !o)}>
+              {typeInfo ? <>{typeInfo.icon} {typeInfo.label}</> : <><Icons.Hash size={11}/> Add type</>}
+            </button>
+            {typeOpen && ReactDOM.createPortal(
+              <div onClick={() => setTypeOpen(false)} style={{position:'fixed', inset:0, zIndex:2147483640}}>
+                <div onClick={e => e.stopPropagation()}
+                  style={{position:'fixed', zIndex:2147483641, top:120, right:20,
+                    background:'var(--panel-solid)', border:'1px solid var(--line)', borderRadius:12,
+                    boxShadow:'var(--shadow-pop)', padding:6, minWidth:210}}>
+                  {TASK_TYPES.map(t => (
+                    <button key={t.id} onClick={() => { update({taskType: t.id}); setTypeOpen(false); }}
+                      style={{display:'flex', alignItems:'center', gap:9, width:'100%', padding:'7px 10px', borderRadius:7,
+                        background: taskType === t.id ? 'var(--panel-2)' : 'transparent', border:'none', cursor:'pointer',
+                        fontSize:13, color:'var(--ink)', textAlign:'left'}}>
+                      <span>{t.icon}</span>{t.label}
+                      {taskType === t.id && <Icons.Check size={11} style={{marginLeft:'auto', color:'oklch(0.56 0.18 145)'}}/>}
+                    </button>
+                  ))}
+                  {taskType && <>
+                    <div style={{height:1, background:'var(--line)', margin:'4px 6px'}}/>
+                    <button onClick={() => { update({taskType: null}); setTypeOpen(false); }}
+                      style={{display:'flex', alignItems:'center', gap:9, width:'100%', padding:'7px 10px', borderRadius:7,
+                        background:'transparent', border:'none', cursor:'pointer', fontSize:12.5, color:'var(--ink-3)'}}>
+                      <Icons.X size={11}/> Remove type
+                    </button>
+                  </>}
+                </div>
+              </div>,
+              document.body
+            )}
+          </div>
         </div>
 
-        {/* Description */}
-        <div className="oa-tdetail-section" style={{marginTop:4}}>
-          <div className="oa-k" style={{fontSize:11, letterSpacing:'0.07em'}}>Description</div>
-          <textarea className="oa-tdetail-desc"
-            ref={descRef}
-            value={desc}
-            placeholder="Add a description…"
+        {/* ── Social Post form ── */}
+        {taskType === 'social' && (
+          <div className="oa-tdetail-form">
+            <p className="oa-tdetail-form-intro">
+              Pop in the main message, tick the platforms, and add your caption. We'll work our magic and send it back for review before it goes live. Let's make it scroll-stopping ✨
+            </p>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">What's the main message or purpose of this post?</label>
+              <FormInput field="mainMessage" placeholder="e.g. Promote new partnership with Nike, highlight training routine…" />
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Post this content to…</label>
+              <div className="oa-tdetail-platforms">
+                {PLATFORMS.map(p => {
+                  const checked = (task.platforms || []).includes(p);
+                  return (
+                    <div key={p} className={`oa-tdetail-platform-row ${checked ? 'checked' : ''}`} onClick={() => togglePlatform(p)}>
+                      <div className={`oa-tdetail-checkbox ${checked ? 'checked' : ''}`}>{checked && <Icons.Check size={10}/>}</div>
+                      <span>{p}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Post Copy</label>
+              <FormInput field="postCopy" placeholder="Write your caption here (emojis welcome 👀)…" multiline rows={5} />
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Visual / Creative brief</label>
+              <FormInput field="visualBrief" placeholder="Describe the image or video needed…" />
+            </div>
+          </div>
+        )}
+
+        {/* ── Video Content form ── */}
+        {taskType === 'video' && (
+          <div className="oa-tdetail-form">
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Video brief / concept</label>
+              <FormInput field="videoBrief" placeholder="Describe the video concept…" multiline rows={3} />
+            </div>
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
+              <div className="oa-tdetail-form-block">
+                <label className="oa-tdetail-form-label">Platform</label>
+                <FormInput field="videoPlatform" placeholder="TikTok, YouTube, Instagram…" />
+              </div>
+              <div className="oa-tdetail-form-block">
+                <label className="oa-tdetail-form-label">Duration</label>
+                <FormInput field="videoDuration" placeholder="e.g. 60s, 3 min…" />
+              </div>
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Script / Storyboard notes</label>
+              <FormInput field="videoScript" placeholder="Key scenes, talking points, call to action…" multiline rows={4} />
+            </div>
+          </div>
+        )}
+
+        {/* ── Email / Newsletter form ── */}
+        {taskType === 'email' && (
+          <div className="oa-tdetail-form">
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Subject line</label>
+              <FormInput field="emailSubject" placeholder="What will the email subject be?" />
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Audience / Segment</label>
+              <FormInput field="emailAudience" placeholder="e.g. All subscribers, Oregon fans, Brand partners…" />
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Body copy</label>
+              <FormInput field="emailBody" placeholder="Write the email content here…" multiline rows={6} />
+            </div>
+          </div>
+        )}
+
+        {/* ── Athlete Appearance form ── */}
+        {taskType === 'appearance' && (
+          <div className="oa-tdetail-form">
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Event name</label>
+              <FormInput field="eventName" placeholder="Name of the event or activation…" />
+            </div>
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
+              <div className="oa-tdetail-form-block">
+                <label className="oa-tdetail-form-label">Location</label>
+                <FormInput field="eventLocation" placeholder="Venue / city…" />
+              </div>
+              <div className="oa-tdetail-form-block">
+                <label className="oa-tdetail-form-label">Duration</label>
+                <FormInput field="eventDuration" placeholder="e.g. 2 hours…" />
+              </div>
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Athlete requirements</label>
+              <FormInput field="eventRequirements" placeholder="What does the athlete need to do, wear, bring?" multiline rows={3} />
+            </div>
+          </div>
+        )}
+
+        {/* ── Brand Deal form ── */}
+        {taskType === 'deal' && (
+          <div className="oa-tdetail-form">
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
+              <div className="oa-tdetail-form-block">
+                <label className="oa-tdetail-form-label">Deal value</label>
+                <FormInput field="dealValue" placeholder="$0.00" />
+              </div>
+              <div className="oa-tdetail-form-block">
+                <label className="oa-tdetail-form-label">Contract type</label>
+                <FormInput field="dealType" placeholder="NIL, Endorsement, Licensing…" />
+              </div>
+            </div>
+            <div className="oa-tdetail-form-block">
+              <label className="oa-tdetail-form-label">Deliverables / Terms</label>
+              <FormInput field="dealTerms" placeholder="List what's expected from the athlete and brand…" multiline rows={4} />
+            </div>
+          </div>
+        )}
+
+        {/* Description / Notes */}
+        <div className="oa-tdetail-section" style={{marginTop:0}}>
+          <div className="oa-k" style={{fontSize:11, letterSpacing:'0.07em'}}>{taskType ? 'Additional notes' : 'Description'}</div>
+          <textarea className="oa-tdetail-desc" ref={descRef} value={desc}
+            placeholder={taskType ? 'Any additional notes…' : 'Add a description…'}
             onChange={e => { setDesc(e.target.value); update({description: e.target.value}); }} />
           <div className="oa-tdetail-toolbar">
             <button className="oa-iconbtn sm" title="Bold" onClick={() => insertMd('**', '**', 'bold text')}><Icons.Bold size={11}/></button>
@@ -9527,7 +9718,23 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
           </div>
         </div>
 
-        {/* Comments */}
+        {/* Quick fields: hours + cost */}
+        <div className="oa-tdetail-section" style={{marginTop:0}}>
+          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+            <div className="oa-tdetail-fieldrow">
+              <Icons.Hash size={11}/><span>Est. hours</span>
+              <input value={task.estimatedHours || ''} onChange={e => update({estimatedHours: e.target.value})}
+                placeholder="—" style={{background:'transparent',border:'none',outline:'none',fontSize:13,color:'var(--asa-ink)',width:'100%',fontFamily:'inherit'}}/>
+            </div>
+            <div className="oa-tdetail-fieldrow">
+              <Icons.Hash size={11}/><span>Cost</span>
+              <input value={task.cost || ''} onChange={e => update({cost: e.target.value})}
+                placeholder="—" style={{background:'transparent',border:'none',outline:'none',fontSize:13,color:'var(--asa-ink)',width:'100%',fontFamily:'inherit'}}/>
+            </div>
+          </div>
+        </div>
+
+        {/* Comments + Activity */}
         <div className="oa-tdetail-comments">
           <div className="oa-tdetail-tabs">
             <button className={commentTab==='comments'?'on':''} onClick={() => setCommentTab('comments')}>Comments</button>
@@ -9536,9 +9743,7 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
 
           {commentTab === 'comments' && (
             <>
-              {comments.length === 0 && (
-                <div style={{fontSize:12, color:'var(--asa-ink-3)', textAlign:'center', padding:'16px 0'}}>No comments yet</div>
-              )}
+              {comments.length === 0 && <div style={{fontSize:12, color:'var(--asa-ink-3)', textAlign:'center', padding:'16px 0'}}>No comments yet</div>}
               {comments.map(cm => {
                 const u = TEAM.find(t => t.id === cm.userId);
                 return (
@@ -9547,9 +9752,7 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
                     <div className="oa-comment-body">
                       <div className="oa-comment-head">
                         <strong>{u?.name}</strong>
-                        <span className="oa-comment-time">
-                          {new Date(cm.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}
-                        </span>
+                        <span className="oa-comment-time">{new Date(cm.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</span>
                       </div>
                       <div className="oa-comment-text">{cm.text}</div>
                     </div>
@@ -9561,11 +9764,7 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
                 <input placeholder="Add a comment…" value={comment}
                   onChange={e => setComment(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && !e.shiftKey && addComment()}/>
-                {comment.trim() && (
-                  <button className="oa-btn kind-primary" style={{fontSize:12, padding:'5px 12px', flexShrink:0}} onClick={addComment}>
-                    Send
-                  </button>
-                )}
+                {comment.trim() && <button className="oa-btn kind-primary" style={{fontSize:12, padding:'5px 12px', flexShrink:0}} onClick={addComment}>Send</button>}
               </div>
             </>
           )}
@@ -9573,14 +9772,11 @@ function TaskDetail({ taskId, campaignId, state, setState, onClose }) {
           {commentTab === 'activity' && (
             <div style={{display:'flex', flexDirection:'column', gap:0}}>
               {activityLog.map(entry => (
-                <div key={entry.id} style={{display:'flex', alignItems:'flex-start', gap:10, padding:'8px 0',
-                  borderBottom:'1px solid var(--asa-line-2,var(--line-2))'}}>
+                <div key={entry.id} style={{display:'flex', alignItems:'flex-start', gap:10, padding:'8px 0', borderBottom:'1px solid var(--asa-line-2,var(--line-2))'}}>
                   <span style={{fontSize:13, flexShrink:0, marginTop:1}}>{entry.icon}</span>
                   <div style={{flex:1}}>
                     <div style={{fontSize:12.5, color:'var(--asa-ink,var(--ink))'}}>{entry.text}</div>
-                    <div style={{fontSize:11, color:'var(--asa-ink-3,var(--ink-3))', marginTop:2}}>
-                      {new Date(entry.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
-                    </div>
+                    <div style={{fontSize:11, color:'var(--asa-ink-3,var(--ink-3))', marginTop:2}}>{new Date(entry.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
                   </div>
                 </div>
               ))}
@@ -11952,18 +12148,6 @@ function App() {
           </div>
 
           <div className="oa-topbar-right">
-            <div className="oa-theme-toggle" title={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
-              <button className={`oa-theme-btn${!dark ? ' active' : ''}`}
-                onClick={() => { setDark(false); persistTweak({ dark: false }); }}
-                title="Light mode">
-                <Icons.Sun size={13}/>
-              </button>
-              <button className={`oa-theme-btn${dark ? ' active' : ''}`}
-                onClick={() => { setDark(true); persistTweak({ dark: true }); }}
-                title="Dark mode">
-                <Icons.Moon size={13}/>
-              </button>
-            </div>
             <div className="oa-divider-v"/>
             <div style={{position:'relative'}}>
               <button className="oa-iconbtn bell" onClick={() => setNotifOpen(o => !o)}>
