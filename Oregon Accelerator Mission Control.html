@@ -7506,7 +7506,6 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
             </div>
           </div>
           <div style={{display:'flex', alignItems:'center', gap:10, flexShrink:0}}>
-            <StatusChip status={c.status}/>
             <button className="oa-btn kind-ghost" onClick={openTaskView}
               style={{fontSize:12, gap:5}}>
               <Icons.Grid size={11}/> Board
@@ -7791,11 +7790,21 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
 // ===== campaign_list_view.jsx =====
 // Asana-style campaign list view: project header, tabs, sectioned task table.
 function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId, openAthlete }) {
-  const { CAMPAIGNS, BRANDS, TEAM, ATHLETES } = state;
+  const { CAMPAIGNS, BRANDS, TEAM, ATHLETES, PLAYBOOKS } = state;
   const c = CAMPAIGNS.find(x => x.id === campaignId);
   if (!c) return <div className="oa-empty big">Campaign not found.</div>;
   const brand = BRANDS.find(b => b.id === c.brandId);
   const owner = TEAM.find(t => t.id === c.ownerId);
+
+  // Derive active process stage label from playbook
+  const _pb            = PLAYBOOKS && PLAYBOOKS.find(p => p.id === c.playbookId);
+  const _stages        = _pb ? (c.customStages || _pb.stages) : null;
+  const _activeStage   = _stages && _stages.find(s => {
+    const steps = c.deliverables.filter(d => d.stageId === s.id);
+    return steps.length > 0 && steps.some(d => !d.done);
+  });
+  const processLabel   = _activeStage ? _activeStage.label
+    : (_stages && _stages.length > 0 ? _stages[_stages.length - 1].label : null);
   const [tab, setTab] = useState('overview');
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -7872,7 +7881,7 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
 
   // Close dropdowns on outside click
   useEffect(() => {
-    if (!statusPickerOpen && !caretMenuOpen && !sortOpen && !groupOpen && !hideOpen && !shareOpen) return;
+    if (!caretMenuOpen && !sortOpen && !groupOpen && !hideOpen && !shareOpen) return;
     const handler = e => {
       if (!e.target.closest('.oa-camp-status-picker') && !e.target.closest('.oa-camp-caret-menu')) {
         setStatusPickerOpen(false);
@@ -7954,33 +7963,10 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
               </div>
             </div>
             <div className="oa-clv-sub">
-              {/* Set status picker */}
-              <div style={{position:'relative'}}>
-                <button className="oa-clv-set-status"
-                  onClick={() => { setStatusPickerOpen(o => !o); setCaretMenuOpen(false); }}>
-                  Set status
-                </button>
-                {statusPickerOpen && (
-                  <div className="oa-camp-status-picker">
-                    {Object.entries(STATUS).map(([key, s]) => (
-                      <button key={key} className={`oa-camp-status-opt${c.status === key ? ' on' : ''}`}
-                        onClick={() => { updateC({ status: key }); setStatusPickerOpen(false); }}>
-                        <span className={`oa-chip-dot tone-${s.tone}`}
-                          style={{width:7, height:7, borderRadius:'50%', flexShrink:0,
-                            background: s.tone === 'green' ? 'var(--tone-green-ink)' :
-                              s.tone === 'amber' ? 'var(--tone-amber-ink)' :
-                              s.tone === 'violet' ? 'var(--tone-violet-ink)' :
-                              s.tone === 'coral' ? 'oklch(0.65 0.2 25)' : 'var(--ink-4)'}}/>
-                        {s.label}
-                        {c.status === key && <span className="oa-check-mark" style={{marginLeft:'auto'}}><Icons.Check size={11}/></span>}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <span className="oa-dotsep">·</span>
-              <StatusChip status={c.status} dense />
-              <span className="oa-dotsep">·</span>
+              {processLabel && (
+                <span style={{fontSize:12.5, fontWeight:600, color:'var(--accent-ink)'}}>{processLabel}</span>
+              )}
+              {processLabel && <span className="oa-dotsep">·</span>}
               <span>{brand?.name}</span>
             </div>
           </div>
