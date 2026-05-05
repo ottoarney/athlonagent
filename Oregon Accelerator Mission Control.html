@@ -7482,14 +7482,7 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
 
   const [newTitle, setNewTitle] = useState('');
   const [newLink,  setNewLink]  = useState('');
-
-  const DELIV_STATUSES = ['Draft', 'Submitted', 'In Review', 'Approved'];
-  const STATUS_STYLE = {
-    Draft:      { background:'var(--panel-3)', color:'var(--ink-3)' },
-    Submitted:  { background:'oklch(0.93 0.07 75 / 0.55)',  color:'oklch(0.42 0.14 75)'  },
-    'In Review':{ background:'var(--accent-wash)',           color:'var(--accent-ink)'    },
-    Approved:   { background:'oklch(0.90 0.08 145 / 0.55)', color:'oklch(0.36 0.14 145)' },
-  };
+  const [addingApprovalFor, setAddingApprovalFor] = useState(null);
 
   const addDeliverable = () => {
     if (!newTitle.trim()) return;
@@ -7599,9 +7592,9 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
             </div>
 
             {/* Column labels */}
-            <div style={{display:'grid', gridTemplateColumns:'32px 1fr 140px 110px 120px 28px',
+            <div style={{display:'grid', gridTemplateColumns:'32px 1fr 150px 120px 100px 28px',
               padding:'7px 18px 6px', borderBottom:'1px solid var(--line)', background:'var(--panel-2)'}}>
-              {['','Task Name','Assignee','Due Date','Status',''].map((h,i) => (
+              {['','Task Name','Assignee','Due Date','Approval',''].map((h,i) => (
                 <div key={i} style={{fontSize:11, fontWeight:600, color:'var(--ink-3)', letterSpacing:'0.02em'}}>{h}</div>
               ))}
             </div>
@@ -7640,29 +7633,34 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
                   )}
                   {/* Task rows */}
                   {!isCollapsed && group.tasks.map(d => {
-                    const ap = allPeople.find(p => p.id === d.assignee);
-                    const ds = d.delivStatus || (d.done ? 'Approved' : 'Draft');
-                    const ss = STATUS_STYLE[ds] || STATUS_STYLE.Draft;
+                    const taskApprovals = d.approvals || [];
+                    const isOverdue = d.due && fmt.daysUntil(d.due) < 0 && !d.done;
                     return (
                       <div key={d.id} style={{display:'grid',
-                        gridTemplateColumns:'32px 1fr 140px 110px 120px 28px',
+                        gridTemplateColumns:'32px 1fr 150px 120px 100px 28px',
                         alignItems:'center', padding:'0 18px',
                         borderBottom:'1px solid var(--line)', minHeight:44, transition:'background 0.1s'}}
                         onMouseEnter={e => e.currentTarget.style.background='var(--panel-2)'}
                         onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+
+                        {/* Checkbox */}
                         <div onClick={() => updateC({ deliverables: c.deliverables.map(x =>
-                          x.id === d.id ? {...x, done:!d.done, delivStatus:!d.done?'Approved':'Draft'} : x) })}
+                          x.id === d.id ? {...x, done:!d.done} : x) })}
                           style={{width:16, height:16, borderRadius:4, flexShrink:0, cursor:'pointer',
                             border: d.done ? 'none' : '1.5px solid oklch(0.72 0.01 268)',
                             background: d.done ? 'var(--accent)' : 'transparent',
                             display:'flex', alignItems:'center', justifyContent:'center'}}>
                           {d.done && <Icons.Check size={9} style={{color:'#fff'}}/>}
                         </div>
+
+                        {/* Title */}
                         <div style={{fontSize:13, color: d.done ? 'var(--ink-4)' : 'var(--ink)',
                           textDecoration: d.done ? 'line-through' : 'none',
                           whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', paddingRight:8}}>
                           {d.title}
                         </div>
+
+                        {/* Assignee */}
                         <div onClick={e => e.stopPropagation()}>
                           <SelectPill
                             value={d.assignee || ''}
@@ -7680,17 +7678,100 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
                             }}
                           />
                         </div>
-                        <div style={{fontSize:12, color: d.due && fmt.daysUntil(d.due) < 0 && !d.done
-                          ? 'oklch(0.55 0.2 25)' : 'var(--ink-3)'}}>
-                          {d.due ? fmt.dateLong(d.due) : '—'}
+
+                        {/* Due date — inline editable */}
+                        <div>
+                          <input type="date" value={d.due || ''}
+                            onChange={e => updateC({ deliverables: c.deliverables.map(x =>
+                              x.id === d.id ? {...x, due: e.target.value || null} : x) })}
+                            style={{background:'none', border:'none', outline:'none', cursor:'pointer',
+                              fontSize:12, fontFamily:'inherit', padding:0, width:'100%',
+                              color: isOverdue ? 'oklch(0.55 0.2 25)' : 'var(--ink-3)'}}/>
                         </div>
-                        <select value={ds}
-                          onChange={e => updateC({ deliverables: c.deliverables.map(x =>
-                            x.id === d.id ? {...x, delivStatus:e.target.value, done:e.target.value==='Approved'} : x) })}
-                          style={{...ss, appearance:'none', border:'none', outline:'none', cursor:'pointer',
-                            padding:'3px 8px', borderRadius:6, fontSize:11.5, fontWeight:600, width:'100%'}}>
-                          {DELIV_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                        </select>
+
+                        {/* Approval */}
+                        <div style={{display:'flex', alignItems:'center', gap:3, position:'relative'}}>
+                          {/* Existing approver avatars */}
+                          {taskApprovals.map(a => {
+                            const ap = allPeople.find(p => p.id === a.userId);
+                            if (!ap) return null;
+                            const dotColor = a.status === 'approved'
+                              ? 'oklch(0.52 0.18 145)'
+                              : a.status === 'rejected'
+                              ? 'oklch(0.55 0.22 25)'
+                              : 'oklch(0.62 0.14 75)';
+                            return (
+                              <div key={a.userId} title={ap.name + ' · ' + a.status}
+                                style={{position:'relative', cursor:'pointer', flexShrink:0}}
+                                onClick={() => updateC({ deliverables: c.deliverables.map(x =>
+                                  x.id === d.id ? {...x, approvals: taskApprovals.filter(z => z.userId !== a.userId)} : x) })}>
+                                <Avatar person={ap} size={20}/>
+                                <span style={{position:'absolute', bottom:-1, right:-1, width:7, height:7,
+                                  borderRadius:'50%', background:dotColor,
+                                  border:'1.5px solid var(--panel)'}}/>
+                              </div>
+                            );
+                          })}
+
+                          {/* Request approval button */}
+                          <div style={{position:'relative', flexShrink:0}}>
+                            <button
+                              onClick={e => { e.stopPropagation(); setAddingApprovalFor(addingApprovalFor === d.id ? null : d.id); }}
+                              title="Request approval"
+                              style={{width:22, height:22, borderRadius:'50%', cursor:'pointer', display:'flex',
+                                alignItems:'center', justifyContent:'center',
+                                border:'1.5px dashed var(--ink-4)', background:'none',
+                                color:'var(--ink-3)', transition:'border-color 0.1s, color 0.1s'}}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor='var(--accent)'; e.currentTarget.style.color='var(--accent)'; }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor='var(--ink-4)'; e.currentTarget.style.color='var(--ink-3)'; }}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                              </svg>
+                            </button>
+
+                            {/* People picker popover */}
+                            {addingApprovalFor === d.id && (
+                              <>
+                                <div style={{position:'fixed', inset:0, zIndex:90}}
+                                  onClick={() => setAddingApprovalFor(null)}/>
+                                <div style={{position:'absolute', bottom:'calc(100% + 6px)', right:0, zIndex:91,
+                                  background:'var(--panel)', border:'1px solid var(--line)', borderRadius:10,
+                                  boxShadow:'0 4px 20px -4px oklch(0.15 0.10 265 / 0.18)',
+                                  minWidth:190, padding:'6px 0', backdropFilter:'var(--blur)'}}>
+                                  <div style={{fontSize:10, fontWeight:700, letterSpacing:'0.06em',
+                                    color:'var(--ink-4)', padding:'4px 12px 6px', textTransform:'uppercase'}}>
+                                    Request approval from
+                                  </div>
+                                  {allPeople.filter(p => !taskApprovals.some(a => a.userId === p.id)).map(p => (
+                                    <div key={p.id}
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                        updateC({ deliverables: c.deliverables.map(x =>
+                                          x.id === d.id ? {...x, approvals: [...taskApprovals, {userId:p.id, status:'pending'}]} : x) });
+                                        setAddingApprovalFor(null);
+                                      }}
+                                      style={{display:'flex', alignItems:'center', gap:9, padding:'7px 12px',
+                                        cursor:'pointer', transition:'background 0.1s'}}
+                                      onMouseEnter={e => e.currentTarget.style.background='var(--panel-2)'}
+                                      onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+                                      <Avatar person={p} size={24}/>
+                                      <div>
+                                        <div style={{fontSize:12.5, fontWeight:600, color:'var(--ink)'}}>{p.name}</div>
+                                        <div style={{fontSize:11, color:'var(--ink-3)'}}>{p.role || p.sport || ''}</div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                  {allPeople.filter(p => !taskApprovals.some(a => a.userId === p.id)).length === 0 && (
+                                    <div style={{padding:'8px 12px', fontSize:12, color:'var(--ink-3)'}}>Everyone added</div>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Remove */}
                         <button onClick={() => updateC({ deliverables: c.deliverables.filter(x => x.id !== d.id) })}
                           style={{background:'none', border:'none', cursor:'pointer', color:'var(--ink-4)',
                             display:'flex', padding:2, borderRadius:4, opacity:0.6}}>
