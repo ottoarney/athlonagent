@@ -7532,11 +7532,31 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
                 <Icons.Calendar size={11}/>
                 {fmt.dateLong(c.start)} → {fmt.dateLong(c.end)}
               </span>
+              {owner && (
+                <span className="oa-coverview-meta-item">
+                  <Avatar person={owner} size={14}/>
+                  {owner.name.split(' ')[0]}
+                </span>
+              )}
             </div>
           </div>
           <button className="oa-btn kind-ghost" onClick={openTaskView} style={{fontSize:12, gap:5, flexShrink:0}}>
             <Icons.Grid size={11}/> Task view
           </button>
+        </div>
+
+        {/* ── Details (brief) ── */}
+        <div style={{paddingTop:14, borderTop:'1px solid var(--line)'}}>
+          <div style={{fontSize:10.5, fontWeight:700, letterSpacing:'0.06em', textTransform:'uppercase',
+            color:'var(--ink-4)', marginBottom:6}}>Details</div>
+          <textarea
+            value={c.description || ''}
+            rows={2}
+            onChange={e => updateC({ description: e.target.value })}
+            placeholder="Add a campaign description..."
+            style={{background:'none', border:'none', outline:'none', resize:'none', width:'100%',
+              fontSize:13, color: c.description ? 'var(--ink-2)' : 'var(--ink-4)',
+              lineHeight:1.6, fontFamily:'inherit', padding:0, display:'block'}}/>
         </div>
       </div>
 
@@ -7807,23 +7827,6 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
             </div>
           </div>
 
-          {/* Brief + Owner */}
-          <div className="oa-panel" style={{padding:'16px 18px'}}>
-            <div style={{fontSize:13, fontWeight:700, color:'var(--ink)', marginBottom:10}}>Brief</div>
-            <textarea className="oa-coverview-desc" value={c.description || ''} rows={3}
-              onChange={e => updateC({ description: e.target.value })}
-              placeholder="Add a campaign brief or description..."
-              style={{marginBottom:0}}/>
-            {owner && (
-              <div style={{marginTop:12, paddingTop:12, borderTop:'1px solid var(--line)',
-                display:'flex', alignItems:'center', gap:10}}>
-                <div style={{fontSize:11, fontWeight:500, color:'var(--ink-3)', flexShrink:0, width:36}}>Owner</div>
-                <Avatar person={owner} size={24}/>
-                <span style={{fontSize:12.5, fontWeight:600, color:'var(--ink)'}}>{owner.name}</span>
-                <span style={{fontSize:11.5, color:'var(--ink-3)'}}>{owner.role || 'Account Manager'}</span>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* RIGHT: Team + Athletes + Activity */}
