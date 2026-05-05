@@ -171,6 +171,24 @@ body::before { background: radial-gradient(circle, oklch(0.82 0.14 340 / 0.70), 
 body::after  { background: radial-gradient(circle, oklch(0.84 0.12 280 / 0.65), transparent 70%); bottom: -200px; right: -160px; animation-delay: -10s; opacity: 0.50; }
 html[data-theme="dark"] body::before { background: radial-gradient(circle, oklch(0.42 0.26 145 / 0.55), transparent 70%); opacity: 0.70; }
 html[data-theme="dark"] body::after  { background: radial-gradient(circle, oklch(0.28 0.18 262 / 0.45), transparent 70%); opacity: 0.60; }
+
+/* Dot grid with gradient opacity falloff */
+html::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle, oklch(0.38 0.08 268 / 0.28) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image:
+    radial-gradient(ellipse 70% 70% at 100% 0%, oklch(0 0 0 / 0.9) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 0% 100%, oklch(0 0 0 / 0.5) 0%, transparent 60%);
+  mask-composite: add;
+  -webkit-mask-image:
+    radial-gradient(ellipse 70% 70% at 100% 0%, oklch(0 0 0 / 0.9) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 0% 100%, oklch(0 0 0 / 0.5) 0%, transparent 60%);
+  -webkit-mask-composite: source-over;
+}
+html[data-theme="dark"]::before {
+  background-image: radial-gradient(circle, oklch(0.75 0.10 265 / 0.18) 1px, transparent 1px);
+}
 @keyframes oa-drift {
   0%   { transform: translate3d(0,0,0) scale(1); }
   50%  { transform: translate3d(60px, 40px, 0) scale(1.12); }
@@ -252,17 +270,17 @@ input, select, textarea { font-family: inherit; color: inherit; }
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
   padding: 9px 0; border-radius: var(--radius); border: none; cursor: pointer;
   font-size: 13px; font-weight: 600; transition: background 0.15s, box-shadow 0.15s;
-  background: oklch(0.72 0.26 145); color: oklch(0.1 0.04 160);
+  background: oklch(0.48 0.22 265); color: #fff;
 }
-.oa-new-btn:hover { background: oklch(0.78 0.28 145); }
+.oa-new-btn:hover { background: oklch(0.44 0.24 265); }
 html[data-theme="dark"] .oa-new-btn {
-  background: oklch(0.78 0.28 145);
-  color: oklch(0.06 0.02 165);
-  box-shadow: 0 0 20px oklch(0.78 0.28 145 / 0.40), 0 2px 8px oklch(0 0 0 / 0.4);
+  background: oklch(0.55 0.22 265);
+  color: #fff;
+  box-shadow: 0 0 20px oklch(0.55 0.22 265 / 0.40), 0 2px 8px oklch(0 0 0 / 0.4);
 }
 html[data-theme="dark"] .oa-new-btn:hover {
-  background: oklch(0.84 0.27 145);
-  box-shadow: 0 0 28px oklch(0.78 0.28 145 / 0.55), 0 2px 10px oklch(0 0 0 / 0.45);
+  background: oklch(0.60 0.22 265);
+  box-shadow: 0 0 28px oklch(0.55 0.22 265 / 0.55), 0 2px 10px oklch(0 0 0 / 0.45);
 }
 .oa-new-popover {
   position: absolute; bottom: calc(100% + 6px); left: 0; right: 0;
@@ -509,7 +527,7 @@ html[data-theme="dark"] .oa-theme-btn.active {
   box-shadow: var(--stroke-inner);
   transition: border-color 120ms, background 120ms;
 }
-.oa-input:focus-within { border-color: oklch(0.6 0.12 150 / 0.6); background: var(--panel-solid); }
+.oa-input:focus-within { border-color: oklch(0.55 0.18 265 / 0.6); background: var(--panel-solid); }
 .oa-input-icon { color: var(--ink-3); }
 .oa-input input { background: transparent; border: none; outline: none; width: 100%; font-size: 13px; }
 
@@ -1387,7 +1405,7 @@ html[data-theme="dark"] .oa-cal-cell.today { background: oklch(0.28 0.04 150); }
   border-radius: 999px; font-size: 12px; color: var(--ink-2);
 }
 .oa-pick:hover { border-color: var(--ink-4); }
-.oa-pick.on { background: var(--green); color: #fff; border-color: var(--green); }
+.oa-pick.on { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ── Tweaks panel ─────────────────────── */
 .oa-tweaks {
@@ -1958,9 +1976,9 @@ html[data-theme="dark"] .oa-sb-create { background: var(--panel); color: var(--i
   background: transparent; transition: all .12s;
   color: transparent;
 }
-.oa-check:hover { border-color: oklch(0.6 0.15 150); color: oklch(0.6 0.15 150); }
+.oa-check:hover { border-color: oklch(0.55 0.18 265); color: oklch(0.55 0.18 265); }
 .oa-check.done {
-  background: oklch(0.55 0.15 150); border-color: oklch(0.55 0.15 150); color: #fff;
+  background: oklch(0.48 0.22 265); border-color: oklch(0.48 0.22 265); color: #fff;
 }
 
 /* Pills */
