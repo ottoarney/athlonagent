@@ -11,6 +11,9 @@
   window.__TWEAK_DEFAULTS = { "home": "dashboard", "density": "dense", "dark": false };
   document.documentElement.setAttribute('data-theme', 'light');
   document.documentElement.setAttribute('data-density', window.__TWEAK_DEFAULTS.density);
+  window.onerror = function(msg, src, line, col, err) {
+    document.body.innerHTML = '<pre style="position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;color:#c00;padding:24px;overflow:auto;z-index:9999;font-size:13px;font-family:monospace">' + msg + '\nLine: ' + line + ', Col: ' + col + '\n\n' + (err && err.stack || '') + '</pre>';
+  };
 </script>
 <style>
 /* Oregon Accelerator Mission Control — stylesheet */
@@ -2242,20 +2245,17 @@ html[data-theme="dark"] .oa-clv-pill {
 /* ───── Campaign Overview (Outlign style) ───── */
 .oa-coverview { display: flex; flex-direction: column; flex: 1; overflow-y: auto; min-height: 0; }
 .oa-coverview-banner {
-  height: 160px; flex-shrink: 0; position: relative; overflow: hidden;
-  cursor: pointer;
+  height: 160px; flex-shrink: 0; position: relative; overflow: hidden; cursor: pointer;
 }
 .oa-coverview-banner-edit {
-  position: absolute; bottom: 12px; right: 14px;
-  display: flex; align-items: center; gap: 6px;
+  position: absolute; bottom: 12px; right: 14px; display: flex; align-items: center; gap: 6px;
   padding: 6px 13px; border-radius: 7px; font-size: 12px; font-weight: 600;
   background: oklch(0 0 0 / 0.45); color: #fff; border: none; cursor: pointer;
   opacity: 0; transition: opacity 0.15s; backdrop-filter: blur(4px);
 }
 .oa-coverview-banner:hover .oa-coverview-banner-edit { opacity: 1; }
 .oa-coverview-body {
-  display: grid;
-  grid-template-columns: 240px 1fr 240px;
+  display: grid; grid-template-columns: 240px 1fr 240px;
   gap: 24px; padding: 24px 24px 32px; align-items: start;
 }
 .oa-coverview-col { display: flex; flex-direction: column; gap: 22px; }
@@ -2272,28 +2272,19 @@ html[data-theme="dark"] .oa-clv-pill {
   resize: none; padding: 0; min-height: 60px;
 }
 .oa-coverview-desc::placeholder { color: var(--ink-3); }
-.oa-coverview-member {
-  display: flex; align-items: center; gap: 10px;
-  padding: 5px 0; border-bottom: 1px solid var(--line-2);
-}
+.oa-coverview-member { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--line-2); }
 .oa-coverview-member:last-of-type { border-bottom: none; }
 .oa-coverview-group {
-  background: var(--panel); border: 1px solid var(--line);
-  border-radius: 10px; padding: 14px 16px;
-  display: flex; flex-direction: column; gap: 10px;
-  cursor: pointer; transition: border-color 0.12s, box-shadow 0.12s;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: border-color 0.12s, box-shadow 0.12s;
 }
 .oa-coverview-group:hover { border-color: var(--accent); box-shadow: 0 2px 10px oklch(0 0 0 / 0.06); }
 .oa-coverview-group-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .oa-coverview-group-name { font-size: 14px; font-weight: 600; color: var(--ink); }
 .oa-coverview-group-count { font-size: 12px; color: var(--ink-3); display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.oa-coverview-act-item {
-  display: flex; gap: 10px; padding: 7px 8px; border-radius: 8px; transition: background 0.08s;
-}
+.oa-coverview-act-item { display: flex; gap: 10px; padding: 7px 8px; border-radius: 8px; transition: background 0.08s; }
 .oa-coverview-act-item:hover { background: var(--panel-2); }
-.oa-coverview-stat {
-  background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px;
-}
+.oa-coverview-stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; }
 
 /* ───── Inbox / My tasks ───── */
 .oa-inbox { display: flex; flex-direction: column; gap: 2px; padding: 4px 0 20px; }
@@ -7386,80 +7377,87 @@ function CampEditModal({ c, state, setState, onClose }) {
 
 // ===== camp_overview_view.jsx =====
 const BANNER_GRADIENTS = [
-  'linear-gradient(130deg, oklch(0.22 0.05 260) 0%, oklch(0.18 0.07 295) 100%)',
-  'linear-gradient(130deg, oklch(0.26 0.09 155) 0%, oklch(0.20 0.06 200) 100%)',
-  'linear-gradient(130deg, oklch(0.25 0.09 20)  0%, oklch(0.20 0.07 340) 100%)',
-  'linear-gradient(130deg, oklch(0.28 0.08 50)  0%, oklch(0.22 0.09 85)  100%)',
-  'linear-gradient(130deg, oklch(0.20 0.05 200) 0%, oklch(0.18 0.09 240) 100%)',
-  'linear-gradient(130deg, oklch(0.24 0.10 145) 0%, oklch(0.18 0.07 180) 100%)',
-  'linear-gradient(130deg, oklch(0.30 0.04 60)  0%, oklch(0.22 0.06 30)  100%)',
+  'linear-gradient(130deg,oklch(0.22 0.05 260),oklch(0.18 0.07 295))',
+  'linear-gradient(130deg,oklch(0.26 0.09 155),oklch(0.20 0.06 200))',
+  'linear-gradient(130deg,oklch(0.25 0.09 20),oklch(0.20 0.07 340))',
+  'linear-gradient(130deg,oklch(0.28 0.08 50),oklch(0.22 0.09 85))',
+  'linear-gradient(130deg,oklch(0.20 0.05 200),oklch(0.18 0.09 240))',
+  'linear-gradient(130deg,oklch(0.24 0.10 145),oklch(0.18 0.07 180))',
+  'linear-gradient(130deg,oklch(0.30 0.04 60),oklch(0.22 0.06 30))',
 ];
 
-function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
+function CampOverviewView({ c, state, setState, openTaskView }) {
   const { BRANDS, TEAM, ATHLETES } = state;
-  const brand   = BRANDS.find(b => b.id === c.brandId);
-  const owner   = TEAM.find(t => t.id === c.ownerId);
-  const athletes = c.athleteIds.map(id => ATHLETES.find(a => a.id === id)).filter(Boolean);
-  const teamMembers = (c.teamIds || []).map(id => TEAM.find(t => t.id === id)).filter(Boolean);
-  const allPeople = [...TEAM, ...ATHLETES];
+  const brand      = BRANDS.find(b => b.id === c.brandId);
+  const owner      = TEAM.find(t => t.id === c.ownerId);
+  const athletes   = c.athleteIds.map(id => ATHLETES.find(a => a.id === id)).filter(Boolean);
+  const teamExtra  = (c.teamIds || []).map(id => TEAM.find(t => t.id === id)).filter(Boolean);
+  const allPeople  = [...TEAM, ...ATHLETES];
 
   const updateC = (patch) => setState(s => ({
     ...s, CAMPAIGNS: s.CAMPAIGNS.map(x => x.id === c.id ? {...x, ...patch} : x),
   }));
 
-  const bannerIdx = c.bannerIdx ?? 0;
+  const bannerIdx  = c.bannerIdx != null ? c.bannerIdx : 0;
   const cycleBanner = () => updateC({ bannerIdx: (bannerIdx + 1) % BANNER_GRADIENTS.length });
 
-  // Group deliverables by section
-  const groups = {};
-  c.deliverables.forEach(d => {
-    const k = d.section || 'Deliverables';
-    (groups[k] = groups[k] || []).push(d);
-  });
-
-  const done  = c.deliverables.filter(d => d.done).length;
-  const total = c.deliverables.length;
-  const pct   = total ? Math.round(done / total * 100) : 0;
+  const done    = c.deliverables.filter(d => d.done).length;
+  const total   = c.deliverables.length;
+  const pct     = total ? Math.round(done / total * 100) : 0;
   const daysLeft = fmt.daysUntil(c.end);
   const overdue  = c.deliverables.filter(d => !d.done && fmt.daysUntil(d.due) < 0).length;
 
-  // Activity feed — deduplicated
-  const activityItems = useMemo(() => {
-    const entries = [];
-    entries.push({ id: 'created', text: `${c.title} created`, icon: '🚀', at: c.start });
-    c.deliverables.filter(d => d.done).forEach(d => {
-      entries.push({ id: d.id+'_done', text: `Completed: ${d.title}`, icon: '✅', at: d.due || c.end });
+  // Group deliverables by section
+  const groups = useMemo(() => {
+    const g = {};
+    c.deliverables.forEach(d => {
+      const k = d.section || 'Deliverables';
+      if (!g[k]) g[k] = [];
+      g[k].push(d);
     });
-    c.deliverables.filter(d => d.assignee).forEach(d => {
+    return g;
+  }, [c.deliverables]);
+
+  // Activity feed
+  const activity = useMemo(() => {
+    const entries = [{ id: 'created', text: c.title + ' created', icon: '🚀', at: c.start }];
+    c.deliverables.filter(d => d.done).forEach(d => {
+      entries.push({ id: d.id + '_done', text: 'Completed: ' + d.title, icon: '✅', at: d.due || c.end });
+    });
+    c.deliverables.filter(d => d.assignee).slice(0, 6).forEach(d => {
       const p = allPeople.find(x => x.id === d.assignee);
-      entries.push({ id: d.id+'_asgn', text: `${p?.name || 'Someone'} → ${d.title}`, icon: '👤', at: c.start });
+      const name = p ? p.name : 'Someone';
+      entries.push({ id: d.id + '_asgn', text: name + ' assigned to ' + d.title, icon: '👤', at: c.start });
     });
     return entries.sort((a, b) => new Date(b.at) - new Date(a.at)).slice(0, 10);
   }, [c]);
 
-  // People for team column (deduped)
+  // Deduped team list
   const teamList = useMemo(() => {
     const seen = new Set();
-    return [owner, ...athletes, ...teamMembers].filter(p => {
+    const list = [owner, ...athletes, ...teamExtra];
+    return list.filter(p => {
       if (!p || seen.has(p.id)) return false;
-      seen.add(p.id); return true;
+      seen.add(p.id);
+      return true;
     });
-  }, [owner, athletes, teamMembers]);
+  }, [c.ownerId, c.athleteIds, c.teamIds]);
 
   return (
     <div className="oa-coverview">
-      {/* ── Banner ── */}
+
+      {/* Banner */}
       <div className="oa-coverview-banner"
-        style={{ background: BANNER_GRADIENTS[bannerIdx % BANNER_GRADIENTS.length] }}>
+        style={{background: BANNER_GRADIENTS[bannerIdx % BANNER_GRADIENTS.length]}}>
         <button className="oa-coverview-banner-edit" onClick={cycleBanner}>
           <Icons.Pencil size={11}/> Change banner
         </button>
       </div>
 
-      {/* ── Three-column body ── */}
+      {/* Three-column layout */}
       <div className="oa-coverview-body">
 
-        {/* LEFT: Info · Team · Resources */}
+        {/* ── LEFT: Info, Team, Resources ── */}
         <div className="oa-coverview-col">
 
           {/* Project Info */}
@@ -7470,19 +7468,20 @@ function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
               value={c.description || ''}
               rows={4}
               onChange={e => updateC({ description: e.target.value })}
-              placeholder="Add a project description…"
+              placeholder="Add a project description..."
             />
-            <div style={{display:'flex', flexDirection:'column', gap:5, fontSize:12.5, color:'var(--ink-3)'}}>
-              <span><strong style={{color:'var(--ink)'}}>Brand:</strong> {brand?.name || '—'}</span>
+            <div style={{fontSize:12.5, color:'var(--ink-3)', display:'flex', flexDirection:'column', gap:5}}>
+              <span><strong style={{color:'var(--ink)'}}>Brand:</strong> {brand ? brand.name : '—'}</span>
               <span style={{display:'flex', alignItems:'center', gap:6}}>
-                <strong style={{color:'var(--ink)'}}>Status:</strong> <StatusChip status={c.status} dense/>
+                <strong style={{color:'var(--ink)'}}>Status:</strong>
+                <StatusChip status={c.status} dense/>
               </span>
               <span>
                 <strong style={{color:'var(--ink)'}}>Timeline:</strong>{' '}
-                {fmt.dateLong(c.start)} → {fmt.dateLong(c.end)}
+                {fmt.dateLong(c.start)} to {fmt.dateLong(c.end)}
                 {daysLeft != null && (
                   <span style={{marginLeft:6, color: daysLeft < 0 ? 'oklch(0.55 0.2 25)' : 'var(--ink-4)'}}>
-                    ({daysLeft < 0 ? `${-daysLeft}d over` : `${daysLeft}d left`})
+                    ({daysLeft < 0 ? (-daysLeft) + 'd over' : daysLeft + 'd left'})
                   </span>
                 )}
               </span>
@@ -7492,22 +7491,31 @@ function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
 
           {/* Project Team */}
           <div className="oa-coverview-section">
-            <div className="oa-coverview-section-head"><Icons.Users size={12}/> Project Team</div>
+            <div className="oa-coverview-section-head"><Icons.People size={12}/> Project Team</div>
             {teamList.map((person, i) => (
-              <div key={person.id} className="oa-coverview-member" style={i === teamList.length - 1 ? {borderBottom:'none'} : {}}>
+              <div key={person.id} className="oa-coverview-member"
+                style={i === teamList.length - 1 ? {borderBottom:'none'} : {}}>
                 <Avatar person={person} size={30}/>
                 <div style={{flex:1, minWidth:0}}>
-                  <div style={{fontSize:13, fontWeight:600, color:'var(--ink)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{person.name}</div>
+                  <div style={{fontSize:13, fontWeight:600, color:'var(--ink)',
+                    whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>
+                    {person.name}
+                  </div>
                   <div style={{fontSize:11.5, color:'var(--ink-3)'}}>
-                    {person.id === owner?.id ? 'Owner' : (person.role || person.sport || 'Athlete')}
+                    {person.id === (owner && owner.id) ? 'Owner' : (person.role || person.sport || 'Athlete')}
                   </div>
                 </div>
-                {person.id === owner?.id && (
-                  <span style={{fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99, background:'var(--accent-wash)', color:'var(--accent-ink)', flexShrink:0}}>Owner</span>
+                {person.id === (owner && owner.id) && (
+                  <span style={{fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99,
+                    background:'var(--accent-wash)', color:'var(--accent-ink)', flexShrink:0}}>
+                    Owner
+                  </span>
                 )}
               </div>
             ))}
-            {teamList.length === 0 && <div className="oa-empty" style={{fontSize:12}}>No team members yet.</div>}
+            {teamList.length === 0 && (
+              <div className="oa-empty" style={{fontSize:12}}>No team members yet.</div>
+            )}
           </div>
 
           {/* Resources */}
@@ -7515,43 +7523,50 @@ function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
             <div className="oa-coverview-section-head"><Icons.Link size={12}/> Resources</div>
             {(c.resources || []).length === 0 && (
               <div style={{fontSize:12.5, color:'var(--ink-3)', fontStyle:'italic', lineHeight:1.5}}>
-                Add key links and files for easy access throughout the project
+                Add key links for easy access throughout the project
               </div>
             )}
             {(c.resources || []).map((r, i) => (
               <a key={i} href={r.url} target="_blank" rel="noopener noreferrer"
-                style={{display:'flex', alignItems:'center', gap:8, padding:'6px 10px', borderRadius:7,
-                  background:'var(--panel-2)', border:'1px solid var(--line)',
+                style={{display:'flex', alignItems:'center', gap:8, padding:'6px 10px',
+                  borderRadius:7, background:'var(--panel-2)', border:'1px solid var(--line)',
                   textDecoration:'none', fontSize:13, color:'var(--accent-ink)'}}>
                 <Icons.Link size={12}/> {r.title || r.url}
               </a>
             ))}
-            <button style={{display:'flex', alignItems:'center', gap:5, fontSize:12, color:'var(--ink-3)',
-              background:'none', border:'none', cursor:'pointer', padding:'2px 0'}}
+            <button style={{display:'flex', alignItems:'center', gap:5, fontSize:12,
+              color:'var(--ink-3)', background:'none', border:'none', cursor:'pointer', padding:'2px 0'}}
               onClick={() => {
-                const title = window.prompt('Resource title:'); if (!title?.trim()) return;
-                const url = window.prompt('URL:'); if (!url?.trim()) return;
-                updateC({ resources: [...(c.resources||[]), {title: title.trim(), url: url.trim()}] });
+                const t = window.prompt('Resource title:');
+                if (!t || !t.trim()) return;
+                const u = window.prompt('URL:');
+                if (!u || !u.trim()) return;
+                updateC({ resources: [...(c.resources || []), {title: t.trim(), url: u.trim()}] });
               }}>
               <Icons.Plus size={11}/> Add resource
             </button>
           </div>
-        </div>
 
-        {/* CENTER: Client Progress */}
+        </div>
+        {/* end LEFT col */}
+
+        {/* ── CENTER: Client Progress ── */}
         <div className="oa-coverview-col">
           <div className="oa-coverview-section">
             <div className="oa-coverview-section-head" style={{justifyContent:'space-between'}}>
-              <div style={{display:'flex', alignItems:'center', gap:7}}><Icons.Check size={12}/> Client Progress</div>
-              <span style={{fontSize:11, color:'var(--ink-3)', textTransform:'none', fontWeight:500, letterSpacing:0}}>
+              <div style={{display:'flex', alignItems:'center', gap:7}}>
+                <Icons.Check size={12}/> Client Progress
+              </div>
+              <span style={{fontSize:11, color:'var(--ink-3)', textTransform:'none',
+                fontWeight:500, letterSpacing:0}}>
                 {done} of {total} complete
               </span>
             </div>
 
             {Object.entries(groups).map(([name, tasks]) => {
-              const gdone  = tasks.filter(t => t.done).length;
-              const gtotal = tasks.length;
-              const gpct   = gtotal ? Math.round(gdone / gtotal * 100) : 0;
+              const gdone    = tasks.filter(t => t.done).length;
+              const gtotal   = tasks.length;
+              const gpct     = gtotal ? Math.round(gdone / gtotal * 100) : 0;
               const assignees = [...new Set(tasks.map(t => t.assignee).filter(Boolean))]
                 .map(id => allPeople.find(p => p.id === id)).filter(Boolean);
               const dueDates = tasks.map(t => t.due).filter(Boolean).sort();
@@ -7562,16 +7577,19 @@ function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
                   <div className="oa-coverview-group-head">
                     <span className="oa-coverview-group-name">{name}</span>
                     <span className="oa-coverview-group-count">
-                      <Icons.Check size={11}/>{gdone} of {gtotal}
+                      <Icons.Check size={11}/> {gdone} of {gtotal}
                     </span>
                   </div>
-                  <div className="oa-progbar" style={{height:5}}><div style={{width: gpct+'%'}}/></div>
-                  <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', gap:8}}>
+                  <div className="oa-progbar" style={{height:5}}>
+                    <div style={{width: gpct + '%'}}></div>
+                  </div>
+                  <div style={{display:'flex', alignItems:'center',
+                    justifyContent:'space-between', gap:8}}>
                     <AvatarStack people={assignees} size={20} max={4}/>
                     {nextDue && (
                       <span style={{fontSize:11.5, display:'flex', alignItems:'center', gap:4,
                         color: isLate ? 'oklch(0.55 0.2 25)' : 'var(--ink-3)'}}>
-                        <Icons.Calendar size={10}/>{fmt.dateLong(nextDue)}
+                        <Icons.Calendar size={10}/> {fmt.dateLong(nextDue)}
                       </span>
                     )}
                   </div>
@@ -7592,26 +7610,33 @@ function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
             </button>
           </div>
         </div>
+        {/* end CENTER col */}
 
-        {/* RIGHT: Updates · Stats */}
+        {/* ── RIGHT: Updates, Stats ── */}
         <div className="oa-coverview-col">
 
           {/* Activity feed */}
           <div className="oa-coverview-section">
             <div className="oa-coverview-section-head"><Icons.Doc size={12}/> Updates</div>
-            {activityItems.length === 0 ? (
-              <div style={{background:'var(--panel-2)', border:'1px solid var(--line)', borderRadius:10,
-                padding:'16px', fontSize:13, color:'var(--ink-3)', textAlign:'center'}}>
-                You're all up to date!
+            {activity.length === 0 ? (
+              <div style={{background:'var(--panel-2)', border:'1px solid var(--line)',
+                borderRadius:10, padding:'16px', fontSize:13, color:'var(--ink-3)', textAlign:'center'}}>
+                You are all up to date!
               </div>
             ) : (
-              <div style={{display:'flex', flexDirection:'column', gap:0}}>
-                {activityItems.map(entry => (
+              <div>
+                {activity.map(entry => (
                   <div key={entry.id} className="oa-coverview-act-item">
                     <span style={{fontSize:14, flexShrink:0, marginTop:1}}>{entry.icon}</span>
                     <div style={{flex:1, minWidth:0}}>
-                      <div style={{fontSize:12.5, color:'var(--ink)', lineHeight:1.4}}>{entry.text}</div>
-                      {entry.at && <div style={{fontSize:11, color:'var(--ink-3)', marginTop:1}}>{fmt.dateLong(entry.at)}</div>}
+                      <div style={{fontSize:12.5, color:'var(--ink)', lineHeight:1.4}}>
+                        {entry.text}
+                      </div>
+                      {entry.at && (
+                        <div style={{fontSize:11, color:'var(--ink-3)', marginTop:1}}>
+                          {fmt.dateLong(entry.at)}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -7619,30 +7644,50 @@ function CampOverviewView({ c, state, setState, openTaskView, openAthlete }) {
             )}
           </div>
 
-          {/* Stats mini grid */}
+          {/* Stats */}
           <div className="oa-coverview-section">
             <div className="oa-coverview-section-head"><Icons.Hash size={12}/> Stats</div>
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
-              {[
-                { label: 'Progress', value: `${pct}%`, sub: `${done}/${total} done` },
-                { label: 'Overdue',  value: String(overdue), sub: overdue > 0 ? 'needs attention' : 'on track',
-                  valueColor: overdue > 0 ? 'oklch(0.55 0.2 25)' : undefined },
-                { label: 'Days left', value: daysLeft == null ? '—' : daysLeft < 0 ? `${-daysLeft}d` : `${daysLeft}d`,
-                  sub: daysLeft != null && daysLeft < 0 ? 'overdue' : `ends ${fmt.date(c.end)}`,
-                  valueColor: daysLeft != null && daysLeft < 0 ? 'oklch(0.55 0.2 25)' : undefined },
-                { label: 'Budget',   value: fmt.moneyShort(c.budget) },
-              ].map(k => (
-                <div key={k.label} className="oa-coverview-stat">
-                  <div style={{fontSize:11, color:'var(--ink-3)', fontWeight:600, marginBottom:3}}>{k.label}</div>
-                  <div style={{fontSize:16, fontWeight:700, color: k.valueColor || 'var(--ink)'}}>{k.value}</div>
-                  {k.sub && <div style={{fontSize:10.5, color:'var(--ink-3)', marginTop:1}}>{k.sub}</div>}
+              <div className="oa-coverview-stat">
+                <div style={{fontSize:11, color:'var(--ink-3)', fontWeight:600, marginBottom:3}}>Progress</div>
+                <div style={{fontSize:16, fontWeight:700, color:'var(--ink)'}}>{pct}%</div>
+                <div style={{fontSize:10.5, color:'var(--ink-3)', marginTop:1}}>{done}/{total} done</div>
+              </div>
+              <div className="oa-coverview-stat">
+                <div style={{fontSize:11, color:'var(--ink-3)', fontWeight:600, marginBottom:3}}>Overdue</div>
+                <div style={{fontSize:16, fontWeight:700,
+                  color: overdue > 0 ? 'oklch(0.55 0.2 25)' : 'var(--ink)'}}>
+                  {overdue}
                 </div>
-              ))}
+                <div style={{fontSize:10.5, color:'var(--ink-3)', marginTop:1}}>
+                  {overdue > 0 ? 'needs attention' : 'on track'}
+                </div>
+              </div>
+              <div className="oa-coverview-stat">
+                <div style={{fontSize:11, color:'var(--ink-3)', fontWeight:600, marginBottom:3}}>Days left</div>
+                <div style={{fontSize:16, fontWeight:700,
+                  color: daysLeft != null && daysLeft < 0 ? 'oklch(0.55 0.2 25)' : 'var(--ink)'}}>
+                  {daysLeft == null ? '—' : daysLeft < 0 ? (-daysLeft) + 'd' : daysLeft + 'd'}
+                </div>
+                <div style={{fontSize:10.5, color:'var(--ink-3)', marginTop:1}}>
+                  {daysLeft != null && daysLeft < 0 ? 'overdue' : 'ends ' + fmt.date(c.end)}
+                </div>
+              </div>
+              <div className="oa-coverview-stat">
+                <div style={{fontSize:11, color:'var(--ink-3)', fontWeight:600, marginBottom:3}}>Budget</div>
+                <div style={{fontSize:16, fontWeight:700, color:'var(--ink)'}}>
+                  {fmt.moneyShort(c.budget)}
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
+        {/* end RIGHT col */}
 
       </div>
+      {/* end body */}
+
     </div>
   );
 }
@@ -7898,7 +7943,7 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
         </button>
       </div>
 
-      {/* ── Overview tab: Outlign-style project overview ── */}
+      {/* ── Overview tab: full project dashboard ───────── */}
       {tab === 'overview' && (
         <CampOverviewView
           key={campaignId}
@@ -7906,7 +7951,6 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
           state={state}
           setState={setState}
           openTaskView={() => setTab('board')}
-          openAthlete={openAthlete || (() => {})}
         />
       )}
 
