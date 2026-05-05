@@ -7444,6 +7444,42 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
   const overdue  = c.deliverables.filter(d => !d.done && fmt.daysUntil(d.due) < 0).length;
   const openCount = total - done;
 
+  const pb              = PLAYBOOKS && PLAYBOOKS.find(p => p.id === c.playbookId);
+  const effectiveStages = pb ? (c.customStages || pb.stages) : null;
+
+  const stageGroups = useMemo(() => {
+    if (!effectiveStages || effectiveStages.length === 0) {
+      return [{ id: '_all', label: 'All Tasks', tasks: c.deliverables }];
+    }
+    const staged = new Set(effectiveStages.map(s => s.id));
+    const groups = effectiveStages
+      .map(s => ({ id: s.id, label: s.label, tasks: c.deliverables.filter(d => d.stageId === s.id) }))
+      .filter(g => g.tasks.length > 0);
+    const unstaged = c.deliverables.filter(d => !d.stageId || !staged.has(d.stageId));
+    if (unstaged.length > 0) groups.push({ id: '_other', label: 'Other', tasks: unstaged });
+    if (groups.length === 0) groups.push({ id: '_all', label: 'All Tasks', tasks: c.deliverables });
+    return groups;
+  }, [c.deliverables, c.playbookId, c.customStages]);
+
+  const [collapsedStages, setCollapsedStages] = useState(() => {
+    const s = new Set();
+    const _pb = PLAYBOOKS && PLAYBOOKS.find(p => p.id === c.playbookId);
+    const _stages = _pb ? (c.customStages || _pb.stages) : null;
+    if (_stages) {
+      _stages.forEach(stage => {
+        const tasks = c.deliverables.filter(d => d.stageId === stage.id);
+        if (tasks.length > 0 && tasks.every(t => t.done)) s.add(stage.id);
+      });
+    }
+    return s;
+  });
+
+  const toggleStage = id => setCollapsedStages(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
   const [newTitle, setNewTitle] = useState('');
   const [newLink,  setNewLink]  = useState('');
 
@@ -7563,118 +7599,95 @@ function CampOverviewView({ c, state, setState, openTaskView, openProcessView })
             </div>
 
             {/* Column labels */}
-            <div style={{display:'grid',
-              gridTemplateColumns:'28px 1fr 130px 110px 90px 90px 120px 28px',
-              padding:'7px 18px 6px', borderBottom:'1px solid var(--line)',
-              background:'var(--panel-2)'}}>
-              {['','Task Name','Assignee','Progress','Priority','Due Date','Status',''].map((h,i) => (
-                <div key={i} style={{fontSize:11, fontWeight:600, color:'var(--ink-3)',
-                  letterSpacing:'0.02em', whiteSpace:'nowrap',
-                  textAlign: i === 3 ? 'center' : 'left'}}>
-                  {h}
-                </div>
+            <div style={{display:'grid', gridTemplateColumns:'32px 1fr 140px 110px 120px 28px',
+              padding:'7px 18px 6px', borderBottom:'1px solid var(--line)', background:'var(--panel-2)'}}>
+              {['','Task Name','Assignee','Due Date','Status',''].map((h,i) => (
+                <div key={i} style={{fontSize:11, fontWeight:600, color:'var(--ink-3)', letterSpacing:'0.02em'}}>{h}</div>
               ))}
             </div>
 
-            {/* Rows */}
-            {c.deliverables.map(d => {
-              const ap  = allPeople.find(p => p.id === d.assignee);
-              const ds  = d.delivStatus || (d.done ? 'Approved' : 'Draft');
-              const ss  = STATUS_STYLE[ds] || STATUS_STYLE.Draft;
-              const STATUS_PCT = { Draft:0, Submitted:40, 'In Review':75, Approved:100 };
-              const dpct = d.done ? 100 : (STATUS_PCT[ds] ?? 0);
-              const PRIO_DOT = { high:'oklch(0.55 0.22 25)', med:'oklch(0.60 0.16 75)', low:'oklch(0.52 0.14 145)' };
-              const PRIO_LABEL = { high:'High', med:'Medium', low:'Low' };
+            {/* Stage groups */}
+            {stageGroups.map(group => {
+              const isCollapsed = collapsedStages.has(group.id);
+              const gDone  = group.tasks.filter(t => t.done).length;
+              const gTotal = group.tasks.length;
+              const allDone = gTotal > 0 && gDone === gTotal;
               return (
-                <div key={d.id} style={{display:'grid',
-                  gridTemplateColumns:'28px 1fr 130px 110px 90px 90px 120px 28px',
-                  alignItems:'center', padding:'0 18px',
-                  borderBottom:'1px solid var(--line)', minHeight:44,
-                  transition:'background 0.1s'}}
-                  onMouseEnter={e => e.currentTarget.style.background='var(--panel-2)'}
-                  onMouseLeave={e => e.currentTarget.style.background='transparent'}>
-
-                  {/* Checkbox */}
-                  <div onClick={() => updateC({ deliverables: c.deliverables.map(x =>
-                    x.id === d.id ? {...x, done:!d.done, delivStatus:!d.done?'Approved':'Draft'} : x) })}
-                    style={{width:16, height:16, borderRadius:4, flexShrink:0, cursor:'pointer',
-                      border: d.done ? 'none' : '1.5px solid oklch(0.72 0.01 268)',
-                      background: d.done ? 'var(--accent)' : 'transparent',
-                      display:'flex', alignItems:'center', justifyContent:'center'}}>
-                    {d.done && <Icons.Check size={9} style={{color:'#fff'}}/>}
-                  </div>
-
-                  {/* Task name */}
-                  <div style={{fontSize:13, color: d.done ? 'var(--ink-4)' : 'var(--ink)',
-                    textDecoration: d.done ? 'line-through' : 'none',
-                    whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', paddingRight:8}}>
-                    {d.title}
-                  </div>
-
-                  {/* Assignee */}
-                  <div style={{display:'flex', alignItems:'center', gap:6}}>
-                    {ap ? (
-                      <>
-                        <Avatar person={ap} size={20}/>
-                        <span style={{fontSize:12, color:'var(--ink)', whiteSpace:'nowrap',
-                          overflow:'hidden', textOverflow:'ellipsis'}}>
-                          {ap.name.split(' ')[0]}
-                        </span>
-                      </>
-                    ) : (
-                      <span style={{fontSize:12, color:'var(--ink-4)'}}>—</span>
-                    )}
-                  </div>
-
-                  {/* Progress bar + % */}
-                  <div style={{display:'flex', alignItems:'center', gap:6}}>
-                    <div className="oa-progbar" style={{flex:1, height:5}}>
-                      <div style={{width:dpct+'%'}}></div>
-                    </div>
-                    <span style={{fontSize:11, color:'var(--ink-3)', flexShrink:0, width:28,
-                      fontVariantNumeric:'tabular-nums'}}>{dpct}%</span>
-                  </div>
-
-                  {/* Priority */}
-                  <div>
-                    {d.priority ? (
-                      <span style={{display:'inline-flex', alignItems:'center', gap:4,
-                        fontSize:11.5, fontWeight:600, padding:'2px 8px', borderRadius:99,
-                        background: d.priority==='high' ? 'oklch(0.95 0.05 25)' :
-                          d.priority==='med' ? 'oklch(0.96 0.06 75)' : 'oklch(0.94 0.06 145)',
-                        color: PRIO_DOT[d.priority]}}>
-                        <span style={{width:6, height:6, borderRadius:'50%', flexShrink:0,
-                          background:PRIO_DOT[d.priority]}}/>
-                        {PRIO_LABEL[d.priority]}
+                <div key={group.id}>
+                  {/* Stage header — hidden when there's only one group */}
+                  {stageGroups.length > 1 && (
+                    <div onClick={() => toggleStage(group.id)}
+                      style={{display:'flex', alignItems:'center', gap:8, padding:'8px 14px 8px 12px',
+                        background:'var(--panel-2)', borderBottom:'1px solid var(--line)',
+                        cursor:'pointer', userSelect:'none'}}
+                      onMouseEnter={e => e.currentTarget.style.background='oklch(0.94 0.005 268 / 0.6)'}
+                      onMouseLeave={e => e.currentTarget.style.background='var(--panel-2)'}>
+                      <span style={{fontSize:10, color:'var(--ink-3)', transition:'transform 0.15s',
+                        transform: isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+                        display:'inline-flex', flexShrink:0}}>▾</span>
+                      <span style={{fontSize:11, fontWeight:700, letterSpacing:'0.04em',
+                        textTransform:'uppercase', color: allDone ? 'var(--ink-4)' : 'var(--ink-2)'}}>
+                        {group.label}
                       </span>
-                    ) : (
-                      <span style={{fontSize:12, color:'var(--ink-4)'}}>—</span>
-                    )}
-                  </div>
-
-                  {/* Due date */}
-                  <div style={{fontSize:12, color: d.due && fmt.daysUntil(d.due) < 0 && !d.done
-                    ? 'oklch(0.55 0.2 25)' : 'var(--ink-3)'}}>
-                    {d.due ? fmt.dateLong(d.due) : '—'}
-                  </div>
-
-                  {/* Status */}
-                  <div>
-                    <select value={ds}
-                      onChange={e => updateC({ deliverables: c.deliverables.map(x =>
-                        x.id === d.id ? {...x, delivStatus:e.target.value, done:e.target.value==='Approved'} : x) })}
-                      style={{...ss, appearance:'none', border:'none', outline:'none', cursor:'pointer',
-                        padding:'3px 8px', borderRadius:6, fontSize:11.5, fontWeight:600, width:'100%'}}>
-                      {DELIV_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </div>
-
-                  {/* Remove */}
-                  <button onClick={() => updateC({ deliverables: c.deliverables.filter(x => x.id !== d.id) })}
-                    style={{background:'none', border:'none', cursor:'pointer', color:'var(--ink-4)',
-                      display:'flex', padding:2, borderRadius:4, opacity:0.6}}>
-                    <Icons.X size={12}/>
-                  </button>
+                      <span style={{fontSize:11, color:'var(--ink-4)', marginLeft:2}}>{gDone}/{gTotal}</span>
+                      {allDone && (
+                        <span style={{fontSize:10, fontWeight:700, padding:'1px 7px', borderRadius:99,
+                          background:'oklch(0.90 0.07 145 / 0.5)', color:'oklch(0.38 0.14 145)', marginLeft:4}}>
+                          Complete
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {/* Task rows */}
+                  {!isCollapsed && group.tasks.map(d => {
+                    const ap = allPeople.find(p => p.id === d.assignee);
+                    const ds = d.delivStatus || (d.done ? 'Approved' : 'Draft');
+                    const ss = STATUS_STYLE[ds] || STATUS_STYLE.Draft;
+                    return (
+                      <div key={d.id} style={{display:'grid',
+                        gridTemplateColumns:'32px 1fr 140px 110px 120px 28px',
+                        alignItems:'center', padding:'0 18px',
+                        borderBottom:'1px solid var(--line)', minHeight:44, transition:'background 0.1s'}}
+                        onMouseEnter={e => e.currentTarget.style.background='var(--panel-2)'}
+                        onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+                        <div onClick={() => updateC({ deliverables: c.deliverables.map(x =>
+                          x.id === d.id ? {...x, done:!d.done, delivStatus:!d.done?'Approved':'Draft'} : x) })}
+                          style={{width:16, height:16, borderRadius:4, flexShrink:0, cursor:'pointer',
+                            border: d.done ? 'none' : '1.5px solid oklch(0.72 0.01 268)',
+                            background: d.done ? 'var(--accent)' : 'transparent',
+                            display:'flex', alignItems:'center', justifyContent:'center'}}>
+                          {d.done && <Icons.Check size={9} style={{color:'#fff'}}/>}
+                        </div>
+                        <div style={{fontSize:13, color: d.done ? 'var(--ink-4)' : 'var(--ink)',
+                          textDecoration: d.done ? 'line-through' : 'none',
+                          whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', paddingRight:8}}>
+                          {d.title}
+                        </div>
+                        <div style={{display:'flex', alignItems:'center', gap:6}}>
+                          {ap ? (<><Avatar person={ap} size={20}/>
+                            <span style={{fontSize:12, color:'var(--ink)', whiteSpace:'nowrap',
+                              overflow:'hidden', textOverflow:'ellipsis'}}>{ap.name.split(' ')[0]}</span>
+                          </>) : <span style={{fontSize:12, color:'var(--ink-4)'}}>—</span>}
+                        </div>
+                        <div style={{fontSize:12, color: d.due && fmt.daysUntil(d.due) < 0 && !d.done
+                          ? 'oklch(0.55 0.2 25)' : 'var(--ink-3)'}}>
+                          {d.due ? fmt.dateLong(d.due) : '—'}
+                        </div>
+                        <select value={ds}
+                          onChange={e => updateC({ deliverables: c.deliverables.map(x =>
+                            x.id === d.id ? {...x, delivStatus:e.target.value, done:e.target.value==='Approved'} : x) })}
+                          style={{...ss, appearance:'none', border:'none', outline:'none', cursor:'pointer',
+                            padding:'3px 8px', borderRadius:6, fontSize:11.5, fontWeight:600, width:'100%'}}>
+                          {DELIV_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                        <button onClick={() => updateC({ deliverables: c.deliverables.filter(x => x.id !== d.id) })}
+                          style={{background:'none', border:'none', cursor:'pointer', color:'var(--ink-4)',
+                            display:'flex', padding:2, borderRadius:4, opacity:0.6}}>
+                          <Icons.X size={12}/>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               );
             })}
