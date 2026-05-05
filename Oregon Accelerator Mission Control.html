@@ -8024,7 +8024,7 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
       </header>
 
       <div className="oa-clv-tabs">
-        {['Overview','Process','Board','Timeline','Calendar','Files'].map(t => {
+        {['Overview','Process','Timeline','Calendar','Files'].map(t => {
           const k = t.toLowerCase();
           const on = tab === k;
           return (
@@ -8034,7 +8034,7 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
           );
         })}
         <button className="oa-clv-tab add" title="Add custom section"
-          onClick={() => { const name = window.prompt('New section name:'); if (name?.trim()) { const id = 'd_sec_' + Date.now(); updateC({ deliverables: [...c.deliverables, { id, title: 'New task', assignee: owner.id, due: null, done: false, campaign: c.id, section: name.trim() }] }); setTab('board'); } }}>
+          onClick={() => { const name = window.prompt('New section name:'); if (name?.trim()) { const id = 'd_sec_' + Date.now(); updateC({ deliverables: [...c.deliverables, { id, title: 'New task', assignee: owner.id, due: null, done: false, campaign: c.id, section: name.trim() }] }); setTab('process'); } }}>
           <Icons.Plus size={11}/>
         </button>
       </div>
@@ -8046,12 +8046,11 @@ function CampaignListView({ campaignId, state, setState, onOpenTask, openTaskId,
           c={c}
           state={state}
           setState={setState}
-          openTaskView={() => setTab('board')}
+          openTaskView={() => setTab('process')}
           openProcessView={() => setTab('process')}
         />
       )}
 
-      {tab === 'board'    && <CampBoardView    c={c} state={state} setState={setState} onOpenTask={onOpenTask} openTaskId={openTaskId} />}
       {tab === 'timeline' && <CampTimelineView c={c} state={state} />}
       {tab === 'calendar' && <CampCalendarView c={c} state={state} setState={setState} />}
       {tab === 'process'  && <CampWorkflowView c={c} state={state} setState={setState} />}
