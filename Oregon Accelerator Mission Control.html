@@ -2272,10 +2272,14 @@ html[data-theme="dark"] .oa-clv-pill {
 .oa-coverview-prog { display: flex; flex-direction: column; gap: 6px; }
 .oa-coverview-prog-labels { display: flex; justify-content: space-between; font-size: 12px; }
 .oa-coverview-desc {
-  width: 100%; background: transparent; border: none; outline: none;
+  width: 100%; background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 8px; outline: none;
   font: inherit; font-size: 13.5px; line-height: 1.6; color: var(--ink);
-  resize: none; padding: 0; min-height: 52px;
+  resize: none; padding: 10px 12px; min-height: 68px;
+  box-sizing: border-box; transition: border-color 0.15s, box-shadow 0.15s;
 }
+.oa-coverview-desc:hover { border-color: var(--line-2); }
+.oa-coverview-desc:focus { border-color: var(--accent); box-shadow: 0 0 0 3px oklch(0.78 0.28 145 / 0.12); background: var(--panel); }
 .oa-coverview-desc::placeholder { color: var(--ink-3); }
 .oa-coverview-body {
   display: grid; grid-template-columns: 210px 1fr 210px;
